@@ -1,0 +1,26 @@
+{
+  "name": "PROPHET — Intelligence Financière",
+  "short_name": "PROPHET",
+  "description": "L'oracle financier panafricain — intelligence financière institutionnelle pour l'Afrique de l'Ouest",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0a1a",
+  "theme_color": "#e8a93e",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

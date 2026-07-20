@@ -5,6 +5,23 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>PROPHET — Intelligence Financière Panafricaine</title>
 <link id="prophet-favicon" rel="icon" type="image/jpeg" href="">
+<!-- PWA : application installable -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e8a93e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PROPHET">
+<link rel="apple-touch-icon" href="icon-180.png">
+<script>
+// Enregistrement du service worker (rend l'app installable)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('service-worker.js').catch(function(e){
+      console.log('SW registration:', e);
+    });
+  });
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
 <script>
 (function(){

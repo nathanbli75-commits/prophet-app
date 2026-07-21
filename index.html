@@ -4973,6 +4973,47 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
   position:fixed;left:0;right:0;bottom:28px;text-align:center;
   font-size:10.5px;color:#a49dc1;letter-spacing:.02em;
 }
+
+/* ═══ FILET DE SÉCURITÉ RESPONSIVE — anti-débordement mobile ═══ */
+@media (max-width: 640px) {
+  /* Empêche tout débordement horizontal de la page */
+  html, body { overflow-x: hidden !important; max-width: 100vw !important; }
+  /* Aucun élément ne doit dépasser la largeur de l'écran */
+  .page, .page * {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  /* Les grilles et cartes s'adaptent à la largeur dispo */
+  .page img, .page table, .page pre, .page canvas, .page video, .page iframe {
+    max-width: 100% !important;
+    height: auto;
+  }
+  /* Les conteneurs à largeur fixe passent en fluide */
+  .page [style*="width:4"], .page [style*="width:5"], .page [style*="width:6"],
+  .page [style*="width: 4"], .page [style*="width: 5"], .page [style*="width: 6"] {
+    width: 100% !important;
+  }
+  /* Le texte long ne casse pas la mise en page */
+  .page p, .page div, .page span, .page td, .page li {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  /* Les rangées à défilement horizontal restent DANS l'écran */
+  #ch-qrow, .ph-scroll-row, .iv-idx-scroll, .iv-cat-co-row, .intel-report-row {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  /* La zone de saisie et suggestions du chat ne déborde pas */
+  #ch-inp, #ch-chips, #ch-qrow {
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+  }
+  /* Tout carrousel/rangée horizontale ne dépasse pas le bord droit */
+  [style*="overflow-x:auto"], [style*="overflow-x: auto"],
+  [class*="scroll-row"], [class*="-scroll"] {
+    max-width: 100% !important;
+  }
+}
 </style>
 </head>
 <body>

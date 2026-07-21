@@ -13,25 +13,26 @@
 <meta name="apple-mobile-web-app-title" content="GUELANE">
 <link rel="apple-touch-icon" href="icon-180.png">
 <script>
-// Enregistrement du service worker — avec réparation auto anti-écran-blanc
+// Enregistrement du service worker — mises à jour propres et automatiques
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('service-worker.js').then(function(reg) {
       reg.update();
-      // Détecter une nouvelle version et l'activer au prochain démarrage
-      reg.addEventListener('updatefound', function() {
-        var nw = reg.installing;
-        if (!nw) return;
-        nw.addEventListener('statechange', function() {
-          if (nw.state === 'installed' && navigator.serviceWorker.controller) {
-            // La nouvelle version est prête ; elle s'activera au prochain lancement
-          }
-        });
-      });
     }).catch(function(e){ console.log('SW registration:', e); });
+
+    // Quand une nouvelle version du service worker prend le contrôle,
+    // on recharge la page UNE SEULE FOIS pour appliquer proprement la mise à jour.
+    // (se produit au démarrage suivant, pas en pleine session)
+    var hasRefreshed = false;
+    navigator.serviceWorker.addEventListener('controllerchange', function() {
+      if (hasRefreshed) return;
+      hasRefreshed = true;
+      window.location.reload();
+    });
   });
 }
 </script>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
@@ -75,7 +76,7 @@ if ('serviceWorker' in navigator) {
   }
 })();
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://accounts.google.com/gsi/client" async></script>
 <style>
 
@@ -17481,11 +17482,11 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "1.9";
+  var GUELANE_VERSION = "2.1";
   var IMPORTANT = true;
   var CHANGEMENTS = [
-    { ic:"🎨", txt:"Logo affiché de façon fiable au démarrage" },
-    { ic:"📡", txt:"Écran 'Pas de connexion' amélioré" }
+    { ic:"🔧", txt:"Correction des graphiques et sections" },
+    { ic:"🔄", txt:"Mises à jour automatiques" }
   ];
   /* ─────────────────────────────────────────────────── */
 

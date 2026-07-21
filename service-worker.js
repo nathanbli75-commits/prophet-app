@@ -4,7 +4,7 @@
 // Une nouvelle version s'installe en arrière-plan et s'active au PROCHAIN lancement
 // de l'application — jamais pendant que l'utilisateur s'en sert.
 
-const CACHE_VERSION = 'guelane-v1.1';   // ← CHANGE ce numéro à chaque déploiement important
+const CACHE_VERSION = 'guelane-v1.2';   // ← CHANGE ce numéro à chaque déploiement important
 const CACHE_NAME = CACHE_VERSION;
 
 // Installation : la nouvelle version s'installe mais N'ÉCRASE PAS tout de suite l'ancienne.

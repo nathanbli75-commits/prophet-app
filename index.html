@@ -5021,6 +5021,20 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
   [class*="scroll-row"], [class*="-scroll"] {
     max-width: 100% !important;
   }
+  /* Le menu de choix Portefeuille (3 options) reste centré et dans l'écran */
+  #wlt-popover {
+    left: 50% !important;
+    right: auto !important;
+    max-width: 94vw !important;
+    box-sizing: border-box !important;
+    justify-content: center !important;
+  }
+  #wlt-popover .wlt-pop-btn {
+    min-width: 0 !important;
+    flex: 1 1 0 !important;
+    padding: 10px 8px !important;
+    font-size: 10px !important;
+  }
 }
 
 /* ═══ ÉCRAN HORS LIGNE ═══ */
@@ -5051,7 +5065,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
 /* ═══ NOTIFICATION MISE À JOUR (bandeau + fenêtre) ═══ */
 #update-toast{
   position:fixed; left:50%; transform:translateX(-50%) translateY(120px);
-  bottom:96px; z-index:9998;
+  bottom:130px; z-index:99997;
   background:linear-gradient(135deg,#0a2050 0%,#1a2f6e 100%);
   border:1px solid rgba(232,169,62,.4);
   color:#fff; padding:13px 18px; border-radius:14px;
@@ -17417,13 +17431,12 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "1.1";
+  var GUELANE_VERSION = "1.2";
   var IMPORTANT = true;
   var CHANGEMENTS = [
-    { ic:"🎨", txt:"Nouveau logo doré GUELANE" },
-    { ic:"📱", txt:"Affichage amélioré sur téléphone" },
-    { ic:"🔔", txt:"Notifications de mise à jour" },
-    { ic:"📡", txt:"Détection du mode hors ligne" }
+    { ic:"📱", txt:"Corrections d'affichage sur téléphone" },
+    { ic:"💼", txt:"Menu Portefeuille mieux adapté à l'écran" },
+    { ic:"🔔", txt:"Notification de mise à jour améliorée" }
   ];
   /* ─────────────────────────────────────────────────── */
 
@@ -17455,7 +17468,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
     if(!t) return;
     if(m) m.textContent = msg;
     t.classList.add('on');
-    setTimeout(function(){ t.classList.remove('on'); }, 5000);
+    setTimeout(function(){ t.classList.remove('on'); }, 4000);
   }
 
   function showWhatsNew(){

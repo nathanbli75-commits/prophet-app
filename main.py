@@ -1,4 +1,3 @@
-
 """
 GUELANE Backend — Phase 1 + 2
 API FastAPI qui protège la clé Anthropic et sert de proxy sécurisé vers Claude.
@@ -40,7 +39,7 @@ MODEL = "claude-sonnet-4-6"
 
 client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
 
-app = FastAPI(title="GUELANE API", version="1.1")
+app = FastAPI(title="GUELANE API", version="1.0")
 
 app.add_middleware(
     CORSMiddleware,

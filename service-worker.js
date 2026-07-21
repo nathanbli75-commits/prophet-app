@@ -6,7 +6,7 @@
 //  2. EN MÊME TEMPS, on télécharge la version fraîche en arrière-plan pour la prochaine fois.
 //  3. Sécurité : si le cache est vide/corrompu, on charge depuis le réseau (pas d'écran blanc).
 
-const CACHE_VERSION = 'guelane-v1.8';   // ← CHANGE ce numéro à chaque déploiement important
+const CACHE_VERSION = 'guelane-v1.9';   // ← CHANGE ce numéro à chaque déploiement important
 const CACHE_NAME = CACHE_VERSION;
 
 // Ressources à mettre en cache dès l'installation (pour un démarrage instantané)

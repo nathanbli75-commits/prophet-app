@@ -40,7 +40,7 @@ MODEL = "claude-sonnet-4-6"
 
 client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
 
-app = FastAPI(title="GUELANE API", version="1.0")
+app = FastAPI(title="GUELANE API", version="1.1")
 
 app.add_middleware(
     CORSMiddleware,

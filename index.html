@@ -13,10 +13,18 @@
 <meta name="apple-mobile-web-app-title" content="GUELANE">
 <link rel="apple-touch-icon" href="icon-180.png">
 <script>
-// Enregistrement du service worker (rend l'app installable)
+// Enregistrement du service worker — MISE À JOUR UNIQUEMENT AU DÉMARRAGE
+// La nouvelle version se prépare en arrière-plan et s'active au PROCHAIN lancement.
+// Jamais de rechargement pendant que l'utilisateur utilise l'application.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
-    navigator.serviceWorker.register('service-worker.js').catch(function(e){
+    navigator.serviceWorker.register('service-worker.js').then(function(reg) {
+      // Vérifier une seule fois, au démarrage, s'il y a une nouvelle version
+      reg.update();
+      // Quand une nouvelle version est trouvée, on la laisse s'installer en arrière-plan.
+      // Elle NE s'active PAS maintenant : elle attendra la prochaine ouverture de l'app.
+      // (aucune action, aucun rechargement pendant la session en cours)
+    }).catch(function(e){
       console.log('SW registration:', e);
     });
   });

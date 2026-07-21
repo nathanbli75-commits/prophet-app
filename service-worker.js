@@ -1,31 +1,46 @@
-// Service Worker PROPHET — permet l'installation en tant qu'application
-// PROPHET a besoin d'Internet (les analyses passent par le backend),
-// donc on garde une stratégie "réseau d'abord" simple, sans cache agressif.
+// ═══ Service Worker GUELANE — mise à jour au prochain démarrage ═══
+// Stratégie "réseau d'abord" : l'app cherche TOUJOURS la dernière version en ligne,
+// et ne se rabat sur le cache que si Internet est absent.
+// Une nouvelle version s'installe en arrière-plan et s'active au PROCHAIN lancement
+// de l'application — jamais pendant que l'utilisateur s'en sert.
 
-const CACHE_NAME = 'prophet-v1';
+const CACHE_VERSION = 'guelane-v1.1';   // ← CHANGE ce numéro à chaque déploiement important
+const CACHE_NAME = CACHE_VERSION;
 
+// Installation : la nouvelle version s'installe mais N'ÉCRASE PAS tout de suite l'ancienne.
+// Elle "attend" que toutes les fenêtres de l'app soient fermées (prochain démarrage).
 self.addEventListener('install', function(event) {
-  self.skipWaiting();
+  // Pas de skipWaiting() : on laisse la version actuelle finir tranquillement.
 });
 
+// Activation : se déclenche au prochain démarrage, quand l'ancienne version n'est plus utilisée.
+// On nettoie alors les anciens caches.
 self.addEventListener('activate', function(event) {
-  // Nettoyer les anciens caches
   event.waitUntil(
     caches.keys().then(function(names) {
       return Promise.all(
         names.filter(function(n) { return n !== CACHE_NAME; })
              .map(function(n) { return caches.delete(n); })
       );
+    }).then(function() {
+      return self.clients.claim();
     })
   );
-  self.clients.claim();
 });
 
+// Récupération : réseau d'abord, cache en secours (hors ligne)
 self.addEventListener('fetch', function(event) {
-  // Réseau d'abord : PROPHET fonctionne en ligne.
-  // On ne met en cache que la page d'accueil pour un affichage rapide.
+  if (event.request.method !== 'GET') return;
   event.respondWith(
-    fetch(event.request).catch(function() {
+    fetch(event.request).then(function(response) {
+      if (response && response.status === 200 && event.request.url.startsWith('http')) {
+        var copy = response.clone();
+        caches.open(CACHE_NAME).then(function(cache) {
+          cache.put(event.request, copy);
+        });
+      }
+      return response;
+    }).catch(function() {
       return caches.match(event.request);
     })
   );

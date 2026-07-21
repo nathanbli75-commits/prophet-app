@@ -4,7 +4,7 @@
 // risque d'écran blanc dû à une version cassée en cache.
 // Le cache ne sert qu'aux icônes et petites ressources, uniquement en secours hors ligne.
 
-const CACHE_VERSION = 'guelane-v1.3';   // ← CHANGE ce numéro à chaque déploiement important
+const CACHE_VERSION = 'guelane-v1.4';   // ← CHANGE ce numéro à chaque déploiement important
 const CACHE_NAME = CACHE_VERSION;
 
 // Installation : activation immédiate de cette version saine

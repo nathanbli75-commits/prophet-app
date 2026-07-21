@@ -5066,16 +5066,18 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
 
 /* ═══ NOTIFICATION MISE À JOUR (bandeau + fenêtre) ═══ */
 #update-toast{
-  position:fixed; left:50%; transform:translateX(-50%) translateY(120px);
+  position:fixed; left:50%; transform:translateX(-50%) translateY(200px);
   bottom:130px; z-index:99997;
   background:linear-gradient(135deg,#0a2050 0%,#1a2f6e 100%);
   border:1px solid rgba(232,169,62,.4);
   color:#fff; padding:13px 18px; border-radius:14px;
   font-size:13px; font-weight:600; font-family:var(--font);
   display:flex; align-items:center; gap:10px; max-width:90vw;
-  box-shadow:0 12px 40px rgba(0,0,0,.4); transition:transform .4s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 12px 40px rgba(0,0,0,.4);
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1), opacity .4s ease, visibility .4s;
 }
-#update-toast.on{ transform:translateX(-50%) translateY(0); }
+#update-toast.on{ transform:translateX(-50%) translateY(0); opacity:1; visibility:visible; pointer-events:auto; }
 #update-toast .ut-close{ cursor:pointer; opacity:.6; margin-left:4px; }
 
 #whatsnew-modal{
@@ -17433,12 +17435,11 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "1.3";
+  var GUELANE_VERSION = "1.4";
   var IMPORTANT = true;
   var CHANGEMENTS = [
-    { ic:"🔧", txt:"Correction du démarrage de l'application" },
-    { ic:"📱", txt:"Affichage mobile amélioré" },
-    { ic:"💼", txt:"Menu Portefeuille adapté à l'écran" }
+    { ic:"🔧", txt:"Correction du message de mise à jour" },
+    { ic:"📱", txt:"Affichage mobile amélioré" }
   ];
   /* ─────────────────────────────────────────────────── */
 

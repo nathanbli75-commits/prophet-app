@@ -1,63 +1,71 @@
-// ═══ Service Worker GUELANE — version sécurisée anti-écran-blanc ═══
-// RÈGLE D'OR : on ne met JAMAIS en cache la page HTML principale.
-// Elle est TOUJOURS chargée fraîche depuis le réseau, ce qui évite tout
-// risque d'écran blanc dû à une version cassée en cache.
-// Le cache ne sert qu'aux icônes et petites ressources, uniquement en secours hors ligne.
+// ═══ Service Worker GUELANE — RAPIDE et SÛR (stale-while-revalidate) ═══
+// Objectif : chargement quasi instantané, tout en restant à jour et sans écran blanc.
+//
+// Principe :
+//  1. On sert IMMÉDIATEMENT la version en cache (ultra rapide).
+//  2. EN MÊME TEMPS, on télécharge la version fraîche en arrière-plan pour la prochaine fois.
+//  3. Sécurité : si le cache est vide/corrompu, on charge depuis le réseau (pas d'écran blanc).
 
-const CACHE_VERSION = 'guelane-v1.4';   // ← CHANGE ce numéro à chaque déploiement important
+const CACHE_VERSION = 'guelane-v1.6';   // ← CHANGE ce numéro à chaque déploiement important
 const CACHE_NAME = CACHE_VERSION;
 
-// Installation : activation immédiate de cette version saine
-self.addEventListener('install', function(event) {
-  self.skipWaiting();
-});
+// Ressources à mettre en cache dès l'installation (pour un démarrage instantané)
+const CORE_ASSETS = [
+  './',
+  './index.html',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-180.png'
+];
 
-// Activation : on supprime TOUS les anciens caches (nettoyage complet)
-self.addEventListener('activate', function(event) {
+// Installation : on pré-charge les ressources essentielles et on active tout de suite
+self.addEventListener('install', function(event) {
   event.waitUntil(
-    caches.keys().then(function(names) {
-      return Promise.all(names.map(function(n) { return caches.delete(n); }));
-    }).then(function() {
-      return self.clients.claim();
-    })
+    caches.open(CACHE_NAME).then(function(cache) {
+      return cache.addAll(CORE_ASSETS).catch(function(){ /* ignore si une ressource manque */ });
+    }).then(function(){ return self.skipWaiting(); })
   );
 });
 
-// Récupération
+// Activation : on supprime les anciens caches et on prend le contrôle
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+    caches.keys().then(function(names) {
+      return Promise.all(
+        names.filter(function(n){ return n !== CACHE_NAME; })
+             .map(function(n){ return caches.delete(n); })
+      );
+    }).then(function(){ return self.clients.claim(); })
+  );
+});
+
+// Récupération : STALE-WHILE-REVALIDATE (cache d'abord = rapide, MAJ en arrière-plan)
 self.addEventListener('fetch', function(event) {
   if (event.request.method !== 'GET') return;
-
   var url = event.request.url;
-  var isHTML = event.request.mode === 'navigate' ||
-               event.request.destination === 'document' ||
-               url.endsWith('/') || url.endsWith('index.html');
+  if (!url.startsWith('http')) return;
 
-  // Pour la PAGE HTML : réseau uniquement (jamais de cache) → jamais d'écran blanc
-  if (isHTML) {
-    event.respondWith(
-      fetch(event.request).catch(function() {
-        // Si vraiment hors ligne, on tente une éventuelle copie, sinon message simple
-        return caches.match(event.request).then(function(cached){
-          return cached || new Response(
-            '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="font-family:sans-serif;background:#0a2050;color:#fff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;padding:20px;"><div><h2>Pas de connexion</h2><p>GUELANE a besoin d\'Internet. Reconnectez-vous et rouvrez l\'application.</p></div></body></html>',
-            { headers: { 'Content-Type': 'text/html; charset=utf-8' } }
-          );
-        });
-      })
-    );
-    return;
+  // Ne pas mettre en cache les appels API vers le backend (toujours frais)
+  if (url.indexOf('/api/') !== -1 || url.indexOf('railway.app') !== -1) {
+    return; // laisser passer normalement vers le réseau
   }
 
-  // Pour les autres ressources (icônes...) : réseau d'abord, cache en secours
   event.respondWith(
-    fetch(event.request).then(function(response) {
-      if (response && response.status === 200 && url.startsWith('http')) {
-        var copy = response.clone();
-        caches.open(CACHE_NAME).then(function(cache) { cache.put(event.request, copy); });
-      }
-      return response;
-    }).catch(function() {
-      return caches.match(event.request);
+    caches.open(CACHE_NAME).then(function(cache) {
+      return cache.match(event.request).then(function(cached) {
+        // Télécharger la version fraîche en arrière-plan
+        var fetchPromise = fetch(event.request).then(function(response) {
+          if (response && response.status === 200) {
+            cache.put(event.request, response.clone());
+          }
+          return response;
+        }).catch(function() {
+          return cached; // hors ligne : on garde le cache
+        });
+        // Servir le cache IMMÉDIATEMENT si disponible (rapide), sinon attendre le réseau
+        return cached || fetchPromise;
+      });
     })
   );
 });

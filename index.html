@@ -5206,8 +5206,19 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
     window.addEventListener('load', tryFinish);
   }
 
-  // Sécurité absolue : terminer coûte que coûte après MAX_WAIT
-  setTimeout(endSequence, MAX_WAIT);
+  // Sécurité : si l'app n'est pas prête après MAX_WAIT (12s), c'est probablement
+  // un problème de connexion → afficher l'écran "Pas de connexion" avec Réessayer.
+  setTimeout(function(){
+    if(finished) return;  // l'app s'est chargée à temps, rien à faire
+    // L'app n'est toujours pas prête : on masque la séquence et on montre l'écran hors ligne
+    var bs = document.getElementById('boot-splash');
+    var bl = document.getElementById('boot-loading');
+    if(bs) bs.style.display = 'none';
+    if(bl) bl.style.display = 'none';
+    var off = document.getElementById('offline-screen');
+    if(off) off.classList.add('on');
+    finished = true;
+  }, MAX_WAIT);
 })();
 </script>
 <script>
@@ -17470,11 +17481,11 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "1.7";
+  var GUELANE_VERSION = "1.8";
   var IMPORTANT = true;
   var CHANGEMENTS = [
-    { ic:"⚡", txt:"Démarrage intelligent : rapide quand c'est possible" },
-    { ic:"📱", txt:"Chargement optimisé sur toutes connexions" }
+    { ic:"📡", txt:"Écran 'Pas de connexion' si le chargement échoue" },
+    { ic:"🔄", txt:"Bouton Réessayer qui relance proprement" }
   ];
   /* ─────────────────────────────────────────────────── */
 
@@ -17540,19 +17551,13 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
   }
 
   window._guelaneRetryConnection = function(){
-    if(navigator.onLine){
-      // Connexion revenue : on cache l'écran et on recharge pour repartir proprement
-      document.getElementById('offline-screen').classList.remove('on');
-      location.reload();
-    } else {
-      // Toujours hors ligne : petit feedback visuel
-      var btn = document.querySelector('#offline-screen .off-btn');
-      if(btn){
-        var orig = btn.innerHTML;
-        btn.innerHTML = 'Toujours hors ligne...';
-        setTimeout(function(){ btn.innerHTML = orig; }, 1500);
-      }
+    var btn = document.querySelector('#offline-screen .off-btn');
+    if(btn){
+      btn.innerHTML = 'Reconnexion...';
     }
+    // Recharger la page relance tout le processus de démarrage (le "même processus").
+    // Que la connexion soit revenue ou juste plus rapide, on retente proprement.
+    setTimeout(function(){ location.reload(); }, 300);
   };
 
   // Écouter les changements de connexion

@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="GUELANE">
-<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="apple-touch-icon" href="icon-v2-180.png">
 <script>
 // Enregistrement du service worker — mises à jour propres et automatiques
 if ('serviceWorker' in navigator) {
@@ -5075,6 +5075,34 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
 }
 @keyframes retryspin{ to{ transform:rotate(360deg); } }
 
+/* ═══ BANNIÈRE MISE À JOUR VISUELLE ═══ */
+#visual-update-banner{
+  position:fixed; left:12px; right:12px; bottom:88px; z-index:99996;
+  background:linear-gradient(135deg,#e8a93e,#8d6cfa);
+  border-radius:16px; padding:14px 16px;
+  box-shadow:0 14px 44px rgba(0,0,0,.35);
+  transform:translateY(160px); opacity:0; visibility:hidden;
+  transition:transform .45s cubic-bezier(.2,.8,.2,1), opacity .45s ease, visibility .45s;
+  max-width:460px; margin:0 auto;
+}
+#visual-update-banner.on{ transform:translateY(0); opacity:1; visibility:visible; }
+#visual-update-banner .vub-inner{ display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+#visual-update-banner .vub-ic{
+  width:40px; height:40px; border-radius:11px; background:rgba(255,255,255,.25);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+#visual-update-banner .vub-title{ font-family:var(--font); font-weight:800; font-size:15px; color:#04001c; }
+#visual-update-banner .vub-sub{ font-family:var(--font); font-size:12px; color:#2a1a4a; margin-top:2px; }
+#visual-update-banner .vub-actions{ display:flex; gap:8px; }
+#visual-update-banner .vub-later{
+  flex:1; background:rgba(255,255,255,.3); color:#04001c; border:none;
+  padding:11px; border-radius:11px; font-family:var(--font); font-weight:700; font-size:13px; cursor:pointer;
+}
+#visual-update-banner .vub-update{
+  flex:2; background:#04001c; color:#fff; border:none;
+  padding:11px; border-radius:11px; font-family:var(--font); font-weight:700; font-size:13px; cursor:pointer;
+}
+
 /* ═══ NOTIFICATION MISE À JOUR (bandeau + fenêtre) ═══ */
 #update-toast{
   position:fixed; left:50%; transform:translateX(-50%) translateY(200px);
@@ -5143,6 +5171,23 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#e8a93e" stroke-width="2"><path d="M12 2v6m0 0l3-3m-3 3L9 5M5 12H2m20 0h-3M12 22v-6m0 0l3 3m-3-3l-3 3"/></svg>
   <span id="update-toast-msg">GUELANE a été mis à jour !</span>
   <span class="ut-close" onclick="document.getElementById('update-toast').classList.remove('on')">✕</span>
+</div>
+
+<!-- ═══ BANNIÈRE MISE À JOUR VISUELLE (invite à mettre à jour) ═══ -->
+<div id="visual-update-banner">
+  <div class="vub-inner">
+    <div class="vub-ic">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#04001c" stroke-width="2"><path d="M21 2v6h-6M3 12a9 9 0 0115-6.7L21 8M3 22v-6h6M21 12a9 9 0 01-15 6.7L3 16"/></svg>
+    </div>
+    <div class="vub-txt">
+      <div class="vub-title">Mise à jour disponible</div>
+      <div class="vub-sub">Une nouvelle version de GUELANE est prête</div>
+    </div>
+  </div>
+  <div class="vub-actions">
+    <button class="vub-later" onclick="document.getElementById('visual-update-banner').classList.remove('on')">Plus tard</button>
+    <button class="vub-update" onclick="_guelaneVisualUpdate()">Mettre à jour</button>
+  </div>
 </div>
 
 <!-- ═══ FENÊTRE QUOI DE NEUF ═══ -->
@@ -17490,13 +17535,38 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "2.5";
+  var GUELANE_VERSION = "2.6";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"🎨", txt:"Nouveau logo GUELANE coloré" },
-    { ic:"✨", txt:"Design rafraîchi" }
+    { ic:"🔔", txt:"Notifications de mise à jour améliorées" }
   ];
+  // VERSION VISUELLE : à changer UNIQUEMENT quand le logo/l'icône change.
+  // Quand elle change, on invite l'utilisateur à mettre à jour l'app installée
+  // (car l'icône de l'écran d'accueil peut nécessiter une réinstallation).
+  var VISUAL_VERSION = "v2";
   /* ─────────────────────────────────────────────────── */
+
+  // Vérifier si l'apparence (logo/icône) a changé → proposer la mise à jour
+  function checkVisualUpdate(){
+    try {
+      var storedVisual = localStorage.getItem('guelane_visual');
+      if (storedVisual !== null && storedVisual !== VISUAL_VERSION) {
+        // Le logo/l'icône a changé depuis la dernière visite → inviter à mettre à jour
+        showVisualUpdateBanner();
+      }
+      localStorage.setItem('guelane_visual', VISUAL_VERSION);
+    } catch(e){}
+  }
+
+  function showVisualUpdateBanner(){
+    // Ne l'afficher que si l'app est installée (mode standalone)
+    var isInstalled = window.matchMedia('(display-mode: standalone)').matches ||
+                      window.navigator.standalone === true;
+    var banner = document.getElementById('visual-update-banner');
+    if(!banner) return;
+    banner.classList.add('on');
+  }
 
   // Vérifier la version stockée localement
   function checkVersion(){
@@ -17559,6 +17629,24 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
     }
   }
 
+  // Mise à jour visuelle : vide le cache et recharge pour récupérer le nouveau logo/icône
+  window._guelaneVisualUpdate = function(){
+    var btn = document.querySelector('#visual-update-banner .vub-update');
+    if(btn){ btn.innerHTML = '<span class="retry-spinner"></span> Mise à jour...'; btn.disabled = true; }
+    // Vider les caches puis recharger : force la récupération des nouvelles ressources
+    if ('caches' in window) {
+      caches.keys().then(function(names){
+        return Promise.all(names.map(function(n){ return caches.delete(n); }));
+      }).then(function(){
+        setTimeout(function(){ location.reload(true); }, 800);
+      }).catch(function(){
+        setTimeout(function(){ location.reload(true); }, 800);
+      });
+    } else {
+      setTimeout(function(){ location.reload(true); }, 800);
+    }
+  };
+
   window._guelaneRetryConnection = function(){
     var btn = document.querySelector('#offline-screen .off-btn');
     if(btn){
@@ -17578,6 +17666,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
   // Au démarrage
   function init(){
     checkVersion();
+    checkVisualUpdate();
     updateOnlineStatus();
     // Mettre à jour l'affichage de version dans l'écran de lancement
     var bv = document.querySelector('.boot-version');

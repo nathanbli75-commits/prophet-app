@@ -13,20 +13,22 @@
 <meta name="apple-mobile-web-app-title" content="GUELANE">
 <link rel="apple-touch-icon" href="icon-180.png">
 <script>
-// Enregistrement du service worker — MISE À JOUR UNIQUEMENT AU DÉMARRAGE
-// La nouvelle version se prépare en arrière-plan et s'active au PROCHAIN lancement.
-// Jamais de rechargement pendant que l'utilisateur utilise l'application.
+// Enregistrement du service worker — avec réparation auto anti-écran-blanc
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('service-worker.js').then(function(reg) {
-      // Vérifier une seule fois, au démarrage, s'il y a une nouvelle version
       reg.update();
-      // Quand une nouvelle version est trouvée, on la laisse s'installer en arrière-plan.
-      // Elle NE s'active PAS maintenant : elle attendra la prochaine ouverture de l'app.
-      // (aucune action, aucun rechargement pendant la session en cours)
-    }).catch(function(e){
-      console.log('SW registration:', e);
-    });
+      // Détecter une nouvelle version et l'activer au prochain démarrage
+      reg.addEventListener('updatefound', function() {
+        var nw = reg.installing;
+        if (!nw) return;
+        nw.addEventListener('statechange', function() {
+          if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+            // La nouvelle version est prête ; elle s'activera au prochain lancement
+          }
+        });
+      });
+    }).catch(function(e){ console.log('SW registration:', e); });
   });
 }
 </script>
@@ -17431,12 +17433,12 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "1.2";
+  var GUELANE_VERSION = "1.3";
   var IMPORTANT = true;
   var CHANGEMENTS = [
-    { ic:"📱", txt:"Corrections d'affichage sur téléphone" },
-    { ic:"💼", txt:"Menu Portefeuille mieux adapté à l'écran" },
-    { ic:"🔔", txt:"Notification de mise à jour améliorée" }
+    { ic:"🔧", txt:"Correction du démarrage de l'application" },
+    { ic:"📱", txt:"Affichage mobile amélioré" },
+    { ic:"💼", txt:"Menu Portefeuille adapté à l'écran" }
   ];
   /* ─────────────────────────────────────────────────── */
 

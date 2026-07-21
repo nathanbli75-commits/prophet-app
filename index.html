@@ -5066,6 +5066,14 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
 #offline-screen .off-status{ margin-top:18px; font-size:12px; color:#8493b8; }
 #offline-screen .off-dot{ display:inline-block; width:7px; height:7px; border-radius:50%; background:#e05555; margin-right:5px; animation:offpulse 1.4s infinite; }
 @keyframes offpulse{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
+/* Spinner animé dans le bouton Réessayer */
+.retry-spinner{
+  display:inline-block; width:15px; height:15px;
+  border:2.5px solid rgba(26,20,0,.3); border-top-color:#1a1400;
+  border-radius:50%; animation:retryspin .7s linear infinite;
+  vertical-align:middle;
+}
+@keyframes retryspin{ to{ transform:rotate(360deg); } }
 
 /* ═══ NOTIFICATION MISE À JOUR (bandeau + fenêtre) ═══ */
 #update-toast{
@@ -5161,7 +5169,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
   // d'affichage pour l'élégance, et attend si le chargement est lent.
 
   var MIN_SPLASH = 1400;    // temps minimum d'affichage du logo (ms) — pour ne pas "flasher"
-  var MAX_WAIT = 12000;     // sécurité : ne jamais rester bloqué au-delà de 12s
+  var MAX_WAIT = 21000;     // sécurité : ne jamais rester bloqué au-delà de 21s
   var started = Date.now();
   var finished = false;
 
@@ -5207,7 +5215,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
     window.addEventListener('load', tryFinish);
   }
 
-  // Sécurité : si l'app n'est pas prête après MAX_WAIT (12s), c'est probablement
+  // Sécurité : si l'app n'est pas prête après MAX_WAIT (21s), c'est probablement
   // un problème de connexion → afficher l'écran "Pas de connexion" avec Réessayer.
   setTimeout(function(){
     if(finished) return;  // l'app s'est chargée à temps, rien à faire
@@ -17482,11 +17490,11 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "2.1";
+  var GUELANE_VERSION = "2.3";
   var IMPORTANT = true;
   var CHANGEMENTS = [
-    { ic:"🔧", txt:"Correction des graphiques et sections" },
-    { ic:"🔄", txt:"Mises à jour automatiques" }
+    { ic:"🔄", txt:"Bouton Réessayer animé (spinner)" },
+    { ic:"📡", txt:"Reconnexion plus fluide" }
   ];
   /* ─────────────────────────────────────────────────── */
 
@@ -17554,11 +17562,13 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
   window._guelaneRetryConnection = function(){
     var btn = document.querySelector('#offline-screen .off-btn');
     if(btn){
-      btn.innerHTML = 'Reconnexion...';
+      // Spinner animé + texte pendant la reconnexion
+      btn.disabled = true;
+      btn.style.opacity = '0.85';
+      btn.innerHTML = '<span class="retry-spinner"></span> Reconnexion...';
     }
-    // Recharger la page relance tout le processus de démarrage (le "même processus").
-    // Que la connexion soit revenue ou juste plus rapide, on retente proprement.
-    setTimeout(function(){ location.reload(); }, 300);
+    // Laisser le spinner tourner un instant, puis relancer tout le processus
+    setTimeout(function(){ location.reload(); }, 1200);
   };
 
   // Écouter les changements de connexion

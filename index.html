@@ -5112,25 +5112,6 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
 </style>
 </head>
 <body>
-<!-- ═══ ÉCRAN DE DÉMARRAGE INSTANTANÉ (s'affiche immédiatement, avant le reste) ═══ -->
-<div id="instant-splash" style="position:fixed;inset:0;z-index:999999;background:#0a2050;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .4s ease;">
-  <div style="width:80px;height:80px;border-radius:22px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
-    <img src="icon-192.png" alt="GUELANE" style="width:64px;height:64px;border-radius:16px;" onerror="this.style.display='none'">
-  </div>
-  <div style="font-family:sans-serif;font-size:22px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:6px;">GUELANE</div>
-  <div style="font-family:sans-serif;font-size:11px;color:#8493b8;letter-spacing:.05em;text-transform:uppercase;margin-bottom:28px;">Oracle Financier Panafricain</div>
-  <div style="width:34px;height:34px;border:3px solid rgba(232,169,62,.25);border-top-color:#e8a93e;border-radius:50%;animation:splashspin .8s linear infinite;"></div>
-</div>
-<style>@keyframes splashspin{to{transform:rotate(360deg)}}</style>
-<script>
-// Cacher l'écran instantané une fois que l'app est prête
-window.addEventListener('load', function(){
-  setTimeout(function(){
-    var s = document.getElementById('instant-splash');
-    if(s){ s.style.opacity='0'; setTimeout(function(){ s.style.display='none'; }, 400); }
-  }, 300);
-});
-</script>
 
 <!-- ═══ ÉCRAN HORS LIGNE ═══ -->
 <div id="offline-screen">
@@ -5174,13 +5155,19 @@ window.addEventListener('load', function(){
 </div>
 <script>
 (function(){
-  setTimeout(function(){
+  // ═══ SÉQUENCE DE LANCEMENT INTELLIGENTE ═══
+  // Elle se termine dès que l'app est prête (rapide), mais garde un minimum
+  // d'affichage pour l'élégance, et attend si le chargement est lent.
+
+  var MIN_SPLASH = 1400;    // temps minimum d'affichage du logo (ms) — pour ne pas "flasher"
+  var MAX_WAIT = 12000;     // sécurité : ne jamais rester bloqué au-delà de 12s
+  var started = Date.now();
+  var finished = false;
+
+  function showLoadingRing(){
     var bs = document.getElementById('boot-splash');
     var bl = document.getElementById('boot-loading');
     if(bl){
-      /* Passer instantanément à pleine opacité (sans fondu) : boot-loading est
-         encore masqué par boot-splash à cet instant, donc un fondu parallèle des
-         deux calques laisserait transparaître le contenu Home en dessous. */
       bl.style.transition = 'none';
       bl.classList.add('boot-in');
       bl.offsetHeight; /* force reflow */
@@ -5188,13 +5175,39 @@ window.addEventListener('load', function(){
     }
     if(bs) bs.classList.add('boot-out');
     setTimeout(function(){ if(bs) bs.style.display='none'; }, 400);
-  }, 4200);
-  setTimeout(function(){
+  }
+
+  function endSequence(){
+    if(finished) return;
+    finished = true;
     var bl = document.getElementById('boot-loading');
     if(!bl) return;
     bl.style.opacity = '0';
     setTimeout(function(){ bl.style.display='none'; }, 400);
-  }, 6700);
+  }
+
+  // Étape 1 : après un court instant, passer du logo à l'anneau de chargement
+  setTimeout(showLoadingRing, 1200);
+
+  // Étape 2 : terminer dès que l'app est prête (en respectant le temps minimum)
+  function tryFinish(){
+    var elapsed = Date.now() - started;
+    if(elapsed >= MIN_SPLASH){
+      endSequence();
+    } else {
+      // Attendre le reste du temps minimum, puis terminer
+      setTimeout(endSequence, MIN_SPLASH - elapsed);
+    }
+  }
+
+  if(document.readyState === 'complete'){
+    tryFinish();
+  } else {
+    window.addEventListener('load', tryFinish);
+  }
+
+  // Sécurité absolue : terminer coûte que coûte après MAX_WAIT
+  setTimeout(endSequence, MAX_WAIT);
 })();
 </script>
 <script>
@@ -17457,12 +17470,11 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "1.6";
+  var GUELANE_VERSION = "1.7";
   var IMPORTANT = true;
   var CHANGEMENTS = [
-    { ic:"⚡", txt:"Démarrage beaucoup plus rapide" },
-    { ic:"🎨", txt:"Écran de démarrage instantané" },
-    { ic:"📉", txt:"Application allégée (chargement accéléré)" }
+    { ic:"⚡", txt:"Démarrage intelligent : rapide quand c'est possible" },
+    { ic:"📱", txt:"Chargement optimisé sur toutes connexions" }
   ];
   /* ─────────────────────────────────────────────────── */
 

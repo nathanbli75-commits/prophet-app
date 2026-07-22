@@ -5325,6 +5325,14 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
       var slot = parseInt(localStorage.getItem('guelane_active_slot')||'0',10);
       var pinOk = false;
       try{ pinOk = sessionStorage.getItem('prophet_pin_ok_'+slot) === '1' || sessionStorage.getItem('prophet_pin_ok') === '1'; }catch(e){}
+      // DEBUG TEMPORAIRE : afficher l'état à l'écran
+      try{
+        var _dbg = document.createElement('div');
+        _dbg.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:999999;background:#000;color:#0f0;font-size:11px;padding:6px;font-family:monospace;';
+        _dbg.textContent = 'DEBUG: pinOk='+pinOk+' | hasPin='+(!!localStorage.getItem('guelane_security_code'))+' | pinDisabled='+(localStorage.getItem('prophet_pin_disabled')==='1');
+        document.body.appendChild(_dbg);
+        setTimeout(function(){ _dbg.remove(); }, 5000);
+      }catch(e){}
       if(!pinOk){
         var hasPin      = !!localStorage.getItem('guelane_security_code');
         var pinDisabled = localStorage.getItem('prophet_pin_disabled') === '1';
@@ -17924,7 +17932,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.16";
+  var GUELANE_VERSION = "3.17";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

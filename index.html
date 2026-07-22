@@ -9527,8 +9527,12 @@ function renderProfilePrompts(){
   }
 }
 
-function setProfile(nextMode, withToast){
+function setProfile(nextMode, withToast, skipSave){
   mode=nextMode==='part'?'part':'pro';
+  // Mémoriser le mode courant pour le retrouver à la réouverture de l'app
+  // (sauf lors des initialisations par défaut, pour ne pas court-circuiter
+  //  l'écran de choix de profil au premier lancement)
+  if(!skipSave){ try{ localStorage.setItem('guelane_profile', mode); }catch(e){} }
   const mb=document.getElementById('mode-btn');
   const sl=document.getElementById('sb-mode-lbl');
   const st=document.getElementById('sb-mode-txt');
@@ -13441,13 +13445,13 @@ try{
     setProfile(_savedProfile, false);
     navTo(_savedProfile==='pro' ? 'home' : 'dash');
   } else {
-    setProfile('pro', false);
+    setProfile('pro', false, true); // init par défaut : ne pas mémoriser (attend le choix)
     navTo('dash'); // Dashboard prêt sous le welcome screen (popup obligatoire au-dessus)
   }
 }catch(e){
   var _ws2=document.getElementById('welcome-screen');
   if(_ws2) _ws2.style.display='none';
-  setProfile('pro', false);
+  setProfile('pro', false, true);
   navTo('dash');
 }
 try{
@@ -17717,11 +17721,11 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.6";
+  var GUELANE_VERSION = "3.7";
   var IMPORTANT = true;
   var CHANGEMENTS = [
-    { ic:"🔐", txt:"Votre code de sécurité vous suit sur tous vos appareils" },
-    { ic:"✨", txt:"Connexion simplifiée" }
+    { ic:"🔄", txt:"L'app rouvre dans votre dernier mode utilisé" },
+    { ic:"✨", txt:"Expérience personnalisée" }
   ];
   // VERSION VISUELLE : à changer UNIQUEMENT quand le logo/l'icône change.
   // Quand elle change, on invite l'utilisateur à mettre à jour l'app installée

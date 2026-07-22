@@ -1,26 +1,38 @@
 {
-  "name": "GUELANE — Intelligence Financière",
+  "name": "GUELANE",
   "short_name": "GUELANE",
   "description": "L'oracle financier panafricain — intelligence financière institutionnelle pour l'Afrique de l'Ouest",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#1a1040",
-  "theme_color": "#e8a93e",
+  "background_color": "#fbfaff",
+  "theme_color": "#fbfaff",
   "lang": "fr",
   "icons": [
     {
       "src": "icon-v2-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icon-v2-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon-v2-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-v2-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

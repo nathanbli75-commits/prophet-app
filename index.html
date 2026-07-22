@@ -5478,60 +5478,44 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
   var LONG_ABSENCE_MS = 5 * 60 * 1000;  // 5 minutes
 
   function _relockOnReturn(longAbsence){
-    // L'app redevient visible
     if(document.visibilityState !== 'visible') return;
-    // Doit avoir une session valide ET un code de sécurité configuré
     if(!_hasValidSession()) return;
     var hasPin = !!localStorage.getItem('guelane_security_code');
     if(!hasPin){
-      // Pas de code : si absence longue, on redirige quand même vers l'accueil
-      if(longAbsence) _goHomeCurrentMode();
+      if(longAbsence && typeof _goHomeCurrentMode === 'function') _goHomeCurrentMode();
       return;
     }
-    // Déjà sur l'écran de saisie du code ? ne rien faire
+    // Si l'écran de code est DÉJÀ affiché (en cours de saisie), ne pas ré-ouvrir
     var ps = document.getElementById('pin-screen');
-    if(ps && ps.style.display !== 'none' && !ps.classList.contains('pin-out')) return;
-    // Si absence longue → après le code, on ira à l'accueil
+    var pinVisible = ps && getComputedStyle(ps).display !== 'none' && !ps.classList.contains('pin-out');
+    if(pinVisible) return;
     window._pinReturnToHome = !!longAbsence;
-    // Effacer le flag de session → forcer une nouvelle saisie
     try{
       sessionStorage.removeItem('prophet_pin_ok');
       sessionStorage.removeItem('prophet_pin_ok_0');
       sessionStorage.removeItem('prophet_pin_ok_1');
     }catch(e){}
-    // Réafficher l'écran de saisie du code
     if(typeof _pinShow === 'function') _pinShow('verify');
   }
 
-  // Ramène à l'écran d'accueil du mode actif (Home si Entrepreneur, Dashboard si Particulier)
   function _goHomeCurrentMode(){
     try{
       var isPro = document.body.classList.contains('profile-pro');
-      var target = isPro ? 'home' : 'dash';
-      if(typeof navTo === 'function') navTo(target);
+      if(typeof navTo === 'function') navTo(isPro ? 'home' : 'dash');
     }catch(e){}
   }
   window._goHomeCurrentMode = _goHomeCurrentMode;
 
-  // On mémorise quand l'app part en arrière-plan + l'heure, pour distinguer
-  // absence courte / longue, et éviter de reverrouiller au tout premier chargement.
-  var _wentBackground = false;
+  // Détecter arrière-plan → premier plan. On mémorise l'heure de départ.
+  // (On n'utilise QUE visibilitychange : pas de pageshow, qui relançait la séquence.)
   var _bgSince = 0;
   document.addEventListener('visibilitychange', function(){
     if(document.visibilityState === 'hidden'){
-      _wentBackground = true;
       _bgSince = Date.now();
-    } else if(document.visibilityState === 'visible' && _wentBackground){
-      _wentBackground = false;
+    } else if(document.visibilityState === 'visible'){
+      if(_bgSince === 0) return;  // pas un vrai retour d'arrière-plan
       var away = Date.now() - _bgSince;
-      _relockOnReturn(away >= LONG_ABSENCE_MS);
-    }
-  });
-  // Sécurité supplémentaire : certains navigateurs déclenchent 'pageshow' au retour
-  window.addEventListener('pageshow', function(e){
-    if(e.persisted && _wentBackground){
-      _wentBackground = false;
-      var away = Date.now() - _bgSince;
+      _bgSince = 0;
       _relockOnReturn(away >= LONG_ABSENCE_MS);
     }
   });
@@ -17912,7 +17896,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.14";
+  var GUELANE_VERSION = "3.15";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

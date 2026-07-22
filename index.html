@@ -13484,20 +13484,20 @@ function _updateMobNav(name){
 
 /* Accueil → toujours le welcome screen */
 function mobNavAccueil(btn){
-  // 2e clic sur l'onglet déjà actif → remonter en haut
   var target = document.body.classList.contains('profile-pro') ? 'home' : 'dash';
+  // 2e clic sur l'onglet déjà actif → remonter en haut
   if(_currentPageName === target && typeof _guelaneScrollToTop === 'function'){
     _guelaneScrollToTop();
     return;
   }
   document.querySelectorAll('.mn-item').forEach(function(b){ b.classList.remove('on'); });
   if(btn) btn.classList.add('on');
-  if(document.body.classList.contains('profile-pro')){
-    _currentPageName = 'home';
+  // On NE modifie PAS _currentPageName ici : navTo s'en charge.
+  // (le modifier avant ferait croire à navTo qu'on est déjà sur la page)
+  if(target === 'home'){
     document.body.classList.remove('on-dash');
     navTo('home');
   } else {
-    _currentPageName = 'dash';
     document.body.classList.add('on-dash');
     navTo('dash');
   }
@@ -17513,8 +17513,10 @@ var _ivDetailPages = {'inv-collection-detail':1,'inv-group':1,'inv-category-deta
                       (_activeNow && _activeNow.id === _targetId);
     if(_isSamePage){
       _guelaneScrollToTop();
-      // Si c'est vraiment la même vue sans paramètre, inutile de re-naviguer
-      if(!param && name === _currentPageName){ return; }
+      // Ne court-circuiter QUE si la page est vraiment affichée dans le DOM
+      // (évite de bloquer une navigation légitime si _currentPageName est désynchronisé)
+      var _reallyActive = _activeNow && _activeNow.id === _targetId;
+      if(!param && _reallyActive){ return; }
     }
     // ─── Historique de navigation (pour le bouton retour) ───
     if(name !== _currentPageName && !window._navBackInProgress && typeof _guelanePushHistory === 'function'){
@@ -17634,7 +17636,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.3";
+  var GUELANE_VERSION = "3.4";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"⬆️", txt:"Retour en haut au 2e clic (partout)" },

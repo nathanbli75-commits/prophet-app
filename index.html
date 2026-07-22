@@ -17553,6 +17553,22 @@ function navBack(){ navTo(_ivPrevPage); }
   window.addEventListener('popstate', function(e){
     var current = (typeof _currentPageName !== 'undefined') ? _currentPageName : null;
 
+    // ─── 1er RETOUR sur une page défilée → remonter en haut d'abord ───
+    // (le 2e RETOUR fera le retour normal à la page précédente)
+    var activePage = document.querySelector('.page.active');
+    var activeView = document.querySelector('.view.on');
+    var scroller = null;
+    if(activePage && activePage.scrollTop > 40) scroller = activePage;
+    else if(activeView && activeView.scrollTop > 40) scroller = activeView;
+
+    if(scroller){
+      // La page est défilée vers le bas → on remonte en haut au lieu de revenir
+      scroller.scrollTo({ top:0, behavior:'smooth' });
+      // Ré-empiler un état pour que le PROCHAIN retour soit intercepté normalement
+      try{ history.pushState({ page:current }, '', ''); }catch(e){}
+      return; // on ne fait pas le retour cette fois
+    }
+
     // Si on est sur une page d'accueil → laisser quitter l'app
     if(HOME_PAGES.indexOf(current) !== -1){
       // Ne rien empêcher : le retour quitte l'application
@@ -17634,7 +17650,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.0";
+  var GUELANE_VERSION = "3.1";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"⬆️", txt:"Retour en haut au 2e clic (partout)" },

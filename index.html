@@ -13484,6 +13484,12 @@ function _updateMobNav(name){
 
 /* Accueil → toujours le welcome screen */
 function mobNavAccueil(btn){
+  // 2e clic sur l'onglet déjà actif → remonter en haut
+  var target = document.body.classList.contains('profile-pro') ? 'home' : 'dash';
+  if(_currentPageName === target && typeof _guelaneScrollToTop === 'function'){
+    _guelaneScrollToTop();
+    return;
+  }
   document.querySelectorAll('.mn-item').forEach(function(b){ b.classList.remove('on'); });
   if(btn) btn.classList.add('on');
   if(document.body.classList.contains('profile-pro')){
@@ -17475,13 +17481,40 @@ var _ivPrevPage = 'investhub';
 var _ivDetailPages = {'inv-collection-detail':1,'inv-group':1,'inv-category-detail':1,'deposit':1,'inv-stock-detail':1,'rewards':1,'premium':1};
 (function(){
   var _navToWithParam = navTo;
-  navTo = function(name, param){
-    // ─── 2e clic sur la page déjà active → remonter en haut ───
-    if(name === _currentPageName){
-      var activeView = document.querySelector('.view.on') || document.querySelector('.page .view');
+  // Remonter en haut : cible le conteneur réellement actif qui défile
+  window._guelaneScrollToTop = function(){
+    function doScroll(){
+      // 1. La page active (.page.active) — c'est elle qui défile
+      var activePage = document.querySelector('.page.active');
+      if(activePage){ activePage.scrollTo({ top:0, behavior:'smooth' }); }
+      // 2. La vue active (.view.on) — cas de certains modules
+      var activeView = document.querySelector('.view.on');
       if(activeView){ activeView.scrollTo({ top:0, behavior:'smooth' }); }
+      // 3. Tout conteneur défilable actuellement visible et défilé
+      document.querySelectorAll('.page.active, .view.on, #main-content, #content').forEach(function(el){
+        if(el && el.scrollTop > 0){ el.scrollTo({ top:0, behavior:'smooth' }); }
+      });
+      // 4. Sécurités : fenêtre + élément racine
       window.scrollTo({ top:0, behavior:'smooth' });
-      // on continue quand même la navigation (utile si param change)
+      if(document.scrollingElement){ document.scrollingElement.scrollTo({ top:0, behavior:'smooth' }); }
+    }
+    doScroll();
+    // Re-appliquer après un court instant (si le DOM change juste après le clic)
+    setTimeout(doScroll, 60);
+  };
+
+  navTo = function(name, param){
+    // ─── 2e clic vers la vue DÉJÀ active → remonter en haut (universel) ───
+    // On se fie à la vraie page active dans le DOM (fiable partout),
+    // et non uniquement à _currentPageName qui peut être désynchronisé.
+    var _activeNow = document.querySelector('.page.active');
+    var _targetId = 'page-' + name;
+    var _isSamePage = (name === _currentPageName) ||
+                      (_activeNow && _activeNow.id === _targetId);
+    if(_isSamePage){
+      _guelaneScrollToTop();
+      // Si c'est vraiment la même vue sans paramètre, inutile de re-naviguer
+      if(!param && name === _currentPageName){ return; }
     }
     // ─── Historique de navigation (pour le bouton retour) ───
     if(name !== _currentPageName && !window._navBackInProgress && typeof _guelanePushHistory === 'function'){
@@ -17601,11 +17634,11 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "2.7";
+  var GUELANE_VERSION = "3.0";
   var IMPORTANT = true;
   var CHANGEMENTS = [
-    { ic:"⬆️", txt:"Appui sur un onglet actif : retour en haut" },
-    { ic:"↩️", txt:"Bouton retour amélioré (navigation fluide)" }
+    { ic:"⬆️", txt:"Retour en haut au 2e clic (partout)" },
+    { ic:"↩️", txt:"Navigation plus fluide" }
   ];
   // VERSION VISUELLE : à changer UNIQUEMENT quand le logo/l'icône change.
   // Quand elle change, on invite l'utilisateur à mettre à jour l'app installée

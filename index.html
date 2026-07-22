@@ -5185,7 +5185,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
     </div>
   </div>
   <div class="vub-actions">
-    <button class="vub-later" onclick="document.getElementById('visual-update-banner').classList.remove('on')">Plus tard</button>
+    <button class="vub-later" onclick="if(window._guelaneMarkVisualSeen)_guelaneMarkVisualSeen();document.getElementById('visual-update-banner').classList.remove('on')">Plus tard</button>
     <button class="vub-update" onclick="_guelaneVisualUpdate()">Mettre à jour</button>
   </div>
 </div>
@@ -17721,7 +17721,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.8";
+  var GUELANE_VERSION = "3.9";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"🔄", txt:"L'app rouvre dans votre dernier mode utilisé" },
@@ -17730,20 +17730,30 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
   // VERSION VISUELLE : à changer UNIQUEMENT quand le logo/l'icône change.
   // Quand elle change, on invite l'utilisateur à mettre à jour l'app installée
   // (car l'icône de l'écran d'accueil peut nécessiter une réinstallation).
-  var VISUAL_VERSION = "v3";
+  var VISUAL_VERSION = "v4";
   /* ─────────────────────────────────────────────────── */
 
   // Vérifier si l'apparence (logo/icône) a changé → proposer la mise à jour
   function checkVisualUpdate(){
     try {
       var storedVisual = localStorage.getItem('guelane_visual');
-      if (storedVisual !== null && storedVisual !== VISUAL_VERSION) {
-        // Le logo/l'icône a changé depuis la dernière visite → inviter à mettre à jour
+      if (storedVisual === null) {
+        // Première visite : on enregistre sans rien montrer
+        localStorage.setItem('guelane_visual', VISUAL_VERSION);
+      } else if (storedVisual !== VISUAL_VERSION) {
+        // L'apparence a changé → afficher la bannière.
+        // IMPORTANT : on n'enregistre PAS la nouvelle version maintenant.
+        // Elle ne sera enregistrée que lorsque l'utilisateur clique
+        // "Mettre à jour" ou "Plus tard" (sinon la bannière disparaît tout de suite).
         showVisualUpdateBanner();
       }
-      localStorage.setItem('guelane_visual', VISUAL_VERSION);
     } catch(e){}
   }
+
+  // Marque la version visuelle comme "vue" (appelé quand l'utilisateur agit)
+  window._guelaneMarkVisualSeen = function(){
+    try{ localStorage.setItem('guelane_visual', VISUAL_VERSION); }catch(e){}
+  };
 
   function showVisualUpdateBanner(){
     // Ne l'afficher que si l'app est installée (mode standalone)
@@ -17819,6 +17829,8 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
   window._guelaneVisualUpdate = function(){
     var btn = document.querySelector('#visual-update-banner .vub-update');
     if(btn){ btn.innerHTML = '<span class="retry-spinner"></span> Mise à jour...'; btn.disabled = true; }
+    // Marquer la nouvelle version visuelle comme appliquée
+    if(window._guelaneMarkVisualSeen) _guelaneMarkVisualSeen();
     // Vider les caches puis recharger : force la récupération des nouvelles ressources
     if ('caches' in window) {
       caches.keys().then(function(names){

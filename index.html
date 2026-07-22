@@ -5352,6 +5352,189 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
   } else {
     _enforceLogin();
   }
+
+  // ═══ SAUVEGARDE DES DONNÉES SAISIES (survit à l'arrière-plan, effacée à la fermeture) ═══
+  // On utilise sessionStorage : il persiste tant que l'app vit (même en arrière-plan
+  // plusieurs minutes), mais est automatiquement vidé quand l'app est VRAIMENT fermée.
+  // → Exactement le comportement voulu : données gardées en veille, effacées si fermé.
+  var _FIELDS_KEY = 'guelane_form_fields';
+  // Champs à NE JAMAIS sauvegarder (sensibles)
+  var _FIELDS_EXCLUDE = ['ls-em-pass','ls-ph-pass','pin','password'];
+
+  function _fieldIsSensitive(el){
+    if(!el || !el.id) return true;              // pas d'id → on ignore
+    if(el.type === 'password') return true;      // jamais les mots de passe
+    for(var i=0;i<_FIELDS_EXCLUDE.length;i++){
+      if(el.id.indexOf(_FIELDS_EXCLUDE[i]) !== -1) return true;
+    }
+    return false;
+  }
+
+  function _saveFormFields(){
+    try{
+      var data = {};
+      var els = document.querySelectorAll('input, textarea');
+      els.forEach(function(el){
+        if(_fieldIsSensitive(el)) return;
+        if(el.type === 'checkbox' || el.type === 'radio'){
+          data[el.id] = { c: el.checked };
+        } else if(el.value !== undefined && el.value !== ''){
+          data[el.id] = { v: el.value };
+        }
+      });
+      sessionStorage.setItem(_FIELDS_KEY, JSON.stringify(data));
+    }catch(e){}
+  }
+
+  function _restoreFormFields(){
+    try{
+      var raw = sessionStorage.getItem(_FIELDS_KEY);
+      if(!raw) return;                 // rien à restaurer (app fermée → sessionStorage vide)
+      var data = JSON.parse(raw);
+      Object.keys(data).forEach(function(id){
+        var el = document.getElementById(id);
+        if(!el || _fieldIsSensitive(el)) return;
+        if(data[id].c !== undefined){ el.checked = data[id].c; }
+        else if(data[id].v !== undefined){ el.value = data[id].v; }
+      });
+    }catch(e){}
+  }
+  window._saveFormFields = _saveFormFields;
+  window._restoreFormFields = _restoreFormFields;
+
+  // Sauvegarder à chaque saisie (avec un léger délai pour ne pas surcharger)
+  var _saveTimer = null;
+  document.addEventListener('input', function(e){
+    if(e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')){
+      clearTimeout(_saveTimer);
+      _saveTimer = setTimeout(_saveFormFields, 400);
+    }
+  });
+  // Sauvegarder aussi juste avant de partir en arrière-plan
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'hidden') _saveFormFields();
+  });
+  // Restaurer au chargement de l'app (si les données ont survécu = arrière-plan)
+  window.addEventListener('load', function(){
+    setTimeout(_restoreFormFields, 500);
+  });
+
+  // ═══ SAUVEGARDE DES FORMULAIRES EN COURS (arrière-plan) ═══
+  // Les données saisies sont gardées dans sessionStorage : elles survivent
+  // à la mise en arrière-plan, mais s'effacent si l'app est complètement fermée.
+  // (sessionStorage se vide automatiquement à la fermeture de l'app/onglet.)
+  var _FORM_STORE_KEY = 'guelane_form_state';
+  // Champs à NE PAS sauvegarder (sécurité : identifiants, mots de passe, code, paiements)
+  var _FORM_SKIP = ['ls-em-email','ls-em-pass','ls-ph-num','ls-ph-name','ls-ph-pass',
+    'ls-cc-q','api-key-input','mm-phone','mm-amount','mm-tr-amount','dp-amount',
+    'pw-birthdate','ep-birthdate-input'];
+
+  function _saveFormState(){
+    try{
+      var data = {};
+      var fields = document.querySelectorAll('input, textarea, select');
+      fields.forEach(function(f){
+        if(!f.id || _FORM_SKIP.indexOf(f.id) !== -1) return;
+        if(f.type === 'password' || f.type === 'file' || f.type === 'hidden') return;
+        if(f.type === 'checkbox' || f.type === 'radio'){
+          if(f.checked) data[f.id] = { c: true };
+        } else if(f.value){
+          data[f.id] = { v: f.value };
+        }
+      });
+      sessionStorage.setItem(_FORM_STORE_KEY, JSON.stringify(data));
+    }catch(e){}
+  }
+
+  function _restoreFormState(){
+    try{
+      var raw = sessionStorage.getItem(_FORM_STORE_KEY);
+      if(!raw) return;
+      var data = JSON.parse(raw);
+      Object.keys(data).forEach(function(id){
+        var f = document.getElementById(id);
+        if(!f) return;
+        if(data[id].c !== undefined){ f.checked = data[id].c; }
+        else if(data[id].v !== undefined && !f.value){ f.value = data[id].v; }
+      });
+    }catch(e){}
+  }
+  window._guelaneRestoreFormState = _restoreFormState;
+
+  // Sauvegarder régulièrement + quand l'app part en arrière-plan
+  setInterval(_saveFormState, 4000);
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'hidden'){ _saveFormState(); }
+  });
+  // Restaurer au chargement (vide si l'app avait été fermée → données effacées)
+  if(document.readyState === 'complete'){ _restoreFormState(); }
+  else { window.addEventListener('load', _restoreFormState); }
+
+  // ═══ REVERROUILLAGE À CHAQUE RETOUR AU PREMIER PLAN ═══
+  // Sécurité : dès que l'app repasse en arrière-plan puis revient (multitâche,
+  // changement d'app, écran verrouillé…), on redemande le code de sécurité.
+  // - Absence courte  → on reprend là où on était après le code.
+  // - Absence longue (≥ 5 min) → on repart de l'accueil du mode actif après le code.
+  var LONG_ABSENCE_MS = 5 * 60 * 1000;  // 5 minutes
+
+  function _relockOnReturn(longAbsence){
+    // L'app redevient visible
+    if(document.visibilityState !== 'visible') return;
+    // Doit avoir une session valide ET un code de sécurité configuré
+    if(!_hasValidSession()) return;
+    var hasPin = !!localStorage.getItem('guelane_security_code');
+    if(!hasPin){
+      // Pas de code : si absence longue, on redirige quand même vers l'accueil
+      if(longAbsence) _goHomeCurrentMode();
+      return;
+    }
+    // Déjà sur l'écran de saisie du code ? ne rien faire
+    var ps = document.getElementById('pin-screen');
+    if(ps && ps.style.display !== 'none' && !ps.classList.contains('pin-out')) return;
+    // Si absence longue → après le code, on ira à l'accueil
+    window._pinReturnToHome = !!longAbsence;
+    // Effacer le flag de session → forcer une nouvelle saisie
+    try{
+      sessionStorage.removeItem('prophet_pin_ok');
+      sessionStorage.removeItem('prophet_pin_ok_0');
+      sessionStorage.removeItem('prophet_pin_ok_1');
+    }catch(e){}
+    // Réafficher l'écran de saisie du code
+    if(typeof _pinShow === 'function') _pinShow('verify');
+  }
+
+  // Ramène à l'écran d'accueil du mode actif (Home si Entrepreneur, Dashboard si Particulier)
+  function _goHomeCurrentMode(){
+    try{
+      var isPro = document.body.classList.contains('profile-pro');
+      var target = isPro ? 'home' : 'dash';
+      if(typeof navTo === 'function') navTo(target);
+    }catch(e){}
+  }
+  window._goHomeCurrentMode = _goHomeCurrentMode;
+
+  // On mémorise quand l'app part en arrière-plan + l'heure, pour distinguer
+  // absence courte / longue, et éviter de reverrouiller au tout premier chargement.
+  var _wentBackground = false;
+  var _bgSince = 0;
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'hidden'){
+      _wentBackground = true;
+      _bgSince = Date.now();
+    } else if(document.visibilityState === 'visible' && _wentBackground){
+      _wentBackground = false;
+      var away = Date.now() - _bgSince;
+      _relockOnReturn(away >= LONG_ABSENCE_MS);
+    }
+  });
+  // Sécurité supplémentaire : certains navigateurs déclenchent 'pageshow' au retour
+  window.addEventListener('pageshow', function(e){
+    if(e.persisted && _wentBackground){
+      _wentBackground = false;
+      var away = Date.now() - _bgSince;
+      _relockOnReturn(away >= LONG_ABSENCE_MS);
+    }
+  });
 })();
 </script>
 <!-- ═══════════════════════ ONBOARDING CAROUSEL ═══════════════════════ -->
@@ -16486,6 +16669,13 @@ function _pinEnterApp(){
   if(typeof _spRefreshSecurity === 'function') _spRefreshSecurity();
   /* Profil pas encore complété → montrer l'assistant, puis la demande de notifications */
   if(typeof _prophetPostAuthCheck === 'function') _prophetPostAuthCheck();
+  /* Après une absence longue (≥5 min), repartir de l'accueil du mode actif */
+  if(window._pinReturnToHome){
+    window._pinReturnToHome = false;
+    setTimeout(function(){
+      if(typeof _goHomeCurrentMode === 'function') _goHomeCurrentMode();
+    }, 100);
+  }
 }
 
 function _pinForgot(){
@@ -17722,11 +17912,11 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.11";
+  var GUELANE_VERSION = "3.14";
   var IMPORTANT = true;
   var CHANGEMENTS = [
-    { ic:"🔄", txt:"L'app rouvre dans votre dernier mode utilisé" },
-    { ic:"✨", txt:"Expérience personnalisée" }
+    { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
+    { ic:"✨", txt:"Expérience fluide" }
   ];
   // VERSION VISUELLE : à changer UNIQUEMENT quand le logo/l'icône change.
   // Quand elle change, on invite l'utilisateur à mettre à jour l'app installée

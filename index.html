@@ -5213,7 +5213,8 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
   // Elle se termine dès que l'app est prête (rapide), mais garde un minimum
   // d'affichage pour l'élégance, et attend si le chargement est lent.
 
-  var MIN_SPLASH = 1400;    // temps minimum d'affichage du logo (ms) — pour ne pas "flasher"
+  var MIN_SPLASH = 3000;    // temps minimum total (ms) — le logo/nom restent à 1200ms,
+                            // l'anneau de chargement reste visible plus longtemps (~1,8s)
   var MAX_WAIT = 21000;     // sécurité : ne jamais rester bloqué au-delà de 21s
   var started = Date.now();
   var finished = false;
@@ -17721,7 +17722,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.9";
+  var GUELANE_VERSION = "3.11";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"🔄", txt:"L'app rouvre dans votre dernier mode utilisé" },

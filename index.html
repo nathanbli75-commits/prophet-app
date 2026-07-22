@@ -4710,7 +4710,7 @@ body.theme-dark .nf-card{box-shadow:none;}
 /* ═══════════════════════════ PIN / CODE DE SÉCURITÉ ═══════════════════════════ */
 #pin-screen{
   display:none;
-  position:fixed;inset:0;z-index:10001;
+  position:fixed;inset:0;z-index:20001;
   background:linear-gradient(160deg,#16054e 0%,#16054e 40%,#2d2057 75%,#04001c 100%);
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
@@ -5328,6 +5328,15 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
       if(!pinOk){
         var hasPin      = !!localStorage.getItem('guelane_security_code');
         var pinDisabled = localStorage.getItem('prophet_pin_disabled') === '1';
+        // Si on revient après une longue absence (mémorisée avant un éventuel
+        // rechargement par le système), prévoir le retour à l'accueil après le code.
+        try{
+          var bgSince = parseInt(sessionStorage.getItem('guelane_bg_since')||'0',10);
+          if(bgSince && (Date.now()-bgSince) >= 5*60*1000){
+            window._pinReturnToHome = true;
+          }
+          sessionStorage.removeItem('guelane_bg_since');
+        }catch(e){}
         if(pinDisabled && !hasPin){
           try{ sessionStorage.setItem('prophet_pin_ok_'+slot,'1'); sessionStorage.setItem('prophet_pin_ok','1'); }catch(e){}
           setTimeout(function(){ if(typeof _showNoPinBanner==='function') _showNoPinBanner(); }, 1200);
@@ -5512,6 +5521,18 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
   document.addEventListener('visibilitychange', function(){
     if(document.visibilityState === 'hidden'){
       _bgSince = Date.now();
+      // Effacer le flag de validation du code DÈS le passage en arrière-plan.
+      // Ainsi, que l'app soit ensuite rechargée par Android OU simplement réveillée,
+      // le code de sécurité sera redemandé dans les deux cas (comportement uniforme).
+      if(localStorage.getItem('guelane_security_code') && _hasValidSession()){
+        try{
+          sessionStorage.removeItem('prophet_pin_ok');
+          sessionStorage.removeItem('prophet_pin_ok_0');
+          sessionStorage.removeItem('prophet_pin_ok_1');
+          // Mémoriser l'heure du passage en arrière-plan (survit au rechargement)
+          sessionStorage.setItem('guelane_bg_since', String(Date.now()));
+        }catch(e){}
+      }
     } else if(document.visibilityState === 'visible'){
       if(_bgSince === 0) return;  // pas un vrai retour d'arrière-plan
       var away = Date.now() - _bgSince;
@@ -16654,7 +16675,14 @@ function _pinEnterApp(){
   /* Profil pas encore complété → montrer l'assistant, puis la demande de notifications */
   if(typeof _prophetPostAuthCheck === 'function') _prophetPostAuthCheck();
   /* Après une absence longue (≥5 min), repartir de l'accueil du mode actif */
-  if(window._pinReturnToHome){
+  var _longAbsence = window._pinReturnToHome;
+  // Cas d'un rechargement complet par Android : vérifier l'heure mémorisée
+  try{
+    var bgSince = parseInt(sessionStorage.getItem('guelane_bg_since')||'0', 10);
+    if(bgSince && (Date.now() - bgSince) >= 5*60*1000){ _longAbsence = true; }
+    sessionStorage.removeItem('guelane_bg_since');
+  }catch(e){}
+  if(_longAbsence){
     window._pinReturnToHome = false;
     setTimeout(function(){
       if(typeof _goHomeCurrentMode === 'function') _goHomeCurrentMode();
@@ -17896,7 +17924,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.15";
+  var GUELANE_VERSION = "3.16";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

@@ -16100,18 +16100,32 @@ function _lsComplete(name, method){
     sessionStorage.removeItem('prophet_pin_ok_1');
   }catch(e){}
 
-  var hasPin      = !!accounts[targetSlot].pinCode;
-  var pinDisabled = !!accounts[targetSlot].pinDisabled;
-  if(pinDisabled && !hasPin){
-    try{
-      sessionStorage.setItem('prophet_pin_ok_'+targetSlot,'1');
-      sessionStorage.setItem('prophet_pin_ok','1');
-    }catch(e){}
-    _pinEnterApp();
-    setTimeout(function(){ if(typeof _showNoPinBanner==='function') _showNoPinBanner(); }, 1200);
-  } else {
-    _pinShow(hasPin ? 'verify' : 'create');
-  }
+  // Un code de sécurité existe-t-il ? Le SERVEUR est la source de vérité
+  // (le code suit le compte sur tout appareil). En secours : le local.
+  var hasPinSlot   = !!accounts[targetSlot].pinCode;
+  var hasPinGlobal = !!localStorage.getItem('guelane_security_code');
+  var hasPinLocal  = hasPinSlot || hasPinGlobal;
+  var pinDisabled  = !!accounts[targetSlot].pinDisabled;
+
+  (async function(){
+    var serverHas = await _pinServerStatus();  // true / false / null (si serveur muet)
+    var hasPin;
+    if(serverHas === null){
+      hasPin = hasPinLocal;          // serveur injoignable → secours local
+    } else {
+      hasPin = serverHas;            // serveur = source de vérité
+    }
+    if(pinDisabled && !hasPin && serverHas !== true){
+      try{
+        sessionStorage.setItem('prophet_pin_ok_'+targetSlot,'1');
+        sessionStorage.setItem('prophet_pin_ok','1');
+      }catch(e){}
+      _pinEnterApp();
+      setTimeout(function(){ if(typeof _showNoPinBanner==='function') _showNoPinBanner(); }, 1200);
+    } else {
+      _pinShow(hasPin ? 'verify' : 'create');
+    }
+  })();
 
   /* Rafraîchir le plan depuis le backend + mettre à jour les cadenas */
   if (typeof _prophetSyncPlan === 'function') _prophetSyncPlan();
@@ -16226,6 +16240,50 @@ function _pinDetachKbd(){
   document.removeEventListener('keydown', _pinKbdHandler);
 }
 
+// ═══ CODE DE SÉCURITÉ CÔTÉ SERVEUR (lié au compte, tout appareil) ═══
+// Ces fonctions parlent au backend pour que le code suive le compte
+// quel que soit l'appareil utilisé.
+async function _pinServerStatus(){
+  // Renvoie true si l'utilisateur a déjà un code enregistré sur le serveur
+  try{
+    if(!window.PROPHET_TOKEN) return null; // pas connecté au backend
+    var r = await fetch(window.PROPHET_BACKEND + '/api/security-code/status', {
+      headers: { 'Authorization': 'Bearer ' + window.PROPHET_TOKEN }
+    });
+    if(!r.ok) return null;
+    var d = await r.json();
+    return !!d.has_code;
+  }catch(e){ return null; }
+}
+
+async function _pinServerSet(code){
+  // Enregistre le code sur le serveur ; renvoie true si OK
+  try{
+    if(!window.PROPHET_TOKEN) return false;
+    var r = await fetch(window.PROPHET_BACKEND + '/api/security-code/set', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'Authorization': 'Bearer ' + window.PROPHET_TOKEN },
+      body: JSON.stringify({ code: code })
+    });
+    return r.ok;
+  }catch(e){ return false; }
+}
+
+async function _pinServerVerify(code){
+  // Vérifie le code sur le serveur ; renvoie true si correct
+  try{
+    if(!window.PROPHET_TOKEN) return null;
+    var r = await fetch(window.PROPHET_BACKEND + '/api/security-code/verify', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'Authorization': 'Bearer ' + window.PROPHET_TOKEN },
+      body: JSON.stringify({ code: code })
+    });
+    if(!r.ok) return null;
+    var d = await r.json();
+    return !!d.valid;
+  }catch(e){ return null; }
+}
+
 function _pinShow(mode){
   _pinMode    = mode || 'verify';
   _pinInput   = '';
@@ -16311,7 +16369,9 @@ function _pinSubmit(){
   /* ── Gate access modes ── */
   if(_pinMode === 'verify'){
     var stored = localStorage.getItem('guelane_security_code') || '';
-    if(btoa(_pinInput) === stored){
+    var enteredCode = _pinInput;
+    // 1. Vérification locale d'abord (rapide, fonctionne hors ligne)
+    if(stored && btoa(enteredCode) === stored){
       var _vSlot = (typeof _maGetSlot === 'function') ? _maGetSlot() : 0;
       try{
         sessionStorage.setItem('prophet_pin_ok','1');
@@ -16319,7 +16379,22 @@ function _pinSubmit(){
       }catch(e){}
       _pinEnterApp();
     } else {
-      _pinShakeError('Code incorrect, réessayez');
+      // 2. Sinon, vérifier auprès du serveur (cas : nouvel appareil sans code local)
+      (async function(){
+        var ok = await _pinServerVerify(enteredCode);
+        if(ok === true){
+          // Code correct côté serveur → on l'enregistre localement pour la prochaine fois
+          try{
+            localStorage.setItem('guelane_security_code', btoa(enteredCode));
+            var _vSlot2 = (typeof _maGetSlot === 'function') ? _maGetSlot() : 0;
+            sessionStorage.setItem('prophet_pin_ok','1');
+            sessionStorage.setItem('prophet_pin_ok_'+_vSlot2,'1');
+          }catch(e){}
+          _pinEnterApp();
+        } else {
+          _pinShakeError('Code incorrect, réessayez');
+        }
+      })();
     }
   } else if(_pinMode === 'create'){
     _pinFirst = _pinInput;
@@ -16328,11 +16403,14 @@ function _pinSubmit(){
     _pinUpdateUI();
   } else if(_pinMode === 'confirm'){
     if(_pinInput === _pinFirst){
+      var newCode = _pinInput;
       try{
-        localStorage.setItem('guelane_security_code', btoa(_pinInput));
+        localStorage.setItem('guelane_security_code', btoa(newCode));
         localStorage.removeItem('prophet_pin_disabled');
         sessionStorage.setItem('prophet_pin_ok','1');
       }catch(e){}
+      // Enregistrer aussi sur le serveur (pour retrouver le code sur tout appareil)
+      _pinServerSet(newCode);
       _pinEnterApp();
     } else {
       _pinShakeError('Les codes ne correspondent pas, réessayez');
@@ -16359,7 +16437,10 @@ function _pinSubmit(){
     _pinUpdateUI();
   } else if(_pinMode === 'change-confirm'){
     if(_pinInput === _pinNewFirst){
-      try{ localStorage.setItem('guelane_security_code', btoa(_pinInput)); }catch(e){}
+      var changedCode = _pinInput;
+      try{ localStorage.setItem('guelane_security_code', btoa(changedCode)); }catch(e){}
+      // Enregistrer le nouveau code sur le serveur aussi
+      _pinServerSet(changedCode);
       _pinChangeDone();
     } else {
       _pinShakeError('Les codes ne correspondent pas, réessayez');
@@ -17636,11 +17717,11 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.4";
+  var GUELANE_VERSION = "3.6";
   var IMPORTANT = true;
   var CHANGEMENTS = [
-    { ic:"⬆️", txt:"Retour en haut au 2e clic (partout)" },
-    { ic:"↩️", txt:"Navigation plus fluide" }
+    { ic:"🔐", txt:"Votre code de sécurité vous suit sur tous vos appareils" },
+    { ic:"✨", txt:"Connexion simplifiée" }
   ];
   // VERSION VISUELLE : à changer UNIQUEMENT quand le logo/l'icône change.
   // Quand elle change, on invite l'utilisateur à mettre à jour l'app installée

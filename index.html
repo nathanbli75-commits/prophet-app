@@ -17476,6 +17476,17 @@ var _ivDetailPages = {'inv-collection-detail':1,'inv-group':1,'inv-category-deta
 (function(){
   var _navToWithParam = navTo;
   navTo = function(name, param){
+    // ─── 2e clic sur la page déjà active → remonter en haut ───
+    if(name === _currentPageName){
+      var activeView = document.querySelector('.view.on') || document.querySelector('.page .view');
+      if(activeView){ activeView.scrollTo({ top:0, behavior:'smooth' }); }
+      window.scrollTo({ top:0, behavior:'smooth' });
+      // on continue quand même la navigation (utile si param change)
+    }
+    // ─── Historique de navigation (pour le bouton retour) ───
+    if(name !== _currentPageName && !window._navBackInProgress && typeof _guelanePushHistory === 'function'){
+      _guelanePushHistory(name);
+    }
     if(_ivDetailPages[name] && _currentPageName && !_ivDetailPages[_currentPageName]){
       _ivPrevPage = _currentPageName;
     }
@@ -17487,6 +17498,61 @@ var _ivDetailPages = {'inv-collection-detail':1,'inv-group':1,'inv-category-deta
   };
 })();
 function navBack(){ navTo(_ivPrevPage); }
+
+// ═══ GESTION DU BOUTON RETOUR (téléphone/navigateur) ═══
+// Le bouton retour ramène à la page précédente DANS l'app.
+// Sur l'accueil, le bouton retour quitte l'application.
+(function(){
+  var _navHistory = [];
+  var HOME_PAGES = ['dash','home'];  // pages considérées comme "accueil"
+
+  // Ajouter une entrée dans l'historique quand on navigue
+  window._guelanePushHistory = function(name){
+    // Éviter les doublons consécutifs
+    if(_navHistory[_navHistory.length-1] !== name){
+      _navHistory.push(name);
+    }
+    // Ajouter un état dans l'historique du navigateur
+    try{ history.pushState({ page:name, depth:_navHistory.length }, '', ''); }catch(e){}
+  };
+
+  // Intercepter le bouton retour
+  window.addEventListener('popstate', function(e){
+    var current = (typeof _currentPageName !== 'undefined') ? _currentPageName : null;
+
+    // Si on est sur une page d'accueil → laisser quitter l'app
+    if(HOME_PAGES.indexOf(current) !== -1){
+      // Ne rien empêcher : le retour quitte l'application
+      return;
+    }
+
+    // Sinon : revenir à la page précédente dans l'app
+    if(_navHistory.length > 1){
+      _navHistory.pop(); // retirer la page actuelle
+      var prev = _navHistory[_navHistory.length-1];
+      // Naviguer sans re-empiler l'historique
+      if(typeof navTo === 'function' && prev){
+        // Empêcher le ré-empilement en marquant la navigation comme "retour"
+        _navBackInProgress = true;
+        navTo(prev);
+        _navBackInProgress = false;
+        // Re-pousser un état pour pouvoir re-intercepter le prochain retour
+        try{ history.pushState({ page:prev }, '', ''); }catch(e){}
+      }
+    } else {
+      // Plus d'historique : aller à l'accueil (au lieu de quitter directement)
+      if(typeof navTo === 'function'){
+        try{ history.pushState({ page:'dash' }, '', ''); }catch(e){}
+        navTo('dash');
+      }
+    }
+  });
+
+  // État initial dans l'historique au chargement
+  window.addEventListener('load', function(){
+    try{ history.replaceState({ page:'dash', depth:0 }, '', ''); }catch(e){}
+  });
+})();
 
 function ivRenderHomeCollections(){
   var el = document.getElementById('ph-collections-row');
@@ -17535,11 +17601,11 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "2.6";
+  var GUELANE_VERSION = "2.7";
   var IMPORTANT = true;
   var CHANGEMENTS = [
-    { ic:"🎨", txt:"Nouveau logo GUELANE coloré" },
-    { ic:"🔔", txt:"Notifications de mise à jour améliorées" }
+    { ic:"⬆️", txt:"Appui sur un onglet actif : retour en haut" },
+    { ic:"↩️", txt:"Bouton retour amélioré (navigation fluide)" }
   ];
   // VERSION VISUELLE : à changer UNIQUEMENT quand le logo/l'icône change.
   // Quand elle change, on invite l'utilisateur à mettre à jour l'app installée

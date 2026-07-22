@@ -17533,28 +17533,33 @@ var _ivDetailPages = {'inv-collection-detail':1,'inv-group':1,'inv-category-deta
 function navBack(){ navTo(_ivPrevPage); }
 
 // ═══ GESTION DU BOUTON RETOUR (téléphone/navigateur) ═══
-// Le bouton retour ramène à la page précédente DANS l'app.
-// Sur l'accueil, le bouton retour quitte l'application.
+// Logique :
+//  - 1er RETOUR sur page défilée → remonte en haut
+//  - RETOUR (page en haut) → page précédente dans l'app
+//  - RETOUR sur l'accueil → quitte l'application
 (function(){
-  var _navHistory = [];
-  var HOME_PAGES = ['dash','home'];  // pages considérées comme "accueil"
+  // Pile de navigation interne. Commence par l'accueil.
+  var _navHistory = ['dash'];
+  var HOME_PAGES = ['dash','home'];
 
-  // Ajouter une entrée dans l'historique quand on navigue
+  // Enregistrer chaque navigation (appelé depuis navTo)
   window._guelanePushHistory = function(name){
-    // Éviter les doublons consécutifs
     if(_navHistory[_navHistory.length-1] !== name){
       _navHistory.push(name);
     }
-    // Ajouter un état dans l'historique du navigateur
-    try{ history.pushState({ page:name, depth:_navHistory.length }, '', ''); }catch(e){}
   };
 
-  // Intercepter le bouton retour
-  window.addEventListener('popstate', function(e){
-    var current = (typeof _currentPageName !== 'undefined') ? _currentPageName : null;
+  // Toujours garder UN état "sentinelle" dans l'historique du navigateur.
+  // Comme ça, un appui sur RETOUR déclenche popstate SANS quitter l'app,
+  // sauf si on décide nous-mêmes de laisser quitter (sur l'accueil).
+  function armSentinel(){
+    try{ history.pushState({ guelane:true }, '', ''); }catch(e){}
+  }
 
-    // ─── 1er RETOUR sur une page défilée → remonter en haut d'abord ───
-    // (le 2e RETOUR fera le retour normal à la page précédente)
+  window.addEventListener('popstate', function(e){
+    var current = (typeof _currentPageName !== 'undefined') ? _currentPageName : _navHistory[_navHistory.length-1];
+
+    // ─── 1er RETOUR sur une page défilée → remonter en haut ───
     var activePage = document.querySelector('.page.active');
     var activeView = document.querySelector('.view.on');
     var scroller = null;
@@ -17562,44 +17567,39 @@ function navBack(){ navTo(_ivPrevPage); }
     else if(activeView && activeView.scrollTop > 40) scroller = activeView;
 
     if(scroller){
-      // La page est défilée vers le bas → on remonte en haut au lieu de revenir
       scroller.scrollTo({ top:0, behavior:'smooth' });
-      // Ré-empiler un état pour que le PROCHAIN retour soit intercepté normalement
-      try{ history.pushState({ page:current }, '', ''); }catch(e){}
-      return; // on ne fait pas le retour cette fois
-    }
-
-    // Si on est sur une page d'accueil → laisser quitter l'app
-    if(HOME_PAGES.indexOf(current) !== -1){
-      // Ne rien empêcher : le retour quitte l'application
+      armSentinel();  // ré-armer pour le prochain RETOUR
       return;
     }
 
-    // Sinon : revenir à la page précédente dans l'app
-    if(_navHistory.length > 1){
-      _navHistory.pop(); // retirer la page actuelle
-      var prev = _navHistory[_navHistory.length-1];
-      // Naviguer sans re-empiler l'historique
-      if(typeof navTo === 'function' && prev){
-        // Empêcher le ré-empilement en marquant la navigation comme "retour"
-        _navBackInProgress = true;
-        navTo(prev);
-        _navBackInProgress = false;
-        // Re-pousser un état pour pouvoir re-intercepter le prochain retour
-        try{ history.pushState({ page:prev }, '', ''); }catch(e){}
-      }
-    } else {
-      // Plus d'historique : aller à l'accueil (au lieu de quitter directement)
-      if(typeof navTo === 'function'){
-        try{ history.pushState({ page:'dash' }, '', ''); }catch(e){}
-        navTo('dash');
-      }
+    // ─── Sur l'accueil → laisser quitter l'application ───
+    if(HOME_PAGES.indexOf(current) !== -1){
+      // On ne ré-arme PAS : on laisse le navigateur/l'OS gérer la sortie.
+      // (l'état sentinelle a déjà été consommé par ce popstate)
+      return;
     }
+
+    // ─── Sinon : revenir à la page précédente dans l'app ───
+    // Retirer la page actuelle de la pile
+    if(_navHistory.length > 1 && _navHistory[_navHistory.length-1] === current){
+      _navHistory.pop();
+    } else if(_navHistory.length > 1){
+      _navHistory.pop();
+    }
+    var prev = _navHistory[_navHistory.length-1] || 'dash';
+
+    if(typeof navTo === 'function'){
+      window._navBackInProgress = true;
+      navTo(prev);
+      window._navBackInProgress = false;
+    }
+    // Ré-armer un état sentinelle pour intercepter le prochain RETOUR
+    armSentinel();
   });
 
-  // État initial dans l'historique au chargement
+  // Au chargement : poser le premier état sentinelle
   window.addEventListener('load', function(){
-    try{ history.replaceState({ page:'dash', depth:0 }, '', ''); }catch(e){}
+    armSentinel();
   });
 })();
 
@@ -17650,7 +17650,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.1";
+  var GUELANE_VERSION = "3.2";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"⬆️", txt:"Retour en haut au 2e clic (partout)" },

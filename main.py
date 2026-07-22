@@ -111,7 +111,7 @@ def check_and_increment_chat(user, db) -> dict:
     Premium = illimité. Non connecté = traité comme gratuit (limité par prudence).
     """
     # Premium : illimité
-    if user is not None and user.plan == "premium":
+    if user is not None and _effective_plan(user) == "premium":
         return {"allowed": True, "used": 0, "limit": -1, "remaining": -1}
 
     # Identifiant pour le comptage : email si connecté, sinon "anonyme"
@@ -139,7 +139,7 @@ def require_premium_for(module: str, user):
     if module in PREMIUM_MODULES:
         if user is None:
             raise HTTPException(status_code=401, detail="Connexion requise pour ce module.")
-        if user.plan != "premium":
+        if _effective_plan(user) != "premium":
             raise HTTPException(
                 status_code=403,
                 detail="Ce module est réservé au plan Premium. Passez à Premium pour y accéder."
@@ -160,7 +160,7 @@ def signup(req: SignupRequest, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(user)
     token = create_token(email)
-    return {"token": token, "user": {"email": user.email, "nom": user.nom, "plan": user.plan}}
+    return {"token": token, "user": {"email": user.email, "nom": user.nom, "plan": _effective_plan(user)}}
 
 
 @app.post("/api/auth/login")
@@ -172,18 +172,32 @@ def login(req: LoginRequest, db: Session = Depends(get_db)):
     if not user.is_active:
         raise HTTPException(status_code=403, detail="Compte désactivé.")
     token = create_token(email)
-    return {"token": token, "user": {"email": user.email, "nom": user.nom, "plan": user.plan}}
+    return {"token": token, "user": {"email": user.email, "nom": user.nom, "plan": _effective_plan(user)}}
 
 
 @app.get("/api/auth/me")
 def get_me(user: User = Depends(get_current_user)):
-    return {"email": user.email, "nom": user.nom, "plan": user.plan, "created_at": user.created_at.isoformat()}
+    return {"email": user.email, "nom": user.nom, "plan": _effective_plan(user), "created_at": user.created_at.isoformat()}
 
 
 # ── Changement de plan (activation manuelle Premium) ──
 # Protégé par une clé admin définie dans .env (PROPHET_ADMIN_KEY).
 # Usage : pour activer manuellement un client Premium en attendant les paiements en ligne.
 PROPHET_ADMIN_KEY = os.environ.get("PROPHET_ADMIN_KEY", "")
+
+# ── Comptes propriétaires (accès total permanent) ──
+# Ces comptes ont TOUJOURS le plan premium, quel que soit l'état de la base.
+# C'est le compte du fondateur de GUELANE.
+OWNER_EMAILS = {"nathanbli75@gmail.com"}
+
+def _effective_plan(user):
+    """Renvoie le plan effectif : premium forcé pour les comptes propriétaires."""
+    if user and user.email and user.email.strip().lower() in OWNER_EMAILS:
+        return "premium"
+    return user.plan if user else "gratuit"
+
+def _is_owner(user):
+    return bool(user and user.email and user.email.strip().lower() in OWNER_EMAILS)
 
 
 class SetPlanRequest(BaseModel):
@@ -202,6 +216,41 @@ def set_plan(req: SetPlanRequest, db: Session = Depends(get_db)):
     user.plan = req.plan
     db.commit()
     return {"email": user.email, "plan": user.plan, "message": f"Plan mis à jour : {req.plan}"}
+
+
+# ═══════════════════════════════════════════════════════════
+# CODE DE SÉCURITÉ (PIN) — lié au compte, valable sur tout appareil
+# Le code n'est JAMAIS stocké en clair : on stocke un hachage bcrypt,
+# comme pour les mots de passe.
+# ═══════════════════════════════════════════════════════════
+class SecurityCodeRequest(BaseModel):
+    code: str
+
+
+@app.get("/api/security-code/status")
+def security_code_status(user: User = Depends(get_current_user)):
+    """Indique si l'utilisateur a déjà configuré un code de sécurité."""
+    return {"has_code": bool(user.security_code_hash)}
+
+
+@app.post("/api/security-code/set")
+def security_code_set(req: SecurityCodeRequest, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Enregistre ou remplace le code de sécurité de l'utilisateur (haché)."""
+    code = (req.code or "").strip()
+    if not code.isdigit() or not (4 <= len(code) <= 8):
+        raise HTTPException(status_code=400, detail="Le code doit comporter 4 à 8 chiffres.")
+    user.security_code_hash = hash_password(code)
+    db.commit()
+    return {"ok": True, "message": "Code de sécurité enregistré."}
+
+
+@app.post("/api/security-code/verify")
+def security_code_verify(req: SecurityCodeRequest, user: User = Depends(get_current_user)):
+    """Vérifie le code de sécurité saisi contre le hachage stocké."""
+    if not user.security_code_hash:
+        raise HTTPException(status_code=404, detail="Aucun code de sécurité configuré.")
+    ok = verify_password((req.code or "").strip(), user.security_code_hash)
+    return {"valid": bool(ok)}
 
 
 # ═══════════════════════════════════════════════════════════

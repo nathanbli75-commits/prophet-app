@@ -3,7 +3,7 @@
 // sans jamais mélanger les versions, et sans que l'utilisateur ait à
 // désinstaller/réinstaller quoi que ce soit.
 
-const CACHE_VERSION = 'guelane-v3.17';   // ← CHANGE ce numéro à chaque déploiement
+const CACHE_VERSION = 'guelane-v3.18';   // ← CHANGE ce numéro à chaque déploiement
 const CACHE_NAME = CACHE_VERSION;
 
 // À l'installation d'une nouvelle version : on l'active tout de suite

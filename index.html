@@ -2966,6 +2966,17 @@ body.sb-open #mobile-sidebar-btn{
 }
 .nfo-done.ok{background:rgba(34,165,94,.12);color:#22a55e;}
 .nfo-done.no{background:var(--bg3);color:var(--t3);}
+.nfo-filter-row{
+  display:flex;gap:7px;padding:0 12px 10px;overflow-x:auto;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.nfo-filter-row::-webkit-scrollbar{display:none;}
+.nfo-ftab{
+  flex-shrink:0;padding:7px 13px;border-radius:10px;
+  border:1px solid var(--bd);background:var(--bg2);
+  font-size:12px;font-weight:700;color:var(--t2);cursor:pointer;white-space:nowrap;
+}
+.nfo-ftab.on{border-color:#8d6cfa;background:rgba(141,108,250,.10);color:var(--t1);}
 .nfo-cap{
   margin:0 12px 11px;padding:11px 13px;border-radius:12px;
   background:rgba(225,29,72,.07);border:1px solid rgba(225,29,72,.20);
@@ -9457,6 +9468,13 @@ function _pnLater(){ _pnDismiss(); }
 
         <div class="nfo-sim">🧪 Simulation — aucun ordre réel n'est transmis à un intermédiaire de marché.</div>
 
+        <div class="nfo-filter-row" id="nfo-filters">
+          <button class="nfo-ftab on" data-f="all"  onclick="_nfoFilter('all',this)">En attente</button>
+          <button class="nfo-ftab"    data-f="buy"  onclick="_nfoFilter('buy',this)">Achats</button>
+          <button class="nfo-ftab"    data-f="sell" onclick="_nfoFilter('sell',this)">Ventes</button>
+          <button class="nfo-ftab"    data-f="rebal" onclick="_nfoFilter('rebal',this)">Arbitrages</button>
+          <button class="nfo-ftab"    data-f="done" onclick="_nfoFilter('done',this)">Validées</button>
+        </div>
         <div id="nfo-list" class="nf-list"></div>
       </div>
 
@@ -10300,8 +10318,26 @@ function _nfRenderOps(){
       + 'Guelane IA analyse le marché et vous préviendra dès qu\'une opportunité correspond à votre profil.</div>';
     return;
   }
+  /* Filtrage : par défaut, seules les propositions en attente de décision */
+  var f = window._nfoFilterMode || 'all';
+  var shown;
+  if(f === 'done')      shown = ops.filter(function(o){ return o.st === 'ok'; });
+  else if(f === 'all')  shown = ops.filter(function(o){ return o.st === 'pending'; });
+  else                  shown = ops.filter(function(o){ return o.st === 'pending' && o.k === f; });
+
+  /* Tri : les plus récentes d'abord (une opportunité de marché se périme vite) */
+  shown.sort(function(a,b){ return b.ts - a.ts; });
+
+  if(!shown.length){
+    var vide = (f === 'done')
+      ? 'Aucune opération validée pour le moment.'
+      : 'Aucune proposition dans cette catégorie.';
+    el.innerHTML = cap + '<div class="nfo-empty">' + vide + '</div>';
+    return;
+  }
+
   var kindLabel = { buy:'ACHAT', sell:'VENTE', rebal:'ARBITRAGE' };
-  el.innerHTML = cap + ops.map(function(o){
+  el.innerHTML = cap + shown.map(function(o){
     var when = _nfAgo(o.ts);
     var actions;
     if(o.st === 'pending'){
@@ -10332,6 +10368,16 @@ function _nfRenderOps(){
   }).join('');
 }
 window._nfRenderOps = _nfRenderOps;
+
+/* Filtre de la liste des propositions */
+window._nfoFilterMode = 'all';
+function _nfoFilter(f, btn){
+  window._nfoFilterMode = f;
+  document.querySelectorAll('.nfo-ftab').forEach(function(b){ b.classList.remove('on'); });
+  if(btn) btn.classList.add('on');
+  _nfRenderOps();
+}
+window._nfoFilter = _nfoFilter;
 
 function _nfAgo(ts){
   var s = Math.floor((Date.now() - ts) / 1000);
@@ -18873,7 +18919,12 @@ var _ivDetailPages = {'inv-collection-detail':1,'inv-group':1,'inv-category-deta
     else if(name === 'inv-stock-detail') ivRenderStockDetail(param);
   };
 })();
-function navBack(){ navTo(_ivPrevPage); }
+function navBack(){
+  var target = _ivPrevPage;
+  /* En mode Entrepreneur, l'accueil est 'home' et non 'dash' */
+  if(target === 'dash' && document.body.classList.contains('profile-pro')) target = 'home';
+  navTo(target);
+}
 
 // ═══ GESTION DU BOUTON RETOUR (méthode simple et fiable) ═══
 // Principe standard : chaque navigation ajoute 1 état dans l'historique.
@@ -18920,7 +18971,9 @@ function navBack(){ navTo(_ivPrevPage); }
 
     // ─── Sinon : aller à la page précédente dans l'app ───
     if(_stack.length > 0) _stack.pop();           // retirer la page actuelle
-    var prev = _stack[_stack.length-1] || 'dash'; // page précédente
+    /* Repli : l'accueil dépend du mode actif (Entrepreneur = home, Particulier = dash) */
+    var fallback = document.body.classList.contains('profile-pro') ? 'home' : 'dash';
+    var prev = _stack[_stack.length-1] || fallback;
 
     if(typeof navTo === 'function'){
       window._navBackInProgress = true;   // empêche navTo de ré-empiler
@@ -18977,7 +19030,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.31";
+  var GUELANE_VERSION = "3.32";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

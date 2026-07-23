@@ -16118,6 +16118,18 @@ function _applyTheme(theme){
 if(_sysDarkMQ){ _sysDarkMQ.addEventListener('change', function(){ if(localStorage.getItem('guelane_theme')==='system') _applyTheme('system'); }); }
 
 /* ── Plan ── */
+/* Applique le plan renvoyé par le serveur (source de vérité).
+   Le compte propriétaire y reçoit "premium" automatiquement. */
+function _applyServerPlan(user){
+  try{
+    var p = user && user.plan;
+    if(p !== 'premium' && p !== 'gratuit') return;
+    localStorage.setItem('guelane_plan', p);
+    _setPlan(p);
+  }catch(e){}
+}
+window._applyServerPlan = _applyServerPlan;
+
 function _setPlan(plan){
   document.body.classList.toggle('plan-gratuit', plan==='gratuit');
   document.body.classList.toggle('plan-premium', plan==='premium');
@@ -16292,7 +16304,9 @@ function _syncSettingsUI(){
   // Niveau d'assistance Guelane IA
   _spRefreshAiLevel();
   // Plan
-  var plan = localStorage.getItem('guelane_plan') || 'premium';
+  /* Le plan du serveur prime sur la valeur locale */
+  var plan = (window.PROPHET_USER && window.PROPHET_USER.plan)
+             || localStorage.getItem('guelane_plan') || 'premium';
   _setPlan(plan);
   // Theme
   var theme = localStorage.getItem('guelane_theme') || 'light';
@@ -16313,7 +16327,9 @@ function _syncSettingsUI(){
     var theme = localStorage.getItem('guelane_theme') || 'light';
     _applyTheme(theme);
     // Plan
-    var plan = localStorage.getItem('guelane_plan') || 'premium';
+    /* Le plan du serveur prime sur la valeur locale */
+    var plan = (window.PROPHET_USER && window.PROPHET_USER.plan)
+               || localStorage.getItem('guelane_plan') || 'premium';
     _setPlan(plan);
     // Lang
     var lang = localStorage.getItem('guelane_lang') || 'fr';
@@ -16760,6 +16776,7 @@ async function _prophetVerifyGoogle(credential, fallbackName){
       try{ localStorage.setItem('prophet_token', data.token); }catch(e){}
       window.PROPHET_TOKEN = data.token;
       window.PROPHET_USER = data.user;
+    if(typeof _applyServerPlan === 'function') _applyServerPlan(data.user);
       var nm = (data.user && data.user.nom) || fallbackName;
       _lsComplete(nm, 'google');
       return;
@@ -17055,6 +17072,7 @@ async function _prophetAuth(email, pass, btn){
     try { localStorage.setItem('prophet_token', data.token); } catch(e){}
     window.PROPHET_TOKEN = data.token;
     window.PROPHET_USER = data.user;
+    if(typeof _applyServerPlan === 'function') _applyServerPlan(data.user);
     var rawName = (data.user && data.user.nom) || email.split('@')[0];
     var name = rawName.replace(/[._\-\+]/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}) || email;
     _lsSaveLastConn('email', {email: email, name: name});
@@ -17124,6 +17142,7 @@ async function _prophetAuthPhone(pseudoEmail, pass, name, btn){
     try { localStorage.setItem('prophet_token', data.token); } catch(e){}
     window.PROPHET_TOKEN = data.token;
     window.PROPHET_USER = data.user;
+    if(typeof _applyServerPlan === 'function') _applyServerPlan(data.user);
     _lsComplete(name, 'phone');
   };
   var showErr = function(msg){
@@ -17250,6 +17269,7 @@ async function _prophetSyncPlan() {
       if (r.ok) {
         var me = await r.json();
         window.PROPHET_USER = me;
+        if(typeof _applyServerPlan === 'function') _applyServerPlan(me);
       }
     }
   } catch(e){}
@@ -19088,7 +19108,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.33";
+  var GUELANE_VERSION = "3.34";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

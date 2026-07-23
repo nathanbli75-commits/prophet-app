@@ -10073,20 +10073,78 @@ var _AI_OP_FALLBACK = {
 
 /* Décrire le portefeuille actuel pour nourrir l'analyse IA */
 function _aiPortfolioContext(){
-  var lignes = [];
+  var parts = [];
   try{
-    document.querySelectorAll('#pf-list .pf-row, .pf-holding').forEach(function(r){
-      var t = (r.textContent || '').replace(/\s+/g, ' ').trim();
-      if(t) lignes.push(t.slice(0, 120));
-    });
+    var ws = (typeof walletState !== 'undefined') ? walletState : null;
+    if(ws){
+      /* ── Positions réelles : titre, quantité, prix moyen, poids ── */
+      var pos = ws.positions || {};
+      var syms = Object.keys(pos);
+      if(syms.length){
+        var total = 0;
+        syms.forEach(function(s){
+          var p = pos[s] || {};
+          total += (p.qty || 0) * (p.avgPrice || 0);
+        });
+        var lignes = syms.map(function(s){
+          var p = pos[s] || {};
+          var val = (p.qty || 0) * (p.avgPrice || 0);
+          var pct = total > 0 ? Math.round(val / total * 100) : 0;
+          return s + ' (' + (p.qty || 0) + ' titres, PRU ' + Math.round(p.avgPrice || 0)
+               + ' FCFA, ' + pct + '% du portefeuille)';
+        });
+        parts.push('Positions détenues : ' + lignes.join(' ; '));
+        parts.push('Valeur totale des positions : ' + Math.round(total) + ' FCFA');
+        /* Signaler une concentration excessive : l'IA doit pouvoir la corriger */
+        var maxPct = 0, maxSym = '';
+        syms.forEach(function(s){
+          var p = pos[s] || {};
+          var pct = total > 0 ? (p.qty || 0) * (p.avgPrice || 0) / total * 100 : 0;
+          if(pct > maxPct){ maxPct = pct; maxSym = s; }
+        });
+        if(maxPct >= 40){
+          parts.push('Attention : ' + maxSym + ' représente ' + Math.round(maxPct)
+                   + '% du portefeuille (concentration élevée)');
+        }
+      } else {
+        parts.push('Aucune position détenue actuellement');
+      }
+
+      /* ── Liquidités disponibles : cadre les montants proposables ── */
+      var dispo = (ws.tradingBalance || 0) + (ws.walletCash || 0);
+      parts.push('Liquidités disponibles pour investir : ' + Math.round(dispo) + ' FCFA');
+      if(ws.marketplaceBalance) parts.push('Solde Marketplace : ' + Math.round(ws.marketplaceBalance) + ' FCFA');
+
+      /* ── Performance : utile pour juger d'une prise de bénéfice ── */
+      if(ws.tradingPnl) parts.push('Résultat cumulé : ' + Math.round(ws.tradingPnl) + ' FCFA');
+
+      /* ── Activité récente : évite de proposer un titre tout juste traité ── */
+      var ord = ws.tradingOrders || [];
+      if(ord.length){
+        var recents = ord.slice(-4).map(function(o){
+          return (o.type || '') + ' ' + (o.sym || '') + ' x' + (o.qty || 0);
+        });
+        parts.push('Derniers ordres : ' + recents.join(', '));
+      }
+
+      /* ── Watchlist : signale un intérêt déjà exprimé ── */
+      if((ws.watchlist || []).length){
+        parts.push('Titres suivis : ' + ws.watchlist.slice(0, 6).join(', '));
+      }
+    }
   }catch(e){}
-  /* Ajouter les opérations déjà validées : elles font partie des positions */
+
+  /* ── Opérations validées via les propositions Guelane IA ── */
   try{
-    _aiLoadOps().filter(function(o){ return o.st === 'ok'; }).slice(0, 8).forEach(function(o){
-      lignes.push((o.k === 'sell' ? 'Vendu ' : 'Détenu ') + o.t + ' — ' + o.a);
-    });
+    var val = _aiLoadOps().filter(function(o){ return o.st === 'ok'; }).slice(0, 6);
+    if(val.length){
+      parts.push('Opérations validées récemment : ' + val.map(function(o){
+        return (o.k === 'sell' ? 'vente ' : 'achat ') + o.t + ' (' + o.a + ')';
+      }).join(', '));
+    }
   }catch(e){}
-  return lignes.slice(0, 15).join(' | ');
+
+  return parts.join('. ');
 }
 
 /* Nombre de propositions en attente */
@@ -19030,7 +19088,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.32";
+  var GUELANE_VERSION = "3.33";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

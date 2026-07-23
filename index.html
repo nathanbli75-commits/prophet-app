@@ -17198,6 +17198,14 @@ function _lsComplete(name, method){
   /* Conserver les données existantes du slot (PIN, avatar) si même utilisateur */
   var prev = accounts[targetSlot] || {};
   var sameUser = prev.name === name;
+  /* Slot vide (après déconnexion) : récupérer le profil archivé de cet utilisateur.
+     Évite de redemander le code de sécurité et les informations déjà fournies. */
+  if(!sameUser){
+    try{
+      var _arch = JSON.parse(localStorage.getItem('guelane_profiles') || '{}');
+      if(_arch[name]){ prev = _arch[name]; sameUser = true; }
+    }catch(e){}
+  }
   accounts[targetSlot] = {
     name:       name,
     method:     method,
@@ -17281,6 +17289,29 @@ function _lsSignOut(){
   var accounts    = _maGetAccounts();
   var activeSlot  = _maGetSlot();
   var otherSlot   = activeSlot === 0 ? 1 : 0;
+
+  /* Archiver le profil avant de retirer le compte : une déconnexion ne doit
+     pas effacer le code de sécurité ni les informations déjà renseignées.
+     Elles seront restaurées si le même utilisateur se reconnecte. */
+  try{
+    var _leaving = accounts[activeSlot];
+    if(_leaving && _leaving.name){
+      var _archive = JSON.parse(localStorage.getItem('guelane_profiles') || '{}');
+      _archive[_leaving.name] = {
+        pinCode:     _leaving.pinCode     || null,
+        pinDisabled: _leaving.pinDisabled || false,
+        avatar:      _leaving.avatar      || null,
+        firstName:   _leaving.firstName   || '',
+        middleName:  _leaving.middleName  || '',
+        lastName:    _leaving.lastName    || '',
+        birthdate:   _leaving.birthdate   || '',
+        username:    _leaving.username    || '',
+        profileDone: _leaving.profileDone || false,
+        ts:          Date.now()
+      };
+      localStorage.setItem('guelane_profiles', JSON.stringify(_archive));
+    }
+  }catch(e){}
 
   /* Retirer le compte actif de la liste */
   accounts[activeSlot] = null;
@@ -18072,6 +18103,18 @@ function _maSyncCacheToSlot(slot){
     accounts[slot].birthdate   = localStorage.getItem('guelane_birthdate')        || '';
     accounts[slot].username    = localStorage.getItem('guelane_username')        || '';
     accounts[slot].profileDone = localStorage.getItem('guelane_profile_done')==='1';
+    /* Tenir l'archive à jour : le profil doit survivre à une déconnexion */
+    var a = accounts[slot];
+    if(a && a.name){
+      var arch = JSON.parse(localStorage.getItem('guelane_profiles') || '{}');
+      arch[a.name] = {
+        pinCode: a.pinCode, pinDisabled: a.pinDisabled, avatar: a.avatar,
+        firstName: a.firstName, middleName: a.middleName, lastName: a.lastName,
+        birthdate: a.birthdate, username: a.username, profileDone: a.profileDone,
+        ts: Date.now()
+      };
+      localStorage.setItem('guelane_profiles', JSON.stringify(arch));
+    }
   }catch(e){}
   _maSaveAccounts(accounts);
 }
@@ -19108,7 +19151,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.34";
+  var GUELANE_VERSION = "3.35";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

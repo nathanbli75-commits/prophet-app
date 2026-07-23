@@ -2966,6 +2966,16 @@ body.sb-open #mobile-sidebar-btn{
 }
 .nfo-done.ok{background:rgba(34,165,94,.12);color:#22a55e;}
 .nfo-done.no{background:var(--bg3);color:var(--t3);}
+/* Bandeau de couverture marché : informe honnêtement l'utilisateur
+   de ce qui est réellement disponible pour son pays */
+.mkt-cov{
+  display:flex;align-items:flex-start;gap:9px;
+  margin:10px 12px;padding:11px 13px;border-radius:13px;
+  background:rgba(232,169,62,.10);border:1px solid rgba(232,169,62,.26);
+}
+.mkt-cov-flag{font-size:17px;line-height:1.3;flex-shrink:0;}
+.mkt-cov-tx{font-size:12.5px;line-height:1.45;color:var(--t2);}
+
 .nfo-filter-row{
   display:flex;gap:7px;padding:0 12px 10px;overflow-x:auto;
   -webkit-overflow-scrolling:touch;scrollbar-width:none;
@@ -5329,6 +5339,63 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
 }
 .alm-go:disabled{opacity:.45;}
 </style>
+<!-- ═══════════ NUMÉRO REQUIS (comptes créés sans téléphone) ═══════════ -->
+<style>
+#phone-req-modal{
+  display:none;position:fixed;inset:0;z-index:20003;
+  background:rgba(10,4,32,.72);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:18px;
+}
+#phone-req-modal.on{display:flex;}
+.prm-box{
+  width:100%;max-width:420px;background:#fff;border-radius:20px;padding:24px 20px;
+  animation:prmIn .3s cubic-bezier(.2,.9,.3,1);
+}
+@keyframes prmIn{from{transform:translateY(18px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.prm-ic{
+  width:52px;height:52px;border-radius:16px;margin:0 auto 14px;
+  background:linear-gradient(135deg,#e8a93e,#8d6cfa);
+  display:flex;align-items:center;justify-content:center;font-size:25px;
+}
+.prm-title{font-size:18px;font-weight:800;text-align:center;color:#1a1040;margin-bottom:7px;}
+.prm-sub{font-size:13px;line-height:1.5;text-align:center;color:#6b6685;margin-bottom:18px;}
+.prm-row{display:flex;gap:8px;margin-bottom:8px;}
+.prm-cc{
+  display:flex;align-items:center;gap:6px;padding:0 11px;border:1.5px solid #ece8f5;
+  border-radius:12px;background:#fff;cursor:pointer;font-size:14px;font-weight:700;color:#1a1040;
+}
+.prm-cc img{width:22px;height:16px;object-fit:cover;border-radius:3px;}
+.prm-inp{
+  flex:1;padding:13px 14px;border:1.5px solid #ece8f5;border-radius:12px;
+  font-size:15px;color:#1a1040;outline:none;
+}
+.prm-inp:focus{border-color:#8d6cfa;}
+.prm-err{font-size:12px;color:#e11d48;margin-bottom:10px;display:none;}
+.prm-err.on{display:block;}
+.prm-go{
+  width:100%;padding:14px;border:none;border-radius:13px;margin-top:6px;
+  background:linear-gradient(135deg,#e8a93e,#8d6cfa);
+  color:#04001c;font-size:15px;font-weight:800;cursor:pointer;
+}
+.prm-go:disabled{opacity:.5;}
+</style>
+<div id="phone-req-modal">
+  <div class="prm-box">
+    <div class="prm-ic">📱</div>
+    <div class="prm-title">Votre numéro de téléphone</div>
+    <div class="prm-sub">Guelane adapte les marchés, la devise et les analyses au pays de votre indicatif.</div>
+    <div class="prm-row">
+      <button type="button" class="prm-cc" id="prm-cc-btn" onclick="_lsOpenCC('prm')">
+        <img id="prm-cc-flag" src="https://flagcdn.com/w40/ci.png" alt="CI">
+        <span id="prm-cc-code">+225</span>
+      </button>
+      <input class="prm-inp" id="prm-phone" type="tel" placeholder="07 12 34 56 78" autocomplete="tel">
+    </div>
+    <div class="prm-err" id="prm-err"></div>
+    <button class="prm-go" id="prm-go" onclick="_prmSubmit()">Continuer</button>
+  </div>
+</div>
+
 <div id="ai-level-modal">
   <div class="alm-sheet">
     <div class="alm-ic">📊</div>
@@ -6084,6 +6151,18 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
       <div class="ls-field">
         <div class="ls-field-lbl">Mot de passe</div>
         <input class="ls-inp" id="ls-em-pass" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div class="ls-field" id="ls-em-phone-field">
+        <div class="ls-field-lbl">Numéro de téléphone</div>
+        <div class="ls-phone-row">
+          <button type="button" id="ls-emcc-btn" onclick="_lsOpenCC('em')" aria-label="Sélectionner l'indicatif pays">
+            <img id="ls-emcc-flag" src="https://flagcdn.com/w40/ci.png" alt="CI">
+            <span id="ls-emcc-code">+225</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <input class="ls-inp" id="ls-em-phone" type="tel" placeholder="Ex. 07 12 34 56 78" style="flex:1;" autocomplete="tel">
+        </div>
+        <div class="ls-em-hint">Votre pays détermine les marchés mis en avant dans Guelane.</div>
       </div>
       <button class="ls-submit" id="ls-em-btn" onclick="_lsLoginEmail()">Se connecter</button>
       <div class="ls-footer-note" style="margin-top:18px;">Mot de passe oublié ? Contactez le support Guelane.</div>
@@ -16480,15 +16559,160 @@ function _isoFlagUrl(iso){
 var _lsSelCC = {c:'CI',n:"Côte d'Ivoire",d:'225'};
 
 function _lsInitCC(){
-  _lsSelCC = {c:'CI',n:"Côte d'Ivoire",d:'225'};
-  _lsUpdateCCBtn(_lsSelCC);
+  var def = {c:'CI',n:"Côte d'Ivoire",d:'225'};
+  /* Initialiser les deux sélecteurs : téléphone et email */
+  window._lsCCTarget = 'ph'; _lsUpdateCCBtn(def);
+  window._lsCCTarget = 'em'; _lsUpdateCCBtn(def);
+  window._lsCCTarget = 'ph';
+  _lsSelCC = def;
 }
 
+/* Numéro international complet depuis le formulaire email */
+function _lsEmailPhone(){
+  var cc = (window._lsSelCCEm && window._lsSelCCEm.d) || '225';
+  var el = document.getElementById('ls-em-phone');
+  var num = el ? (el.value || '').replace(/[^0-9]/g, '') : '';
+  if(num.charAt(0) === '0') num = num.slice(1);   // 07... -> 7...
+  return num ? '+' + cc + num : '';
+}
+/* Numéro international complet depuis le formulaire téléphone */
+function _lsPhoneFull(){
+  var cc = (_lsSelCC && _lsSelCC.d) || '225';
+  var el = document.getElementById('ls-ph-num');
+  var num = el ? (el.value || '').replace(/[^0-9]/g, '') : '';
+  if(num.charAt(0) === '0') num = num.slice(1);
+  return num ? '+' + cc + num : '';
+}
+/* ── Écran « numéro requis » (comptes créés sans téléphone, ex. Google) ── */
+/* ── Contexte de marché : adapte l'app au pays de l'utilisateur ── */
+function _applyMarketContext(ctx){
+  if(!ctx) return;
+  try{
+    window.GUELANE_MARKET = ctx;
+    localStorage.setItem('guelane_market', JSON.stringify(ctx));
+    /* Devise affichée dans toute l'application */
+    if(ctx.devise) document.body.setAttribute('data-devise', ctx.devise);
+    if(ctx.pays)   document.body.setAttribute('data-pays', ctx.pays);
+    /* Bandeau de couverture : honnête sur ce qui est réellement disponible */
+    _renderMarketBanner(ctx);
+  }catch(e){}
+}
+window._applyMarketContext = _applyMarketContext;
+
+function _renderMarketBanner(ctx){
+  var host = document.getElementById('page-home') || document.getElementById('page-dash');
+  if(!host || !ctx || !ctx.message) return;
+  var old = document.getElementById('mkt-cov-banner');
+  if(old) old.remove();
+  var b = document.createElement('div');
+  b.id = 'mkt-cov-banner';
+  b.className = 'mkt-cov';
+  b.innerHTML = '<span class="mkt-cov-flag">' + (ctx.drapeau || '🌍') + '</span>'
+              + '<span class="mkt-cov-tx">' + ctx.message + '</span>';
+  var anchorEl = host.querySelector('.ph-greet-sub, .ai-coach') || host.firstElementChild;
+  if(anchorEl && anchorEl.parentNode) anchorEl.parentNode.insertBefore(b, anchorEl.nextSibling);
+  else host.insertBefore(b, host.firstChild);
+}
+
+/* Charger le contexte de marché depuis le serveur */
+function _loadMarketContext(){
+  var headers = {};
+  try{ if(window.PROPHET_TOKEN) headers['Authorization'] = 'Bearer ' + window.PROPHET_TOKEN; }catch(e){}
+  fetch(window.PROPHET_BACKEND + '/api/market/context', { headers: headers })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){ if(d) _applyMarketContext(d); })
+    .catch(function(){
+      /* Hors ligne : réutiliser le dernier contexte connu */
+      try{
+        var c = JSON.parse(localStorage.getItem('guelane_market') || 'null');
+        if(c) _applyMarketContext(c);
+      }catch(e){}
+    });
+}
+window._loadMarketContext = _loadMarketContext;
+
+function _prmShow(){
+  var m = document.getElementById('phone-req-modal');
+  if(!m) return;
+  window._lsCCTarget = 'prm';
+  _lsUpdateCCBtn(window._lsSelCCPrm || {c:'CI',n:"Côte d'Ivoire",d:'225'});
+  window._lsCCTarget = 'ph';
+  var e = document.getElementById('prm-err');
+  if(e){ e.textContent = ''; e.classList.remove('on'); }
+  m.classList.add('on');
+  setTimeout(function(){
+    var i = document.getElementById('prm-phone');
+    if(i) i.focus();
+  }, 320);
+}
+window._prmShow = _prmShow;
+
+function _prmSubmit(){
+  var cc  = (window._lsSelCCPrm && window._lsSelCCPrm.d) || '225';
+  var el  = document.getElementById('prm-phone');
+  var err = document.getElementById('prm-err');
+  var btn = document.getElementById('prm-go');
+  var num = el ? (el.value || '').replace(/[^0-9]/g, '') : '';
+  if(num.charAt(0) === '0') num = num.slice(1);
+  var showErr = function(msg){
+    if(err){ err.textContent = msg; err.classList.add('on'); }
+    if(btn){ btn.disabled = false; btn.textContent = 'Continuer'; }
+  };
+  if(num.length < 6) return showErr('Veuillez saisir un numéro valide.');
+  if(btn){ btn.disabled = true; btn.textContent = 'Vérification…'; }
+
+  var headers = { 'Content-Type': 'application/json' };
+  try{ if(window.PROPHET_TOKEN) headers['Authorization'] = 'Bearer ' + window.PROPHET_TOKEN; }catch(e){}
+
+  fetch(window.PROPHET_BACKEND + '/api/auth/phone', {
+    method: 'POST', headers: headers,
+    body: JSON.stringify({ phone: '+' + cc + num })
+  })
+  .then(function(r){
+    if(r.ok) return r.json();
+    return r.json().then(function(d){ throw new Error(d.detail || 'Numéro refusé'); });
+  })
+  .then(function(d){
+    var m = document.getElementById('phone-req-modal');
+    if(m) m.classList.remove('on');
+    if(btn){ btn.disabled = false; btn.textContent = 'Continuer'; }
+    if(window.PROPHET_USER){
+      window.PROPHET_USER.phone   = d.phone;
+      window.PROPHET_USER.country = d.country;
+      window.PROPHET_USER.needs_phone = false;
+    }
+    if(typeof _applyMarketContext === 'function') _applyMarketContext(d.market);
+  })
+  .catch(function(e){ showErr(e.message || 'Erreur, réessayez.'); });
+}
+window._prmSubmit = _prmSubmit;
+
+/* Réclamer le numéro si le compte n'en a pas encore */
+function _prmCheckNeeded(user){
+  if(!user) return;
+  if(user.needs_phone || !user.phone){
+    setTimeout(_prmShow, 900);
+  }
+}
+window._prmCheckNeeded = _prmCheckNeeded;
+
+window._lsEmailPhone = _lsEmailPhone;
+window._lsPhoneFull  = _lsPhoneFull;
+
 function _lsUpdateCCBtn(item){
-  _lsSelCC = item;
-  var flagEl = document.getElementById('ls-cc-flag');
-  var codeEl = document.getElementById('ls-cc-code');
-  var phEl   = document.getElementById('ls-ph-num');
+  var t = window._lsCCTarget || 'ph';
+  /* Chaque formulaire garde son propre indicatif */
+  if(t === 'em')       window._lsSelCCEm  = item;
+  else if(t === 'prm') window._lsSelCCPrm = item;
+  else                 _lsSelCC = item;
+  var ids = {
+    ph:  ['ls-cc-flag','ls-cc-code','ls-ph-num'],
+    em:  ['ls-emcc-flag','ls-emcc-code','ls-em-phone'],
+    prm: ['prm-cc-flag','prm-cc-code','prm-phone']
+  }[t];
+  var flagEl = document.getElementById(ids[0]);
+  var codeEl = document.getElementById(ids[1]);
+  var phEl   = document.getElementById(ids[2]);
   if(flagEl){ flagEl.src = _isoFlagUrl(item.c); flagEl.alt = item.c; }
   if(codeEl) codeEl.textContent = '+' + item.d;
   if(phEl){
@@ -16497,7 +16721,9 @@ function _lsUpdateCCBtn(item){
   }
 }
 
-function _lsOpenCC(){
+function _lsOpenCC(target){
+  /* 'em' = formulaire email, 'prm' = écran numéro requis, sinon téléphone */
+  window._lsCCTarget = (target === 'em' || target === 'prm') ? target : 'ph';
   var modal = document.getElementById('ls-cc-modal');
   var qEl   = document.getElementById('ls-cc-q');
   if(!modal) return;
@@ -16777,6 +17003,8 @@ async function _prophetVerifyGoogle(credential, fallbackName){
       window.PROPHET_TOKEN = data.token;
       window.PROPHET_USER = data.user;
     if(typeof _applyServerPlan === 'function') _applyServerPlan(data.user);
+    if(typeof _prmCheckNeeded === 'function') _prmCheckNeeded(data.user);
+    if(typeof _loadMarketContext === 'function') _loadMarketContext();
       var nm = (data.user && data.user.nom) || fallbackName;
       _lsComplete(nm, 'google');
       return;
@@ -17073,6 +17301,8 @@ async function _prophetAuth(email, pass, btn){
     window.PROPHET_TOKEN = data.token;
     window.PROPHET_USER = data.user;
     if(typeof _applyServerPlan === 'function') _applyServerPlan(data.user);
+    if(typeof _prmCheckNeeded === 'function') _prmCheckNeeded(data.user);
+    if(typeof _loadMarketContext === 'function') _loadMarketContext();
     var rawName = (data.user && data.user.nom) || email.split('@')[0];
     var name = rawName.replace(/[._\-\+]/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}) || email;
     _lsSaveLastConn('email', {email: email, name: name});
@@ -17095,7 +17325,7 @@ async function _prophetAuth(email, pass, btn){
     if (r.status === 401) {
       var r2 = await fetch(backend + '/api/auth/signup', {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ email: email, password: pass, nom: '' })
+        body: JSON.stringify({ email: email, password: pass, nom: '', phone: _lsEmailPhone() })
       });
       if (r2.ok) { toast('Compte créé ✓'); finishOk(await r2.json()); return; }
       var e2 = await r2.json().catch(function(){return{};});
@@ -17143,6 +17373,8 @@ async function _prophetAuthPhone(pseudoEmail, pass, name, btn){
     window.PROPHET_TOKEN = data.token;
     window.PROPHET_USER = data.user;
     if(typeof _applyServerPlan === 'function') _applyServerPlan(data.user);
+    if(typeof _prmCheckNeeded === 'function') _prmCheckNeeded(data.user);
+    if(typeof _loadMarketContext === 'function') _loadMarketContext();
     _lsComplete(name, 'phone');
   };
   var showErr = function(msg){
@@ -17160,7 +17392,7 @@ async function _prophetAuthPhone(pseudoEmail, pass, name, btn){
     if (r.status === 401) {
       var r2 = await fetch(backend + '/api/auth/signup', {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ email: pseudoEmail, password: pass, nom: name })
+        body: JSON.stringify({ email: pseudoEmail, password: pass, nom: name, phone: _lsPhoneFull() })
       });
       if (r2.ok) { toast('Compte créé ✓'); finishOk(await r2.json()); return; }
       if (r2.status === 409) { showErr('Mot de passe incorrect pour ce numéro.'); return; }
@@ -19151,7 +19383,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.35";
+  var GUELANE_VERSION = "3.36";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

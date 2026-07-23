@@ -10025,7 +10025,7 @@ function _aiLoadOps(){
   try{ return JSON.parse(localStorage.getItem(_AI_OPS_KEY) || '[]'); }catch(e){ return []; }
 }
 function _aiSaveOps(ops){
-  try{ localStorage.setItem(_AI_OPS_KEY, JSON.stringify(ops.slice(0, 40))); }catch(e){}
+  try{ localStorage.setItem(_AI_OPS_KEY, JSON.stringify(ops.slice(0, 80))); }catch(e){}
 }
 
 /* Repli local si l'IA est indisponible (hors ligne, erreur réseau) */
@@ -10068,7 +10068,7 @@ function _aiPendingCount(){
 }
 window._aiPendingCount = _aiPendingCount;
 
-var _AI_MAX_PENDING = 3;
+var _AI_MAX_PENDING = 25;
 var _aiGenBusy = false;
 
 /* Générer une proposition via Guelane IA (analyse du marché réel + portefeuille) */
@@ -10076,20 +10076,23 @@ function _aiGenerateOp(manual){
   if((_aiGetLevel() || 'assist') !== 'assist') return;
   if(_aiGenBusy) return;
 
-  /* Plafond : jamais plus de 3 propositions en attente de décision */
+  /* Plafond : nombre maximum de propositions en attente de décision */
   if(_aiPendingCount() >= _AI_MAX_PENDING){
     if(manual && typeof toast === 'function'){
-      toast('3 propositions déjà en attente — décidez-en une d\'abord');
+      toast(_AI_MAX_PENDING + ' propositions en attente — décidez-en une d\'abord');
     }
     return;
   }
 
   _aiGenBusy = true;
   var pending = _aiLoadOps().filter(function(o){ return o.st === 'pending'; });
+  /* Exclure : les propositions en attente + les titres récemment refusés */
+  var exclure = pending.map(function(o){ return o.t; })
+                       .concat(Object.keys(_aiLoadIgnored()));
   var body = {
     risque: _aiGetRisk(),
     portefeuille: _aiPortfolioContext(),
-    exclure: pending.map(function(o){ return o.t; }),
+    exclure: exclure,
     profile: (typeof mode !== 'undefined' && mode === 'pro') ? 'pro' : 'part'
   };
 
@@ -10112,7 +10115,8 @@ function _aiGenerateOp(manual){
   .catch(function(){
     /* Hors ligne ou erreur : proposition de repli, pour ne pas bloquer l'usage */
     var pool = _AI_OP_FALLBACK[_aiGetRisk()] || _AI_OP_FALLBACK.equilibre;
-    var noms = pending.map(function(o){ return o.t; });
+    var noms = pending.map(function(o){ return o.t; })
+                      .concat(Object.keys(_aiLoadIgnored()));
     var libres = pool.filter(function(p){ return noms.indexOf(p.t) === -1; });
     if(libres.length) _aiPushOp(libres[Math.floor(Math.random() * libres.length)], manual);
     else if(manual && typeof toast === 'function') toast('Aucune proposition disponible pour le moment');
@@ -10187,16 +10191,53 @@ window._aiOpenOps = _aiOpenOps;
 window._aiDismissToast = _aiDismissToast;
 
 /* Valider / ignorer une proposition */
+/* Mémoire des refus : un titre ignoré n'est pas reproposé pendant 48 h,
+   sauf si le contexte de marché a réellement changé (nouvelle justification). */
+var _AI_IGNORED_KEY = 'guelane_ai_ignored';
+var _AI_IGNORE_MS   = 48 * 60 * 60 * 1000;
+
+function _aiLoadIgnored(){
+  try{
+    var raw = JSON.parse(localStorage.getItem(_AI_IGNORED_KEY) || '{}');
+    var now = Date.now(), clean = {};
+    /* Purger les refus expirés : le titre redevient proposable */
+    Object.keys(raw).forEach(function(t){
+      if(now - raw[t] < _AI_IGNORE_MS) clean[t] = raw[t];
+    });
+    return clean;
+  }catch(e){ return {}; }
+}
+function _aiMarkIgnored(titre){
+  try{
+    var ig = _aiLoadIgnored();
+    ig[titre] = Date.now();
+    localStorage.setItem(_AI_IGNORED_KEY, JSON.stringify(ig));
+  }catch(e){}
+}
+window._aiLoadIgnored = _aiLoadIgnored;
+
 function _aiOpDecide(id, decision){
   var ops = _aiLoadOps();
-  for(var i=0;i<ops.length;i++){
-    if(ops[i].id === id){ ops[i].st = decision; ops[i].dts = Date.now(); break; }
+  if(decision === 'no'){
+    /* Ignorer : la proposition disparaît complètement de la liste.
+       Le titre est mémorisé pour ne pas revenir tout de suite. */
+    var titre = null;
+    ops = ops.filter(function(o){
+      if(o.id === id){ titre = o.t; return false; }
+      return true;
+    });
+    if(titre) _aiMarkIgnored(titre);
+  } else {
+    /* Valider : la proposition reste en historique avec son statut */
+    for(var i=0;i<ops.length;i++){
+      if(ops[i].id === id){ ops[i].st = decision; ops[i].dts = Date.now(); break; }
+    }
   }
   _aiSaveOps(ops);
   _nfRefreshBadge();
   _nfRenderOps();
   if(typeof toast === 'function'){
-    toast(decision === 'ok' ? 'Opération validée (simulation)' : 'Proposition ignorée');
+    toast(decision === 'ok' ? 'Opération validée (simulation)' : 'Proposition retirée');
   }
 }
 window._aiOpDecide = _aiOpDecide;
@@ -10235,15 +10276,15 @@ function _nfRenderOps(){
   var risk = { prudent:'Prudent', equilibre:'Équilibré', dynamique:'Dynamique' }[_aiGetRisk()] || 'Équilibré';
   if(sub) sub.textContent = 'Profil ' + risk + ' · à valider par vous';
   var nPend = ops.filter(function(o){ return o.st === 'pending'; }).length;
-  /* Bandeau de plafond : 3 propositions en attente maximum */
+  /* Bandeau de plafond — le seuil vient d'une seule constante */
   var cap = '';
-  if(nPend >= 3){
-    cap = '<div class="nfo-cap">Vous avez <b>3 propositions en attente</b>. '
-        + 'Validez-en ou ignorez-en une pour que Guelane IA puisse en préparer de nouvelles.</div>';
+  if(nPend >= _AI_MAX_PENDING){
+    cap = '<div class="nfo-cap">Vous avez <b>' + _AI_MAX_PENDING + ' propositions en attente</b>. '
+        + 'Traitez-en une pour que Guelane IA puisse en préparer de nouvelles.</div>';
   } else {
     cap = '<div class="nfo-more">'
         + '<button class="nfo-more-btn" onclick="_aiGenerateOp(true)">✨ Demander une proposition</button>'
-        + '<span class="nfo-more-hint">' + nPend + '/3 en attente</span></div>';
+        + '<span class="nfo-more-hint">' + nPend + '/' + _AI_MAX_PENDING + ' en attente</span></div>';
   }
   if(!ops.length){
     el.innerHTML = cap + '<div class="nfo-empty">Aucune proposition pour le moment.<br>'
@@ -10373,14 +10414,14 @@ window._aiMaybeAskLevel = _aiMaybeAskLevel;
   function init(){
     _aiApplyLevel(_aiGetLevel() || 'assist');
     _nfRefreshBadge();
-    /* Cycle automatique : une proposition toutes les 6 minutes, en mode assisté.
+    /* Cycle automatique : une proposition toutes les 3 minutes, en mode assisté.
        Le plafond de 3 en attente s'applique silencieusement (rien n'est généré).
        Rien n'est généré non plus si l'app est en arrière-plan ou sur un écran bloquant. */
     setInterval(function(){
       if(document.visibilityState !== 'visible') return;
       if(typeof _aiScreenBusy === 'function' && _aiScreenBusy()) return;
       _aiGenerateOp(false);
-    }, 6 * 60 * 1000);
+    }, 3 * 60 * 1000);
     setTimeout(function(){
       if(_aiGetLevel() && document.visibilityState === 'visible') _aiGenerateOp(false);
     }, 40 * 1000);
@@ -18902,7 +18943,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.27";
+  var GUELANE_VERSION = "3.28";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

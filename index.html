@@ -10022,7 +10022,23 @@ window._aiSetLevel = _aiSetLevel;
 
 /* ── Propositions d'opérations (stockage local) ── */
 function _aiLoadOps(){
-  try{ return JSON.parse(localStorage.getItem(_AI_OPS_KEY) || '[]'); }catch(e){ return []; }
+  try{
+    var ops = JSON.parse(localStorage.getItem(_AI_OPS_KEY) || '[]');
+    var changed = false;
+    var clean = [];
+    ops.forEach(function(o){
+      if(!o || !o.id || !o.t){ changed = true; return; }        // entrée corrompue
+      if(o.st === 'no'){ changed = true; return; }              // ignorée : supprimée
+      if(o.st !== 'ok' && o.st !== 'pending'){                  // statut inconnu :
+        o.st = 'pending'; changed = true;                       // redevient décidable
+      }
+      clean.push(o);
+    });
+    if(changed){
+      try{ localStorage.setItem(_AI_OPS_KEY, JSON.stringify(clean)); }catch(e){}
+    }
+    return clean;
+  }catch(e){ return []; }
 }
 function _aiSaveOps(ops){
   try{ localStorage.setItem(_AI_OPS_KEY, JSON.stringify(ops.slice(0, 80))); }catch(e){}
@@ -10303,7 +10319,12 @@ function _nfRenderOps(){
     } else if(o.st === 'ok'){
       actions = '<div class="nfo-done ok">✓ Validée — exécutée en simulation</div>';
     } else {
-      actions = '<div class="nfo-done no">Ignorée</div>';
+      /* Statut inattendu (ancienne version) : rendre la carte décidable
+         plutôt que de la laisser figée sans action possible. */
+      actions = '<div class="nfo-acts">'
+        + '<button class="nfo-btn nfo-ignore" onclick="_aiOpDecide(\'' + o.id + '\',\'no\')">Retirer</button>'
+        + '<button class="nfo-btn nfo-ok" onclick="_aiOpDecide(\'' + o.id + '\',\'ok\')">Valider</button>'
+        + '</div>';
     }
     return '<div class="nfo-card">'
       + '<div class="nfo-top">'
@@ -18943,7 +18964,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.28";
+  var GUELANE_VERSION = "3.29";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

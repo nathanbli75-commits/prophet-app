@@ -4774,6 +4774,9 @@ body.theme-dark .nf-card{box-shadow:none;}
   }
 }
 .pin-key.pin-del{font-size:19px;}
+.pin-key.pin-bio{color:#e8a93e;display:flex;align-items:center;justify-content:center;}
+.pin-key.pin-bio:active{color:#8d6cfa;}
+.pin-key.pin-bio svg{display:block;}
 .pin-key.pin-empty{
   background:transparent!important;border-color:transparent!important;
   pointer-events:none;cursor:default;
@@ -5750,7 +5753,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
       <div class="ls-logo-ic" id="ls-logo-ic">
         <img id="ls-logo-img" src="" alt="Guelane">
       </div>
-      <div class="ls-brand-nm">GUE<span>LANE</span></div>
+      <div class="ls-brand-nm">Gue<span>lane</span></div>
       <div class="ls-brand-tag">Oracle Financier Panafricain</div>
     </div>
 
@@ -5944,7 +5947,20 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
         <button class="pin-key" onclick="_pinKey('7')">7</button>
         <button class="pin-key" onclick="_pinKey('8')">8</button>
         <button class="pin-key" onclick="_pinKey('9')">9</button>
-        <button class="pin-key pin-empty" aria-hidden="true" tabindex="-1"></button>
+        <button class="pin-key pin-bio" id="pin-bio-btn" style="display:none;" onclick="_bioUnlock()" aria-label="Déverrouiller avec l'empreinte">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+            <path d="M12 4c-2.4 0-4.5 1.2-5.7 3"/>
+            <path d="M17.7 7A6.9 6.9 0 0 0 12 4"/>
+            <path d="M5 10.5a7 7 0 0 1 .6-2.3"/>
+            <path d="M12 8a4 4 0 0 0-4 4v2.5a9 9 0 0 1-.6 3.2"/>
+            <path d="M16 12a4 4 0 0 0-4-4"/>
+            <path d="M16 12v3a13 13 0 0 1-.5 3.6"/>
+            <path d="M12 12v3.5a16 16 0 0 1-.7 4.5"/>
+            <path d="M19 12a7 7 0 0 0-.5-2.6"/>
+            <path d="M19 12v2a19 19 0 0 1-.4 4"/>
+            <path d="M5 14v.5A12 12 0 0 1 4.3 19"/>
+          </svg>
+        </button>
         <button class="pin-key" onclick="_pinKey('0')">0</button>
         <button class="pin-key pin-del" onclick="_pinDel()">⌫</button>
       </div>
@@ -16491,6 +16507,8 @@ function _pinShow(mode){
   if(kp) kp.style.display = '';
   _pinAttachKbd();
   _pinUpdateUI();
+  /* Bouton empreinte : visible seulement en vérification, si l'appareil le permet */
+  if(typeof _bioRefreshButton === 'function') _bioRefreshButton(_pinMode);
 }
 
 function _pinUpdateUI(){
@@ -16605,6 +16623,8 @@ function _pinSubmit(){
       // Enregistrer aussi sur le serveur (pour retrouver le code sur tout appareil)
       _pinServerSet(newCode);
       _pinEnterApp();
+      // Proposer le déverrouillage par empreinte si l'appareil le supporte
+      if(typeof _bioOfferEnroll === 'function') _bioOfferEnroll();
     } else {
       _pinShakeError('Les codes ne correspondent pas, réessayez');
       _pinFirst = '';
@@ -16652,6 +16672,139 @@ function _pinShakeError(msg){
   setTimeout(function(){ _pinInput = ''; _pinRenderDots(); }, 700);
 }
 
+/* ═══════════════ DÉVERROUILLAGE PAR EMPREINTE (WebAuthn) ═══════════════
+   Utilise l'authentificateur intégré à l'appareil : empreinte sur Android,
+   Face ID / Touch ID sur iPhone, Windows Hello sur PC.
+   L'empreinte ne quitte JAMAIS l'appareil : le système renvoie seulement
+   une confirmation signée. Le code de sécurité reste toujours disponible. */
+
+var _BIO_KEY = 'guelane_bio_cred';   // identifiant de la clé, par appareil
+
+function _bioSupported(){
+  return !!(window.PublicKeyCredential && navigator.credentials && navigator.credentials.create);
+}
+
+/* L'appareil possède-t-il un capteur utilisable (empreinte / visage) ? */
+function _bioAvailable(){
+  if(!_bioSupported()) return Promise.resolve(false);
+  if(!PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) return Promise.resolve(false);
+  return PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()
+    .then(function(ok){ return !!ok; })
+    .catch(function(){ return false; });
+}
+
+function _bioEnrolled(){
+  try{ return !!localStorage.getItem(_BIO_KEY); }catch(e){ return false; }
+}
+
+function _b64ToBuf(s){
+  var bin = atob(s.replace(/-/g,'+').replace(/_/g,'/'));
+  var buf = new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++) buf[i] = bin.charCodeAt(i);
+  return buf;
+}
+function _bufToB64(buf){
+  var bytes = new Uint8Array(buf), s = '';
+  for(var i=0;i<bytes.length;i++) s += String.fromCharCode(bytes[i]);
+  return btoa(s);
+}
+function _bioRandom(){
+  var a = new Uint8Array(32);
+  (window.crypto || window.msCrypto).getRandomValues(a);
+  return a;
+}
+
+/* Enregistrer l'empreinte de cet appareil (proposé après création du code) */
+function _bioEnroll(){
+  if(!_bioSupported()) return Promise.resolve(false);
+  var accName = 'Guelane';
+  try{
+    var accs = JSON.parse(localStorage.getItem('guelane_accounts')||'null');
+    var slot = parseInt(localStorage.getItem('guelane_active_slot')||'0',10);
+    if(accs && accs[slot] && accs[slot].name) accName = accs[slot].name;
+  }catch(e){}
+  return navigator.credentials.create({
+    publicKey: {
+      challenge: _bioRandom(),
+      rp: { name: 'Guelane' },
+      user: { id: _bioRandom(), name: accName, displayName: accName },
+      pubKeyCredParams: [{ type:'public-key', alg:-7 }, { type:'public-key', alg:-257 }],
+      authenticatorSelection: {
+        authenticatorAttachment: 'platform',
+        userVerification: 'required',
+        residentKey: 'preferred'
+      },
+      timeout: 60000,
+      attestation: 'none'
+    }
+  }).then(function(cred){
+    if(!cred) return false;
+    try{ localStorage.setItem(_BIO_KEY, _bufToB64(cred.rawId)); }catch(e){}
+    return true;
+  }).catch(function(){ return false; });
+}
+
+/* Déverrouiller avec l'empreinte (bouton du clavier) */
+function _bioUnlock(){
+  if(!_bioEnrolled() || !_bioSupported()) return;
+  var btn = document.getElementById('pin-bio-btn');
+  if(btn) btn.disabled = true;
+  var credId;
+  try{ credId = _b64ToBuf(localStorage.getItem(_BIO_KEY)); }catch(e){ if(btn) btn.disabled=false; return; }
+  navigator.credentials.get({
+    publicKey: {
+      challenge: _bioRandom(),
+      allowCredentials: [{ type:'public-key', id: credId }],
+      userVerification: 'required',
+      timeout: 60000
+    }
+  }).then(function(assertion){
+    if(btn) btn.disabled = false;
+    if(!assertion) return;
+    /* Succès : même chemin qu'un code correct */
+    try{
+      var slot = parseInt(localStorage.getItem('guelane_active_slot')||'0',10);
+      sessionStorage.setItem('prophet_pin_ok','1');
+      sessionStorage.setItem('prophet_pin_ok_'+slot,'1');
+    }catch(e){}
+    _pinEnterApp();
+  }).catch(function(){
+    if(btn) btn.disabled = false;
+    /* Échec ou annulation : l'utilisateur saisit son code normalement */
+  });
+}
+
+/* Afficher le bouton empreinte seulement si l'appareil le supporte
+   ET que l'empreinte a été enregistrée, en mode vérification uniquement */
+function _bioRefreshButton(mode){
+  var btn = document.getElementById('pin-bio-btn');
+  if(!btn) return;
+  btn.style.display = 'none';
+  if(mode !== 'verify' || !_bioEnrolled()) return;
+  _bioAvailable().then(function(ok){
+    if(ok) btn.style.display = '';
+  });
+}
+
+/* Proposer l'empreinte juste après la création du code de sécurité */
+function _bioOfferEnroll(){
+  if(!_bioSupported() || _bioEnrolled()) return;
+  _bioAvailable().then(function(ok){
+    if(!ok) return;
+    setTimeout(function(){
+      if(!confirm("Voulez-vous aussi déverrouiller Guelane avec votre empreinte ?\n\nVotre code de sécurité restera toujours disponible.")) return;
+      _bioEnroll().then(function(done){
+        if(done && typeof toast === 'function') toast('Empreinte activée');
+      });
+    }, 600);
+  });
+}
+window._bioUnlock = _bioUnlock;
+window._bioOfferEnroll = _bioOfferEnroll;
+window._bioEnroll = _bioEnroll;
+window._bioAvailable = _bioAvailable;
+window._bioEnrolled = _bioEnrolled;
+
 function _pinEnterApp(){
   _pinDetachKbd();
   var ls = document.getElementById('login-screen');
@@ -16694,6 +16847,7 @@ function _pinForgot(){
   if(!confirm('Pour réinitialiser votre code de sécurité, vous devrez vous reconnecter.\n\nContinuer ?')) return;
   try{
     localStorage.removeItem('guelane_security_code');
+    localStorage.removeItem('guelane_bio_cred');   // l'empreinte suit le code
     sessionStorage.removeItem('prophet_pin_ok');
   }catch(e){}
   var ps = document.getElementById('pin-screen');
@@ -16787,6 +16941,34 @@ function _spRefreshSecurity(){
       + '</div></div>'
       + '<svg class="sp-action-chevron" viewBox="0 0 24 24" fill="none" stroke="#e11d48" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="9 18 15 12 9 6"/></svg>'
       + '</button>';
+    /* Ligne empreinte : ajoutée seulement si l'appareil possède un capteur */
+    if(typeof _bioAvailable === 'function'){
+      _bioAvailable().then(function(ok){
+        if(!ok) return;
+        var b = document.getElementById('sp-security-body');
+        if(!b || document.getElementById('sp-bio-row')) return;
+        var on = (typeof _bioEnrolled === 'function') && _bioEnrolled();
+        var row = document.createElement('button');
+        row.className = 'sp-action-row';
+        row.id = 'sp-bio-row';
+        row.setAttribute('onclick', '_spToggleBio()');
+        row.innerHTML =
+          '<div class="sp-toggle-info">'
+          + '<div class="sp-toggle-ic" style="background:rgba(232,169,62,.12);">'
+          + '<svg viewBox="0 0 24 24" fill="none" stroke="#e8a93e" stroke-width="1.8" stroke-linecap="round" width="18" height="18">'
+          + '<path d="M12 4c-2.4 0-4.5 1.2-5.7 3"/><path d="M17.7 7A6.9 6.9 0 0 0 12 4"/>'
+          + '<path d="M12 8a4 4 0 0 0-4 4v2.5a9 9 0 0 1-.6 3.2"/><path d="M16 12a4 4 0 0 0-4-4"/>'
+          + '<path d="M16 12v3a13 13 0 0 1-.5 3.6"/><path d="M12 12v3.5a16 16 0 0 1-.7 4.5"/>'
+          + '<path d="M19 12v2a19 19 0 0 1-.4 4"/><path d="M5 14v.5A12 12 0 0 1 4.3 19"/></svg>'
+          + '</div><div>'
+          + '<div class="sp-toggle-text">Déverrouillage par empreinte</div>'
+          + '<div class="sp-toggle-sub">' + (on ? 'Activé — appuyez pour désactiver' : 'Ouvrir Guelane avec votre empreinte') + '</div>'
+          + '</div></div>'
+          + (on ? '<div style="color:#22a55e;font-weight:700;font-size:13px;">Activé</div>' : chevron);
+        var danger = b.querySelector('.sp-danger');
+        if(danger) b.insertBefore(row, danger); else b.appendChild(row);
+      });
+    }
   } else {
     body.innerHTML =
       '<button class="sp-action-row" onclick="_spCreatePin()">'
@@ -16800,6 +16982,27 @@ function _spRefreshSecurity(){
   }
 }
 
+/* Activer / désactiver le déverrouillage par empreinte depuis les Paramètres */
+function _spToggleBio(){
+  if(typeof _bioEnrolled !== 'function') return;
+  if(_bioEnrolled()){
+    if(!confirm("Désactiver le déverrouillage par empreinte ?\n\nVous continuerez à utiliser votre code de sécurité.")) return;
+    try{ localStorage.removeItem('guelane_bio_cred'); }catch(e){}
+    if(typeof toast === 'function') toast('Empreinte désactivée');
+    _spRefreshSecurity();
+  } else {
+    _bioEnroll().then(function(done){
+      if(done){
+        if(typeof toast === 'function') toast('Empreinte activée');
+      } else {
+        if(typeof toast === 'function') toast("Activation annulée");
+      }
+      _spRefreshSecurity();
+    });
+  }
+}
+window._spToggleBio = _spToggleBio;
+
 function _confirmDeletePin(){
   var msg = '⚠️ Il est fortement déconseillé de supprimer votre code de sécurité.\n\n'
     + 'Sans code, toute personne ayant accès à cet appareil pourra utiliser Guelane et consulter vos données financières.\n\n'
@@ -16807,6 +17010,7 @@ function _confirmDeletePin(){
   if(!confirm(msg)) return;
   try{
     localStorage.removeItem('guelane_security_code');
+    localStorage.removeItem('guelane_bio_cred');   // l'empreinte suit le code
     localStorage.setItem('prophet_pin_disabled','1');
   }catch(e){}
   _spRefreshSecurity();
@@ -17924,7 +18128,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.19";
+  var GUELANE_VERSION = "3.21";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

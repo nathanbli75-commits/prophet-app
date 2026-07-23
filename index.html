@@ -2901,6 +2901,91 @@ body.sb-open #mobile-sidebar-btn{
 .ws-part .ws-cta{ background:linear-gradient(135deg,#8d6cfa,#7e57c2); color:#fff; box-shadow:0 6px 20px rgba(126,114,255,.35); }
 .ws-cta:hover{ transform:scale(1.03); filter:brightness(1.07); }
 
+/* ═══ GESTION DES INVESTISSEMENTS GUELANE IA ═══
+   Deux modes, appliqués via une classe sur le body :
+   - ai-assist : Guelane IA prépare des opérations, l'utilisateur valide
+   - ai-solo   : l'utilisateur décide seul, aucune proposition
+   Les boutons d'analyse et les conseils restent visibles dans les deux cas. */
+
+/* Bandeau de conseil Guelane IA (toujours visible) */
+.ai-coach{
+  margin:10px 12px;padding:12px 14px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(232,169,62,.12),rgba(141,108,250,.12));
+  border:1px solid rgba(232,169,62,.25);
+}
+.ai-coach-hd{display:flex;align-items:center;gap:7px;font-weight:700;font-size:12.5px;color:#8d6cfa;margin-bottom:4px;}
+.ai-coach-tx{font-size:12.5px;line-height:1.45;color:var(--t2);}
+
+/* ═══ NOTIFICATIONS : CATÉGORIES + PROPOSITIONS D'OPÉRATIONS ═══ */
+.nfc-row{display:flex;gap:8px;padding:12px 12px 4px;}
+.nfc-tab{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:11px 8px;border-radius:13px;border:1.5px solid var(--bd);
+  background:var(--bg2);cursor:pointer;position:relative;
+  font-size:12.5px;font-weight:700;color:var(--t2);transition:all .18s;
+}
+.nfc-tab.on{border-color:#8d6cfa;background:rgba(141,108,250,.08);color:var(--t1);}
+.nfc-ic{font-size:15px;}
+.nfc-badge{
+  background:var(--re);color:#fff;font-size:10.5px;font-weight:800;
+  min-width:17px;height:17px;border-radius:9px;padding:0 5px;
+  display:none;align-items:center;justify-content:center;
+}
+.nfc-badge.on{display:flex;}
+
+.nfo-sim{
+  margin:10px 12px;padding:9px 12px;border-radius:11px;
+  background:rgba(232,169,62,.10);border:1px solid rgba(232,169,62,.28);
+  font-size:11.5px;line-height:1.45;color:var(--t2);
+}
+.nfo-card{
+  margin:0 12px 11px;padding:14px;border-radius:15px;
+  background:var(--bg2);border:1px solid var(--bd);
+}
+.nfo-top{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
+.nfo-kind{
+  font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:7px;letter-spacing:.02em;
+}
+.nfo-kind.buy{background:rgba(34,165,94,.14);color:#22a55e;}
+.nfo-kind.sell{background:rgba(225,29,72,.12);color:#e11d48;}
+.nfo-kind.rebal{background:rgba(141,108,250,.14);color:#8d6cfa;}
+.nfo-time{font-size:11px;color:var(--t3);margin-left:auto;}
+.nfo-title{font-size:14.5px;font-weight:800;color:var(--t1);margin-bottom:3px;}
+.nfo-amount{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:7px;}
+.nfo-why{font-size:12.5px;line-height:1.5;color:var(--t2);margin-bottom:11px;}
+.nfo-why b{color:var(--t1);}
+.nfo-acts{display:flex;gap:8px;}
+.nfo-btn{
+  flex:1;padding:10px;border:none;border-radius:11px;
+  font-size:13px;font-weight:700;cursor:pointer;
+}
+.nfo-ignore{background:var(--bg3);color:var(--t2);}
+.nfo-ok{background:linear-gradient(135deg,#e8a93e,#8d6cfa);color:#04001c;}
+.nfo-done{
+  padding:9px 12px;border-radius:10px;font-size:12.5px;font-weight:700;text-align:center;
+}
+.nfo-done.ok{background:rgba(34,165,94,.12);color:#22a55e;}
+.nfo-done.no{background:var(--bg3);color:var(--t3);}
+.nfo-cap{
+  margin:0 12px 11px;padding:11px 13px;border-radius:12px;
+  background:rgba(225,29,72,.07);border:1px solid rgba(225,29,72,.20);
+  font-size:12.5px;line-height:1.5;color:var(--t2);
+}
+.nfo-cap b{color:var(--t1);}
+.nfo-more{
+  margin:0 12px 12px;display:flex;align-items:center;gap:10px;
+}
+.nfo-more-btn{
+  flex:1;padding:10px;border:1.5px dashed var(--bd);border-radius:12px;
+  background:transparent;color:var(--t2);font-size:12.5px;font-weight:700;cursor:pointer;
+}
+.nfo-more-btn:active{background:var(--bg3);}
+.nfo-more-hint{font-size:11.5px;color:var(--t3);font-weight:600;flex-shrink:0;}
+.nfo-empty{
+  margin:24px 12px;padding:26px 18px;text-align:center;
+  color:var(--t3);font-size:13px;line-height:1.5;
+}
+
 /* Modules masqués pour les Particuliers */
 body.profile-part .tb[data-pg="survival"],
 body.profile-part .tb[data-pg="diligence"],
@@ -5177,6 +5262,117 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
 </div>
 
 <!-- ═══ BANNIÈRE MISE À JOUR VISUELLE (invite à mettre à jour) ═══ -->
+<!-- ═══════════ CHOIX DU NIVEAU D'ASSISTANCE GUELANE IA ═══════════ -->
+<style>
+#ai-level-modal{
+  display:none;position:fixed;inset:0;z-index:20002;
+  background:rgba(10,4,32,.62);backdrop-filter:blur(6px);
+  align-items:flex-end;justify-content:center;
+}
+#ai-level-modal.on{display:flex;}
+.alm-sheet{
+  width:100%;max-width:520px;background:#fff;
+  border-radius:22px 22px 0 0;padding:22px 18px 26px;
+  max-height:92vh;overflow-y:auto;
+  animation:almUp .34s cubic-bezier(.2,.9,.3,1);
+}
+@keyframes almUp{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.alm-ic{
+  width:52px;height:52px;border-radius:16px;margin:0 auto 12px;
+  background:linear-gradient(135deg,#e8a93e,#8d6cfa);
+  display:flex;align-items:center;justify-content:center;font-size:26px;
+}
+.alm-title{font-size:19px;font-weight:800;text-align:center;color:#1a1040;margin-bottom:6px;}
+.alm-sub{font-size:13px;line-height:1.5;text-align:center;color:#6b6685;margin-bottom:18px;}
+.alm-opt{
+  width:100%;text-align:left;border:1.5px solid #ece8f5;background:#fff;
+  border-radius:15px;padding:14px 15px;margin-bottom:10px;cursor:pointer;
+  display:flex;gap:12px;align-items:flex-start;transition:border-color .18s,background .18s;
+}
+.alm-opt:active{background:#faf8ff;}
+.alm-opt.sel{border-color:#8d6cfa;background:#faf8ff;}
+.alm-opt-ic{font-size:22px;line-height:1;flex-shrink:0;margin-top:1px;}
+.alm-opt-nm{font-size:14.5px;font-weight:700;color:#1a1040;margin-bottom:3px;}
+.alm-opt-ds{font-size:12.5px;line-height:1.45;color:#6b6685;}
+.alm-risk{
+  flex:1;border:1.5px solid #ece8f5;background:#fff;border-radius:13px;
+  padding:11px 6px;cursor:pointer;text-align:center;transition:border-color .18s,background .18s;
+}
+.alm-risk.sel{border-color:#8d6cfa;background:#faf8ff;}
+.alm-risk-nm{font-size:12px;font-weight:700;color:#1a1040;margin-top:3px;}
+.alm-note{font-size:11.5px;line-height:1.5;color:#8b86a3;text-align:center;margin:14px 4px 16px;}
+.alm-go{
+  width:100%;padding:14px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,#e8a93e,#8d6cfa);
+  color:#04001c;font-size:15px;font-weight:800;cursor:pointer;
+}
+.alm-go:disabled{opacity:.45;}
+</style>
+<div id="ai-level-modal">
+  <div class="alm-sheet">
+    <div class="alm-ic">📊</div>
+    <div class="alm-title">Gestion de vos investissements</div>
+    <div class="alm-sub">Comment souhaitez-vous que Guelane IA vous accompagne&nbsp;?</div>
+
+    <button class="alm-opt" id="alm-opt-assist" onclick="_aiPickLevel('assist')">
+      <div class="alm-opt-ic">🤝</div>
+      <div>
+        <div class="alm-opt-nm">Guelane IA prépare mes opérations <span style="color:#22a55e;font-size:11.5px;font-weight:700;">· Recommandé</span></div>
+        <div class="alm-opt-ds">L'IA surveille le marché et prépare des opérations adaptées à votre profil. <b>Vous validez ou refusez chacune d'elles</b> — rien n'est exécuté sans votre accord.</div>
+      </div>
+    </button>
+
+    <button class="alm-opt" id="alm-opt-solo" onclick="_aiPickLevel('solo')">
+      <div class="alm-opt-ic">✋</div>
+      <div>
+        <div class="alm-opt-nm">Je décide seul</div>
+        <div class="alm-opt-ds">Aucune proposition. Vous construisez vos opérations vous-même, avec les analyses de Guelane IA à la demande.</div>
+      </div>
+    </button>
+
+    <div id="alm-risk-box" style="display:none;margin-top:6px;">
+      <div style="font-size:13px;font-weight:800;color:#1a1040;margin:14px 2px 8px;">Votre profil de risque</div>
+      <div style="display:flex;gap:7px;">
+        <button class="alm-risk" id="alm-risk-prudent" onclick="_aiPickRisk('prudent')">
+          <div style="font-size:17px;">🛡️</div><div class="alm-risk-nm">Prudent</div>
+        </button>
+        <button class="alm-risk" id="alm-risk-equilibre" onclick="_aiPickRisk('equilibre')">
+          <div style="font-size:17px;">⚖️</div><div class="alm-risk-nm">Équilibré</div>
+        </button>
+        <button class="alm-risk" id="alm-risk-dynamique" onclick="_aiPickRisk('dynamique')">
+          <div style="font-size:17px;">🚀</div><div class="alm-risk-nm">Dynamique</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="alm-note">🧪 Les données de marché sont actuellement simulées : aucun ordre réel n'est transmis à un intermédiaire de marché. Guelane IA est un outil d'aide à la décision — vous restez seul décideur. Modifiable à tout moment dans les Paramètres.</div>
+    <button class="alm-go" id="alm-go" onclick="_aiConfirmLevel()" disabled>Confirmer</button>
+  </div>
+</div>
+
+<!-- Demande d'autorisation avant un chargement automatique (mode « Avec autorisation ») -->
+<style>
+#ai-ask-bar{
+  position:fixed;left:12px;right:12px;bottom:calc(72px + env(safe-area-inset-bottom,0px));
+  z-index:19000;background:#fff;border-radius:16px;padding:13px 15px;
+  box-shadow:0 10px 34px rgba(20,8,60,.22);border:1px solid #ece8f5;
+  display:none;align-items:center;gap:11px;max-width:520px;margin:0 auto;
+}
+#ai-ask-bar.on{display:flex;animation:aabUp .3s cubic-bezier(.2,.9,.3,1);}
+@keyframes aabUp{from{transform:translateY(14px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.aab-ic{font-size:19px;flex-shrink:0;}
+.aab-tx{flex:1;font-size:13px;font-weight:600;color:#1a1040;line-height:1.35;}
+.aab-no,.aab-yes{border:none;border-radius:10px;padding:8px 13px;font-size:12.5px;font-weight:700;cursor:pointer;flex-shrink:0;}
+.aab-no{background:#f2eff8;color:#6b6685;}
+.aab-yes{background:linear-gradient(135deg,#e8a93e,#8d6cfa);color:#04001c;}
+</style>
+<div id="ai-ask-bar">
+  <div class="aab-ic">✨</div>
+  <div class="aab-tx" id="ai-ask-tx">Actualiser les données ?</div>
+  <button class="aab-no" onclick="_aiDismissToast()">Plus tard</button>
+  <button class="aab-yes" onclick="_aiOpenOps()">Voir</button>
+</div>
+
 <div id="visual-update-banner">
   <div class="vub-inner">
     <div class="vub-ic">
@@ -6809,6 +7005,11 @@ function _pnLater(){ _pnDismiss(); }
 
     <div class="ph-greet-hi" id="ph-greet-name">Bonjour 👋</div>
     <div class="ph-greet-sub">Commencez votre journée en construisant votre patrimoine</div>
+
+    <div class="ai-coach">
+      <div class="ai-coach-hd">✨ Guelane IA vous suggère</div>
+      <div class="ai-coach-tx" id="ai-coach-home">Commencez par le Score de survie pour évaluer la santé de votre entreprise, puis explorez les opportunités du marché BRVM.</div>
+    </div>
 
     <div class="ph-status-card">
       <div class="ph-status-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></div>
@@ -9233,6 +9434,43 @@ function _pnLater(){ _pnDismiss(); }
     <div class="page" id="page-notif">
     <div id="notif-v" class="view">
 
+      <!-- Sélecteur de catégorie -->
+      <div class="nfc-row">
+        <button class="nfc-tab on" id="nfc-tab-ops" onclick="_nfCat('ops')">
+          <span class="nfc-ic">📊</span>
+          <span class="nfc-lbl">Mes opérations</span>
+          <span class="nfc-badge" id="nfc-badge-ops">0</span>
+        </button>
+        <button class="nfc-tab" id="nfc-tab-ai" onclick="_nfCat('ai')">
+          <span class="nfc-ic">🤖</span>
+          <span class="nfc-lbl">Alertes agents IA</span>
+        </button>
+      </div>
+
+      <!-- ══ CATÉGORIE 1 : PROPOSITIONS D'OPÉRATIONS ══ -->
+      <div id="nfc-pane-ops">
+        <div class="nf-header">
+          <div class="nf-hd-row">
+            <div class="nf-hd-left">
+              <div class="nf-hd-ic" style="background:linear-gradient(135deg,rgba(232,169,62,.18),rgba(141,108,250,.18));">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg>
+              </div>
+              <div>
+                <div class="nf-hd-title">Propositions Guelane IA</div>
+                <div class="nf-hd-sub" id="nfo-sub">Opérations préparées pour vous</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="nfo-sim">🧪 Simulation — aucun ordre réel n'est transmis à un intermédiaire de marché.</div>
+
+        <div id="nfo-list" class="nf-list"></div>
+      </div>
+
+      <!-- ══ CATÉGORIE 2 : ALERTES AGENTS IA ══ -->
+      <div id="nfc-pane-ai" style="display:none;">
+
       <!-- Header -->
       <div class="nf-header">
         <div class="nf-hd-row">
@@ -9274,6 +9512,8 @@ function _pnLater(){ _pnDismiss(); }
         <span class="nf-footer-dot"></span>
         Mise à jour automatique toutes les 8 secondes
       </div>
+
+      </div><!-- /nfc-pane-ai -->
 
     </div>
     </div>
@@ -9731,6 +9971,394 @@ function renderProfilePrompts(){
     }).join('');
   }
 }
+
+/* ═══════════ GESTION DES INVESTISSEMENTS — GUELANE IA ═══════════
+   Guelane IA prépare des opérations, l'utilisateur valide ou ignore.
+   L'utilisateur reste TOUJOURS le décideur : aucune opération n'est
+   exécutée sans sa validation explicite (outil d'aide à la décision).
+     'assist' = Guelane IA prépare des propositions à valider
+     'solo'   = aucune proposition, l'utilisateur décide seul
+   Le profil de risque cadre les propositions : prudent / equilibre / dynamique. */
+
+var _AI_LEVEL_KEY = 'guelane_ai_level';
+var _AI_RISK_KEY  = 'guelane_ai_risk';
+var _AI_OPS_KEY   = 'guelane_ai_ops';
+var _aiPendingLevel = null;
+var _aiPendingRisk  = 'equilibre';
+
+function _aiGetLevel(){
+  try{ return localStorage.getItem(_AI_LEVEL_KEY) || null; }catch(e){ return null; }
+}
+function _aiGetRisk(){
+  try{ return localStorage.getItem(_AI_RISK_KEY) || 'equilibre'; }catch(e){ return 'equilibre'; }
+}
+function _aiSetRisk(risk, silent){
+  try{ localStorage.setItem(_AI_RISK_KEY, risk); }catch(e){}
+  if(!silent && typeof toast === 'function'){
+    var n = { prudent:'Prudent', equilibre:'Équilibré', dynamique:'Dynamique' };
+    toast('Profil de risque : ' + (n[risk] || risk));
+  }
+  if(typeof _spRefreshAiLevel === 'function') _spRefreshAiLevel();
+}
+window._aiGetRisk = _aiGetRisk;
+window._aiSetRisk = _aiSetRisk;
+
+function _aiApplyLevel(level){
+  var lv = (level === 'assist' || level === 'solo') ? level : 'assist';
+  var b = document.body;
+  b.classList.remove('ai-assist','ai-solo');
+  b.classList.add('ai-' + lv);
+}
+function _aiSetLevel(level, silent){
+  _aiApplyLevel(level);
+  try{ localStorage.setItem(_AI_LEVEL_KEY, level); }catch(e){}
+  if(!silent && typeof toast === 'function'){
+    toast(level === 'assist' ? 'Guelane IA prépare vos opérations' : 'Vous décidez seul');
+  }
+  if(typeof _spRefreshAiLevel === 'function') _spRefreshAiLevel();
+  _nfRefreshBadge();
+}
+window._aiGetLevel = _aiGetLevel;
+window._aiSetLevel = _aiSetLevel;
+
+/* ── Propositions d'opérations (stockage local) ── */
+function _aiLoadOps(){
+  try{ return JSON.parse(localStorage.getItem(_AI_OPS_KEY) || '[]'); }catch(e){ return []; }
+}
+function _aiSaveOps(ops){
+  try{ localStorage.setItem(_AI_OPS_KEY, JSON.stringify(ops.slice(0, 40))); }catch(e){}
+}
+
+/* Repli local si l'IA est indisponible (hors ligne, erreur réseau) */
+var _AI_OP_FALLBACK = {
+  prudent: [
+    { k:'buy',  t:'SONATEL (SNTS)',    a:'150 000 FCFA', w:'Dividende régulier et volatilité faible. Renforce la partie défensive de votre portefeuille.' },
+    { k:'buy',  t:'BOA Côte d\'Ivoire', a:'100 000 FCFA', w:'Secteur bancaire stable, rendement du dividende supérieur à la moyenne BRVM.' }
+  ],
+  equilibre: [
+    { k:'buy',  t:'ECOBANK (ETIT)',   a:'250 000 FCFA', w:'Résultats trimestriels au-dessus du consensus et valorisation sous la moyenne sectorielle.' },
+    { k:'buy',  t:'ORANGE CI (ORAC)', a:'200 000 FCFA', w:'Croissance du mobile money soutenue, position dominante sur le marché ivoirien.' }
+  ],
+  dynamique: [
+    { k:'buy',  t:'SERVAIR ABIDJAN', a:'300 000 FCFA', w:'Reprise du trafic aérien régional. Potentiel de revalorisation à moyen terme.' },
+    { k:'buy',  t:'PALMCI',          a:'280 000 FCFA', w:'Cours des matières premières agricoles orienté à la hausse sur le trimestre.' }
+  ]
+};
+
+/* Décrire le portefeuille actuel pour nourrir l'analyse IA */
+function _aiPortfolioContext(){
+  var lignes = [];
+  try{
+    document.querySelectorAll('#pf-list .pf-row, .pf-holding').forEach(function(r){
+      var t = (r.textContent || '').replace(/\s+/g, ' ').trim();
+      if(t) lignes.push(t.slice(0, 120));
+    });
+  }catch(e){}
+  /* Ajouter les opérations déjà validées : elles font partie des positions */
+  try{
+    _aiLoadOps().filter(function(o){ return o.st === 'ok'; }).slice(0, 8).forEach(function(o){
+      lignes.push((o.k === 'sell' ? 'Vendu ' : 'Détenu ') + o.t + ' — ' + o.a);
+    });
+  }catch(e){}
+  return lignes.slice(0, 15).join(' | ');
+}
+
+/* Nombre de propositions en attente */
+function _aiPendingCount(){
+  return _aiLoadOps().filter(function(o){ return o.st === 'pending'; }).length;
+}
+window._aiPendingCount = _aiPendingCount;
+
+var _AI_MAX_PENDING = 3;
+var _aiGenBusy = false;
+
+/* Générer une proposition via Guelane IA (analyse du marché réel + portefeuille) */
+function _aiGenerateOp(manual){
+  if((_aiGetLevel() || 'assist') !== 'assist') return;
+  if(_aiGenBusy) return;
+
+  /* Plafond : jamais plus de 3 propositions en attente de décision */
+  if(_aiPendingCount() >= _AI_MAX_PENDING){
+    if(manual && typeof toast === 'function'){
+      toast('3 propositions déjà en attente — décidez-en une d\'abord');
+    }
+    return;
+  }
+
+  _aiGenBusy = true;
+  var pending = _aiLoadOps().filter(function(o){ return o.st === 'pending'; });
+  var body = {
+    risque: _aiGetRisk(),
+    portefeuille: _aiPortfolioContext(),
+    exclure: pending.map(function(o){ return o.t; }),
+    profile: (typeof mode !== 'undefined' && mode === 'pro') ? 'pro' : 'part'
+  };
+
+  var headers = { 'Content-Type': 'application/json' };
+  try{ if(window.PROPHET_TOKEN) headers['Authorization'] = 'Bearer ' + window.PROPHET_TOKEN; }catch(e){}
+
+  fetch(window.PROPHET_BACKEND + '/api/invest/proposal', {
+    method: 'POST', headers: headers, body: JSON.stringify(body)
+  })
+  .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+  .then(function(d){
+    var k = (d.type === 'sell' || d.type === 'rebal') ? d.type : 'buy';
+    _aiPushOp({
+      k: k,
+      t: d.titre || 'Opportunité BRVM',
+      a: d.montant || '—',
+      w: d.justification || 'Opportunité identifiée sur le marché.'
+    }, manual);
+  })
+  .catch(function(){
+    /* Hors ligne ou erreur : proposition de repli, pour ne pas bloquer l'usage */
+    var pool = _AI_OP_FALLBACK[_aiGetRisk()] || _AI_OP_FALLBACK.equilibre;
+    var noms = pending.map(function(o){ return o.t; });
+    var libres = pool.filter(function(p){ return noms.indexOf(p.t) === -1; });
+    if(libres.length) _aiPushOp(libres[Math.floor(Math.random() * libres.length)], manual);
+    else if(manual && typeof toast === 'function') toast('Aucune proposition disponible pour le moment');
+  })
+  .then(function(){ _aiGenBusy = false; });
+}
+window._aiGenerateOp = _aiGenerateOp;
+
+/* Enregistrer une proposition et prévenir l'utilisateur sans l'interrompre */
+function _aiPushOp(p, manual){
+  var ops = _aiLoadOps();
+  ops.unshift({
+    id: 'op' + Date.now(),
+    k: p.k, t: p.t, a: p.a, w: p.w,
+    ts: Date.now(), st: 'pending'
+  });
+  _aiSaveOps(ops);
+  _nfRefreshBadge();
+  if(typeof _nfRenderOps === 'function') _nfRenderOps();
+  _aiOpToast(p);
+}
+
+/* Notification passive : signale la proposition sans interrompre.
+   Si l'utilisateur ne réagit pas, elle disparaît — la proposition
+   reste disponible dans les notifications, il décidera plus tard. */
+function _aiOpToast(op){
+  var bar = document.getElementById('ai-ask-bar');
+  if(!bar) return;
+  var n = _aiPendingCount();
+  var tx = document.getElementById('ai-ask-tx');
+  if(tx){
+    tx.innerHTML = 'Guelane IA vous propose une opération'
+      + '<span style="display:block;font-weight:600;color:var(--t3);font-size:11.5px;margin-top:1px;">'
+      + (op && op.t ? op.t : '')
+      + (n > 1 ? ' · ' + n + ' en attente' : '')
+      + '</span>';
+  }
+  bar.classList.add('on');
+  clearTimeout(bar._timer);
+  bar._timer = setTimeout(function(){ bar.classList.remove('on'); }, 7000);
+}
+
+/* Aller aux propositions depuis la bannière */
+function _aiOpenOps(){
+  var bar = document.getElementById('ai-ask-bar');
+  if(bar){ bar.classList.remove('on'); clearTimeout(bar._timer); }
+  if(typeof navTo === 'function') navTo('notif');
+}
+/* Fermer la bannière : la proposition reste en attente dans les notifications */
+function _aiDismissToast(){
+  var bar = document.getElementById('ai-ask-bar');
+  if(bar){ bar.classList.remove('on'); clearTimeout(bar._timer); }
+}
+window._aiOpenOps = _aiOpenOps;
+window._aiDismissToast = _aiDismissToast;
+
+/* Valider / ignorer une proposition */
+function _aiOpDecide(id, decision){
+  var ops = _aiLoadOps();
+  for(var i=0;i<ops.length;i++){
+    if(ops[i].id === id){ ops[i].st = decision; ops[i].dts = Date.now(); break; }
+  }
+  _aiSaveOps(ops);
+  _nfRefreshBadge();
+  _nfRenderOps();
+  if(typeof toast === 'function'){
+    toast(decision === 'ok' ? 'Opération validée (simulation)' : 'Proposition ignorée');
+  }
+}
+window._aiOpDecide = _aiOpDecide;
+
+/* Badge du nombre de propositions en attente */
+function _nfRefreshBadge(){
+  var n = _aiLoadOps().filter(function(o){ return o.st === 'pending'; }).length;
+  var b = document.getElementById('nfc-badge-ops');
+  if(b){ b.textContent = n; b.classList.toggle('on', n > 0); }
+  document.querySelectorAll('.ph-bell-dot').forEach(function(d){
+    d.style.display = n > 0 ? '' : 'none';
+  });
+}
+window._nfRefreshBadge = _nfRefreshBadge;
+
+/* Rendu de la liste des propositions */
+function _nfRenderOps(){
+  var el = document.getElementById('nfo-list');
+  if(!el) return;
+  var lvl = _aiGetLevel() || 'assist';
+  var ops = _aiLoadOps();
+  var sub = document.getElementById('nfo-sub');
+  if(lvl === 'solo'){
+    if(sub) sub.textContent = 'Vous décidez seul';
+    el.innerHTML = '<div class="nfo-empty">Guelane IA ne prépare aucune opération.<br>'
+      + 'Vous gardez la main sur toutes vos décisions.<br><br>'
+      + '<button class="nfo-btn nfo-ok" style="max-width:260px;margin:0 auto;" onclick="_aiSetLevel(\'assist\')">Activer les propositions</button></div>';
+    return;
+  }
+  var risk = { prudent:'Prudent', equilibre:'Équilibré', dynamique:'Dynamique' }[_aiGetRisk()] || 'Équilibré';
+  if(sub) sub.textContent = 'Profil ' + risk + ' · à valider par vous';
+  var nPend = ops.filter(function(o){ return o.st === 'pending'; }).length;
+  /* Bandeau de plafond : 3 propositions en attente maximum */
+  var cap = '';
+  if(nPend >= 3){
+    cap = '<div class="nfo-cap">Vous avez <b>3 propositions en attente</b>. '
+        + 'Validez-en ou ignorez-en une pour que Guelane IA puisse en préparer de nouvelles.</div>';
+  } else {
+    cap = '<div class="nfo-more">'
+        + '<button class="nfo-more-btn" onclick="_aiGenerateOp(true)">✨ Demander une proposition</button>'
+        + '<span class="nfo-more-hint">' + nPend + '/3 en attente</span></div>';
+  }
+  if(!ops.length){
+    el.innerHTML = cap + '<div class="nfo-empty">Aucune proposition pour le moment.<br>'
+      + 'Guelane IA analyse le marché et vous préviendra dès qu\'une opportunité correspond à votre profil.</div>';
+    return;
+  }
+  var kindLabel = { buy:'ACHAT', sell:'VENTE', rebal:'ARBITRAGE' };
+  el.innerHTML = cap + ops.map(function(o){
+    var when = _nfAgo(o.ts);
+    var actions;
+    if(o.st === 'pending'){
+      actions = '<div class="nfo-acts">'
+        + '<button class="nfo-btn nfo-ignore" onclick="_aiOpDecide(\'' + o.id + '\',\'no\')">Ignorer</button>'
+        + '<button class="nfo-btn nfo-ok" onclick="_aiOpDecide(\'' + o.id + '\',\'ok\')">Valider</button>'
+        + '</div>';
+    } else if(o.st === 'ok'){
+      actions = '<div class="nfo-done ok">✓ Validée — exécutée en simulation</div>';
+    } else {
+      actions = '<div class="nfo-done no">Ignorée</div>';
+    }
+    return '<div class="nfo-card">'
+      + '<div class="nfo-top">'
+      +   '<span class="nfo-kind ' + o.k + '">' + (kindLabel[o.k] || '') + '</span>'
+      +   '<span class="nfo-time">' + when + '</span>'
+      + '</div>'
+      + '<div class="nfo-title">' + o.t + '</div>'
+      + '<div class="nfo-amount">' + o.a + '</div>'
+      + '<div class="nfo-why">' + o.w + '</div>'
+      + actions
+      + '</div>';
+  }).join('');
+}
+window._nfRenderOps = _nfRenderOps;
+
+function _nfAgo(ts){
+  var s = Math.floor((Date.now() - ts) / 1000);
+  if(s < 60) return 'à l\'instant';
+  var m = Math.floor(s / 60);
+  if(m < 60) return 'il y a ' + m + ' min';
+  var h = Math.floor(m / 60);
+  if(h < 24) return 'il y a ' + h + ' h';
+  return 'il y a ' + Math.floor(h / 24) + ' j';
+}
+
+/* Bascule entre les deux catégories de notifications */
+function _nfCat(cat){
+  var isOps = (cat === 'ops');
+  var po = document.getElementById('nfc-pane-ops');
+  var pa = document.getElementById('nfc-pane-ai');
+  if(po) po.style.display = isOps ? '' : 'none';
+  if(pa) pa.style.display = isOps ? 'none' : '';
+  var to = document.getElementById('nfc-tab-ops');
+  var ta = document.getElementById('nfc-tab-ai');
+  if(to) to.classList.toggle('on', isOps);
+  if(ta) ta.classList.toggle('on', !isOps);
+  if(isOps) _nfRenderOps();
+}
+window._nfCat = _nfCat;
+
+/* ── Popup de choix (à la première visite d'un module d'investissement) ── */
+function _aiPickLevel(level){
+  _aiPendingLevel = level;
+  ['assist','solo'].forEach(function(k){
+    var el = document.getElementById('alm-opt-' + k);
+    if(el) el.classList.toggle('sel', k === level);
+  });
+  var rb = document.getElementById('alm-risk-box');
+  if(rb) rb.style.display = (level === 'assist') ? '' : 'none';
+  var go = document.getElementById('alm-go');
+  if(go) go.disabled = false;
+}
+window._aiPickLevel = _aiPickLevel;
+
+function _aiPickRisk(r){
+  _aiPendingRisk = r;
+  ['prudent','equilibre','dynamique'].forEach(function(k){
+    var el = document.getElementById('alm-risk-' + k);
+    if(el) el.classList.toggle('sel', k === r);
+  });
+}
+window._aiPickRisk = _aiPickRisk;
+
+function _aiConfirmLevel(){
+  if(!_aiPendingLevel) return;
+  if(_aiPendingLevel === 'assist') _aiSetRisk(_aiPendingRisk, true);
+  _aiSetLevel(_aiPendingLevel, true);
+  var m = document.getElementById('ai-level-modal');
+  if(m) m.classList.remove('on');
+  _aiPendingLevel = null;
+  if(typeof toast === 'function'){
+    toast(_aiGetLevel() === 'assist' ? 'Guelane IA prépare vos opérations' : 'Vous décidez seul');
+  }
+}
+window._aiConfirmLevel = _aiConfirmLevel;
+
+function _aiShowLevelModal(){
+  var m = document.getElementById('ai-level-modal');
+  if(!m) return;
+  _aiPendingLevel = null;
+  _aiPendingRisk = _aiGetRisk();
+  ['assist','solo'].forEach(function(k){
+    var el = document.getElementById('alm-opt-' + k);
+    if(el) el.classList.remove('sel');
+  });
+  var go = document.getElementById('alm-go');
+  if(go) go.disabled = true;
+  var cur = _aiGetLevel();
+  if(cur) _aiPickLevel(cur); else { var rb=document.getElementById('alm-risk-box'); if(rb) rb.style.display='none'; }
+  _aiPickRisk(_aiPendingRisk);
+  m.classList.add('on');
+}
+window._aiShowLevelModal = _aiShowLevelModal;
+
+/* Proposer le choix à la première entrée dans un module d'investissement */
+function _aiMaybeAskLevel(){
+  if(_aiGetLevel()) return;
+  var ps = document.getElementById('pin-screen');
+  if(ps && getComputedStyle(ps).display !== 'none') return;
+  var ls = document.getElementById('login-screen');
+  if(ls && getComputedStyle(ls).display !== 'none') return;
+  setTimeout(function(){ if(!_aiGetLevel()) _aiShowLevelModal(); }, 700);
+}
+window._aiMaybeAskLevel = _aiMaybeAskLevel;
+
+/* Démarrage : appliquer le niveau et lancer le cycle de propositions */
+(function(){
+  function init(){
+    _aiApplyLevel(_aiGetLevel() || 'assist');
+    _nfRefreshBadge();
+    /* Cycle automatique : une proposition toutes les ~6 minutes, en mode assisté.
+       Le plafond de 3 en attente s'applique silencieusement (rien n'est généré). */
+    setInterval(function(){ _aiGenerateOp(false); }, 6 * 60 * 1000);
+    setTimeout(function(){ if(_aiGetLevel()) _aiGenerateOp(false); }, 40 * 1000);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
 
 function setProfile(nextMode, withToast, skipSave){
   mode=nextMode==='part'?'part':'pro';
@@ -12548,15 +13176,25 @@ async function loadWorldMarket() {
   }
 }
 
-// Charger automatiquement le marché quand on arrive sur le dashboard
+// Charger le marché à l'arrivée sur une page — selon le niveau d'assistance choisi
 (function(){
   var _origNavTo = window.navTo;
   if (typeof _origNavTo === 'function') {
     window.navTo = function(name){
       _origNavTo(name);
-      if (name === 'dash' || name === 'dashboard') { setTimeout(function(){ loadBRVM(); loadWorldMarket(); }, 300); }
-      if (name === 'trade' || name === 'trading') { setTimeout(syncTradingBRVM, 300); }
+      if (name === 'dash' || name === 'dashboard') {
+        setTimeout(function(){ loadBRVM(); loadWorldMarket(); }, 300);
+      }
+      if (name === 'trade' || name === 'trading') {
+        setTimeout(syncTradingBRVM, 300);
+      }
       if (name === 'pred') { setTimeout(function(){ if(typeof loadPredDashboard==='function') loadPredDashboard(); }, 400); }
+      // Page notifications : afficher les propositions
+      if (name === 'notif') { setTimeout(function(){ if(typeof _nfCat==='function') _nfCat('ops'); }, 60); }
+      // Première entrée dans un module d'investissement : proposer le mode de gestion
+      if (name==='trade'||name==='trading'||name==='portfolio2'||name==='invest'||name==='inv-companies') {
+        if(typeof _aiMaybeAskLevel === 'function') _aiMaybeAskLevel();
+      }
     };
   }
 })();
@@ -14277,6 +14915,40 @@ function closeProfilePanel(){
         </div>
       </div>
 
+      <!-- ── GESTION DES INVESTISSEMENTS ── -->
+      <div class="sp-section">
+        <div class="sp-section-hd">Gestion des investissements</div>
+        <div class="sp-section-body">
+          <div class="sp-pill-row">
+            <div class="sp-pill" id="sp-ai-assist" onclick="_aiSetLevel('assist')">
+              <span class="sp-pill-icon">🤝</span>
+              <span class="sp-pill-lbl">Propositions IA</span>
+            </div>
+            <div class="sp-pill" id="sp-ai-solo" onclick="_aiSetLevel('solo')">
+              <span class="sp-pill-icon">✋</span>
+              <span class="sp-pill-lbl">Je décide seul</span>
+            </div>
+          </div>
+          <div id="sp-risk-row" style="margin-top:9px;">
+            <div class="sp-toggle-sub" style="margin-bottom:6px;padding:0 2px;font-weight:700;">Profil de risque</div>
+            <div class="sp-pill-row">
+              <div class="sp-pill" id="sp-risk-prudent" onclick="_aiSetRisk('prudent')">
+                <span class="sp-pill-icon">🛡️</span><span class="sp-pill-lbl">Prudent</span>
+              </div>
+              <div class="sp-pill" id="sp-risk-equilibre" onclick="_aiSetRisk('equilibre')">
+                <span class="sp-pill-icon">⚖️</span><span class="sp-pill-lbl">Équilibré</span>
+              </div>
+              <div class="sp-pill" id="sp-risk-dynamique" onclick="_aiSetRisk('dynamique')">
+                <span class="sp-pill-icon">🚀</span><span class="sp-pill-lbl">Dynamique</span>
+              </div>
+            </div>
+          </div>
+          <div class="sp-toggle-sub" style="margin-top:8px;padding:0 2px;">
+            Guelane IA prépare des opérations, vous validez ou refusez chacune d'elles. Données simulées : aucun ordre réel n'est transmis.
+          </div>
+        </div>
+      </div>
+
       <!-- ── LANGUE ── -->
       <div class="sp-section">
         <div class="sp-section-hd" data-i18n="sp.lang">Langue</div>
@@ -15387,10 +16059,28 @@ function closeSettings(){
   var ov = document.getElementById('settings-overlay');
   if(ov) ov.classList.remove('sp-open');
 }
+function _spRefreshAiLevel(){
+  var lv = (typeof _aiGetLevel === 'function' && _aiGetLevel()) || 'assist';
+  ['assist','solo'].forEach(function(k){
+    var el = document.getElementById('sp-ai-' + k);
+    if(el) el.classList.toggle('active', k === lv);
+  });
+  var rk = (typeof _aiGetRisk === 'function' && _aiGetRisk()) || 'equilibre';
+  ['prudent','equilibre','dynamique'].forEach(function(k){
+    var el = document.getElementById('sp-risk-' + k);
+    if(el) el.classList.toggle('active', k === rk);
+  });
+  var rr = document.getElementById('sp-risk-row');
+  if(rr) rr.style.display = (lv === 'assist') ? '' : 'none';
+}
+window._spRefreshAiLevel = _spRefreshAiLevel;
+
 function _syncSettingsUI(){
   // Mode d'utilisation
   document.getElementById('sp-mode-pro') && document.getElementById('sp-mode-pro').classList.toggle('active', mode==='pro');
   document.getElementById('sp-mode-part') && document.getElementById('sp-mode-part').classList.toggle('active', mode==='part');
+  // Niveau d'assistance Guelane IA
+  _spRefreshAiLevel();
   // Plan
   var plan = localStorage.getItem('guelane_plan') || 'premium';
   _setPlan(plan);
@@ -18128,7 +18818,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.21";
+  var GUELANE_VERSION = "3.25";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

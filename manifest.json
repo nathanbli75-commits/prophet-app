@@ -1,13 +1,15 @@
 {
-  "name": "GUELANE",
-  "short_name": "GUELANE",
+  "name": "Guelane",
+  "short_name": "Guelane",
   "description": "L'oracle financier panafricain — intelligence financière institutionnelle pour l'Afrique de l'Ouest",
-  "start_url": "./index.html",
+  "version": "3.9",
+  "id": "guelane-app-v39",
+  "start_url": "./index.html?v=39",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#fbfaff",
-  "theme_color": "#fbfaff",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "lang": "fr",
   "icons": [
     {

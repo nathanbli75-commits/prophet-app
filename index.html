@@ -4859,9 +4859,19 @@ body.theme-dark .nf-card{box-shadow:none;}
   }
 }
 .pin-key.pin-del{font-size:19px;}
-.pin-key.pin-bio{color:#e8a93e;display:flex;align-items:center;justify-content:center;}
-.pin-key.pin-bio:active{color:#8d6cfa;}
-.pin-key.pin-bio svg{display:block;}
+.pin-bio-hint{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  font-size:12.5px;font-weight:600;color:rgba(255,255,255,.62);
+  margin:14px auto 0;text-align:center;max-width:280px;line-height:1.4;
+}
+.pin-bio-hint::before{
+  content:'';width:17px;height:17px;flex-shrink:0;
+  background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round'%3E%3Cpath d='M12 4c-2.4 0-4.5 1.2-5.7 3'/%3E%3Cpath d='M17.7 7A6.9 6.9 0 0 0 12 4'/%3E%3Cpath d='M12 8a4 4 0 0 0-4 4v2.5a9 9 0 0 1-.6 3.2'/%3E%3Cpath d='M16 12a4 4 0 0 0-4-4'/%3E%3Cpath d='M16 12v3a13 13 0 0 1-.5 3.6'/%3E%3Cpath d='M12 12v3.5a16 16 0 0 1-.7 4.5'/%3E%3Cpath d='M19 12v2a19 19 0 0 1-.4 4'/%3E%3Cpath d='M5 14v.5A12 12 0 0 1 4.3 19'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.7' stroke-linecap='round'%3E%3Cpath d='M12 4c-2.4 0-4.5 1.2-5.7 3'/%3E%3Cpath d='M17.7 7A6.9 6.9 0 0 0 12 4'/%3E%3Cpath d='M12 8a4 4 0 0 0-4 4v2.5a9 9 0 0 1-.6 3.2'/%3E%3Cpath d='M16 12a4 4 0 0 0-4-4'/%3E%3Cpath d='M16 12v3a13 13 0 0 1-.5 3.6'/%3E%3Cpath d='M12 12v3.5a16 16 0 0 1-.7 4.5'/%3E%3Cpath d='M19 12v2a19 19 0 0 1-.4 4'/%3E%3Cpath d='M5 14v.5A12 12 0 0 1 4.3 19'/%3E%3C/svg%3E") center/contain no-repeat;
+  animation:bioPulse 1.9s ease-in-out infinite;
+}
+@keyframes bioPulse{0%,100%{opacity:.55;}50%{opacity:1;}}
 .pin-key.pin-empty{
   background:transparent!important;border-color:transparent!important;
   pointer-events:none;cursor:default;
@@ -6121,7 +6131,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
 </div><!-- /login-screen -->
 
 <!-- ═══════════════════════ PIN / CODE DE SÉCURITÉ ═══════════════════════ -->
-<div id="pin-screen">
+<div id="pin-screen" onclick="if(window._bioScreenTap)_bioScreenTap(event)">
   <div class="pin-scroll">
     <div class="pin-container">
       <div class="pin-app-icon">🔐</div>
@@ -6134,6 +6144,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
         <div class="pin-dot"></div>
       </div>
       <div class="pin-error-msg" id="pin-error">Code incorrect, réessayez</div>
+      <div class="pin-bio-hint" id="pin-bio-hint" style="display:none;"></div>
       <div class="pin-keypad">
         <button class="pin-key" onclick="_pinKey('1')">1</button>
         <button class="pin-key" onclick="_pinKey('2')">2</button>
@@ -6144,20 +6155,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
         <button class="pin-key" onclick="_pinKey('7')">7</button>
         <button class="pin-key" onclick="_pinKey('8')">8</button>
         <button class="pin-key" onclick="_pinKey('9')">9</button>
-        <button class="pin-key pin-bio" id="pin-bio-btn" style="display:none;" onclick="_bioUnlock()" aria-label="Déverrouiller avec l'empreinte">
-          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-            <path d="M12 4c-2.4 0-4.5 1.2-5.7 3"/>
-            <path d="M17.7 7A6.9 6.9 0 0 0 12 4"/>
-            <path d="M5 10.5a7 7 0 0 1 .6-2.3"/>
-            <path d="M12 8a4 4 0 0 0-4 4v2.5a9 9 0 0 1-.6 3.2"/>
-            <path d="M16 12a4 4 0 0 0-4-4"/>
-            <path d="M16 12v3a13 13 0 0 1-.5 3.6"/>
-            <path d="M12 12v3.5a16 16 0 0 1-.7 4.5"/>
-            <path d="M19 12a7 7 0 0 0-.5-2.6"/>
-            <path d="M19 12v2a19 19 0 0 1-.4 4"/>
-            <path d="M5 14v.5A12 12 0 0 1 4.3 19"/>
-          </svg>
-        </button>
+        <button class="pin-key pin-empty" aria-hidden="true" tabindex="-1"></button>
         <button class="pin-key" onclick="_pinKey('0')">0</button>
         <button class="pin-key pin-del" onclick="_pinDel()">⌫</button>
       </div>
@@ -17231,7 +17229,8 @@ function _pinShow(mode){
   _pinAttachKbd();
   _pinUpdateUI();
   /* Bouton empreinte : visible seulement en vérification, si l'appareil le permet */
-  if(typeof _bioRefreshButton === 'function') _bioRefreshButton(_pinMode);
+  /* Empreinte : tentative automatique en mode vérification */
+  if(_pinMode === 'verify' && typeof _bioAutoStart === 'function') _bioAutoStart();
 }
 
 function _pinUpdateUI(){
@@ -17286,6 +17285,8 @@ function _pinRenderDots(){
 }
 
 function _pinKey(d){
+  /* L'utilisateur choisit de taper son code : masquer l'invite empreinte */
+  if(typeof _bioHint === 'function') _bioHint('');
   if(_pinInput.length >= 4) return;
   _pinInput += d;
   _pinRenderDots();
@@ -17467,14 +17468,31 @@ function _bioEnroll(){
   }).catch(function(){ return false; });
 }
 
-/* Déverrouiller avec l'empreinte (bouton du clavier) */
-function _bioUnlock(){
-  if(!_bioEnrolled() || !_bioSupported()) return;
-  var btn = document.getElementById('pin-bio-btn');
-  if(btn) btn.disabled = true;
+/* ── Déverrouillage automatique par empreinte ──
+   Le capteur s'active de lui-même à l'ouverture de l'écran de sécurité.
+   Les navigateurs exigent parfois un geste de l'utilisateur : dans ce cas,
+   le premier contact avec l'écran déclenche le capteur. Le clavier reste
+   toujours disponible en repli. */
+
+var _bioBusy   = false;   // une demande est en cours
+var _bioTried  = false;   // tentative automatique déjà faite pour cet affichage
+var _bioCancel = false;   // l'utilisateur a refusé : ne pas insister
+
+function _bioUnlock(fromGesture){
+  if(!_bioEnrolled() || !_bioSupported()) return Promise.resolve(false);
+  if(_bioBusy) return Promise.resolve(false);
+  /* Ne rien tenter si l'écran de code n'est plus affiché */
+  var ps = document.getElementById('pin-screen');
+  if(!ps || getComputedStyle(ps).display === 'none') return Promise.resolve(false);
+
+  _bioBusy = true;
   var credId;
-  try{ credId = _b64ToBuf(localStorage.getItem(_BIO_KEY)); }catch(e){ if(btn) btn.disabled=false; return; }
-  navigator.credentials.get({
+  try{ credId = _b64ToBuf(localStorage.getItem(_BIO_KEY)); }
+  catch(e){ _bioBusy = false; return Promise.resolve(false); }
+
+  _bioHint('Posez votre doigt sur le capteur');
+
+  return navigator.credentials.get({
     publicKey: {
       challenge: _bioRandom(),
       allowCredentials: [{ type:'public-key', id: credId }],
@@ -17482,46 +17500,79 @@ function _bioUnlock(){
       timeout: 60000
     }
   }).then(function(assertion){
-    if(btn) btn.disabled = false;
-    if(!assertion) return;
+    _bioBusy = false;
+    if(!assertion) return false;
     /* Succès : même chemin qu'un code correct */
     try{
       var slot = parseInt(localStorage.getItem('guelane_active_slot')||'0',10);
       sessionStorage.setItem('prophet_pin_ok','1');
       sessionStorage.setItem('prophet_pin_ok_'+slot,'1');
     }catch(e){}
+    _bioHint('');
     _pinEnterApp();
-  }).catch(function(){
-    if(btn) btn.disabled = false;
-    /* Échec ou annulation : l'utilisateur saisit son code normalement */
+    return true;
+  }).catch(function(err){
+    _bioBusy = false;
+    var name = (err && err.name) || '';
+    /* Refus explicite de l'utilisateur : ne plus relancer automatiquement */
+    if(name === 'NotAllowedError' && fromGesture) _bioCancel = true;
+    _bioHint(_bioCancel ? '' : 'Touchez l\'écran pour utiliser votre empreinte');
+    return false;
   });
 }
 
-/* Afficher le bouton empreinte seulement si l'appareil le supporte
-   ET que l'empreinte a été enregistrée, en mode vérification uniquement */
-function _bioRefreshButton(mode){
-  var btn = document.getElementById('pin-bio-btn');
-  if(!btn) return;
-  btn.style.display = 'none';
-  if(mode !== 'verify' || !_bioEnrolled()) return;
+/* Message d'invitation sous les points du code */
+function _bioHint(txt){
+  var el = document.getElementById('pin-bio-hint');
+  if(!el) return;
+  el.textContent = txt || '';
+  el.style.display = txt ? '' : 'none';
+}
+
+/* Tentative automatique dès l'affichage de l'écran de sécurité */
+function _bioAutoStart(){
+  _bioTried  = false;
+  _bioCancel = false;
+  _bioHint('');
+  if(!_bioEnrolled() || !_bioSupported()) return;
   _bioAvailable().then(function(ok){
-    if(ok) btn.style.display = '';
+    if(!ok) return;
+    _bioTried = true;
+    /* 1re voie : déclenchement immédiat, sans action de l'utilisateur */
+    _bioUnlock(false).then(function(done){
+      if(!done && !_bioCancel) _bioHint('Touchez l\'écran pour utiliser votre empreinte');
+    });
   });
 }
 
-/* Proposer l'empreinte juste après la création du code de sécurité */
+/* 2e voie : le premier contact avec l'écran relance le capteur */
+function _bioScreenTap(e){
+  if(_bioCancel || _bioBusy) return;
+  if(!_bioEnrolled() || !_bioSupported()) return;
+  /* Ignorer les appuis sur le clavier : l'utilisateur a choisi de taper son code */
+  if(e && e.target && e.target.closest && e.target.closest('.pin-keypad, .pin-forgot')) return;
+  _bioUnlock(true);
+}
+/* Activation automatique de l'empreinte après création du code de sécurité.
+   L'appareil demande lui-même confirmation via son dialogue système :
+   pas besoin d'une question supplémentaire dans l'app.
+   Désactivable ensuite dans Paramètres → Sécurité. */
 function _bioOfferEnroll(){
   if(!_bioSupported() || _bioEnrolled()) return;
   _bioAvailable().then(function(ok){
     if(!ok) return;
     setTimeout(function(){
-      if(!confirm("Voulez-vous aussi déverrouiller Guelane avec votre empreinte ?\n\nVotre code de sécurité restera toujours disponible.")) return;
       _bioEnroll().then(function(done){
-        if(done && typeof toast === 'function') toast('Empreinte activée');
+        if(done && typeof toast === 'function'){
+          toast('Déverrouillage par empreinte activé');
+        }
       });
-    }, 600);
+    }, 700);
   });
 }
+
+window._bioScreenTap = _bioScreenTap;
+
 window._bioUnlock = _bioUnlock;
 window._bioOfferEnroll = _bioOfferEnroll;
 window._bioEnroll = _bioEnroll;
@@ -18851,7 +18902,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.26";
+  var GUELANE_VERSION = "3.27";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

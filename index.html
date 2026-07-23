@@ -14527,10 +14527,18 @@ function _applySlide(pageName, direction){
       _prophetShowLock(name);
       return;
     }
-    // Mode Investisseur: only invest + wallet allowed
+    // Mode Investisseur : navigation restreinte au Marketplace et au Portefeuille.
+    // Exception : revenir  l'accueil quitte automatiquement ce mode, sinon
+    // l'utilisateur se retrouve bloqu sur une page qu'il n'a pas demande.
     if(typeof _appMode !== 'undefined' && _appMode === 'investisseur'){
-      var allowed = ['invest','wallet','notif'];
-      if(allowed.indexOf(name) === -1) name = 'invest';
+      if(name === 'home' || name === 'dash'){
+        _appMode = 'normal';
+        try{ localStorage.setItem('guelane_app_mode','normal'); }catch(e){}
+        if(typeof _applyAppMode === 'function') _applyAppMode();
+      } else {
+        var allowed = ['invest','wallet','notif'];
+        if(allowed.indexOf(name) === -1) name = 'invest';
+      }
     }
     var dir = _getSlideDirection(_currentPageName, name);
     _origNavTo(name);
@@ -14608,7 +14616,8 @@ function _setAppMode(mode){
   localStorage.setItem('guelane_app_mode', mode);
   _applyAppMode();
   if(mode === 'normal'){
-    navTo('dash');
+    /* Revenir à l'accueil du profil actif : Home en Entrepreneur, Dashboard en Particulier */
+    navTo(document.body.classList.contains('profile-pro') ? 'home' : 'dash');
     _modeToast('✓ Mode Normal rétabli','Toutes les fonctionnalités Guelane sont à nouveau disponibles.','normal');
   }
 }
@@ -18968,7 +18977,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.30";
+  var GUELANE_VERSION = "3.31";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

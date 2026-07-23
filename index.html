@@ -5354,7 +5354,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
 <style>
 #ai-ask-bar{
   position:fixed;left:12px;right:12px;bottom:calc(72px + env(safe-area-inset-bottom,0px));
-  z-index:19000;background:#fff;border-radius:16px;padding:13px 15px;
+  z-index:19500;background:#fff;border-radius:16px;padding:13px 15px;
   box-shadow:0 10px 34px rgba(20,8,60,.22);border:1px solid #ece8f5;
   display:none;align-items:center;gap:11px;max-width:520px;margin:0 auto;
 }
@@ -5733,6 +5733,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
         }catch(e){}
       }
     } else if(document.visibilityState === 'visible'){
+      if(typeof _nfRefreshBadge === 'function') setTimeout(_nfRefreshBadge, 100);
       if(_bgSince === 0) return;  // pas un vrai retour d'arrière-plan
       var away = Date.now() - _bgSince;
       _bgSince = 0;
@@ -7504,7 +7505,7 @@ function _pnLater(){ _pnDismiss(); }
         <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
         <path d="M13.73 21a2 2 0 01-3.46 0"/>
       </svg>
-      <span class="dmh-welcome-badge">3</span>
+      <span class="dmh-welcome-badge" id="dmh-notif-badge">0</span>
     </button>
   </div>
 
@@ -10139,9 +10140,23 @@ function _aiPushOp(p, manual){
 /* Notification passive : signale la proposition sans interrompre.
    Si l'utilisateur ne réagit pas, elle disparaît — la proposition
    reste disponible dans les notifications, il décidera plus tard. */
+/* L'app est-elle sur un écran bloquant ? (code, connexion, lancement, popup) */
+function _aiScreenBusy(){
+  var ids = ['pin-screen','login-screen','boot-splash','boot-loading',
+             'welcome-screen','ai-level-modal','offline-screen'];
+  for(var i=0;i<ids.length;i++){
+    var el = document.getElementById(ids[i]);
+    if(el && getComputedStyle(el).display !== 'none') return true;
+  }
+  return false;
+}
+
 function _aiOpToast(op){
   var bar = document.getElementById('ai-ask-bar');
   if(!bar) return;
+  /* Ne jamais s'afficher par-dessus un écran bloquant : la proposition
+     est déjà enregistrée, l'utilisateur la verra dans ses notifications. */
+  if(_aiScreenBusy()) return;
   var n = _aiPendingCount();
   var tx = document.getElementById('ai-ask-tx');
   if(tx){
@@ -10151,6 +10166,9 @@ function _aiOpToast(op){
       + (n > 1 ? ' · ' + n + ' en attente' : '')
       + '</span>';
   }
+  /* Inutile de prévenir si l'utilisateur est déjà sur la page des notifications */
+  var np = document.getElementById('page-notif');
+  if(np && np.classList.contains('active')) return;
   bar.classList.add('on');
   clearTimeout(bar._timer);
   bar._timer = setTimeout(function(){ bar.classList.remove('on'); }, 7000);
@@ -10190,7 +10208,13 @@ function _nfRefreshBadge(){
   var n = _aiLoadOps().filter(function(o){ return o.st === 'pending'; }).length;
   var b = document.getElementById('nfc-badge-ops');
   if(b){ b.textContent = n; b.classList.toggle('on', n > 0); }
+  /* Point rouge sur la cloche du mode Entrepreneur */
   document.querySelectorAll('.ph-bell-dot').forEach(function(d){
+    d.style.display = n > 0 ? '' : 'none';
+  });
+  /* Badge chiffré sur la cloche du mode Particulier */
+  document.querySelectorAll('.dmh-welcome-badge').forEach(function(d){
+    d.textContent = n;
     d.style.display = n > 0 ? '' : 'none';
   });
 }
@@ -10351,10 +10375,17 @@ window._aiMaybeAskLevel = _aiMaybeAskLevel;
   function init(){
     _aiApplyLevel(_aiGetLevel() || 'assist');
     _nfRefreshBadge();
-    /* Cycle automatique : une proposition toutes les ~6 minutes, en mode assisté.
-       Le plafond de 3 en attente s'applique silencieusement (rien n'est généré). */
-    setInterval(function(){ _aiGenerateOp(false); }, 6 * 60 * 1000);
-    setTimeout(function(){ if(_aiGetLevel()) _aiGenerateOp(false); }, 40 * 1000);
+    /* Cycle automatique : une proposition toutes les 6 minutes, en mode assisté.
+       Le plafond de 3 en attente s'applique silencieusement (rien n'est généré).
+       Rien n'est généré non plus si l'app est en arrière-plan ou sur un écran bloquant. */
+    setInterval(function(){
+      if(document.visibilityState !== 'visible') return;
+      if(typeof _aiScreenBusy === 'function' && _aiScreenBusy()) return;
+      _aiGenerateOp(false);
+    }, 6 * 60 * 1000);
+    setTimeout(function(){
+      if(_aiGetLevel() && document.visibilityState === 'visible') _aiGenerateOp(false);
+    }, 40 * 1000);
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
@@ -10410,6 +10441,8 @@ function setProfile(nextMode, withToast, skipSave){
   renderProfilePrompts();
   rebuildAlloc();
   applyProfileUI();
+  /* Les deux modes ont leur propre cloche : resynchroniser le badge */
+  if(typeof _nfRefreshBadge === 'function') setTimeout(_nfRefreshBadge, 50);
   if(withToast) toast(mode==='pro'?'Profil Entrepreneur activé':'Profil Particulier activé');
 }
 
@@ -18818,7 +18851,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.25";
+  var GUELANE_VERSION = "3.26";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

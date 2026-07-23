@@ -5359,17 +5359,14 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
 }
 .prm-title{font-size:18px;font-weight:800;text-align:center;color:#1a1040;margin-bottom:7px;}
 .prm-sub{font-size:13px;line-height:1.5;text-align:center;color:#6b6685;margin-bottom:18px;}
-.prm-row{display:flex;gap:8px;margin-bottom:8px;}
-.prm-cc{
-  display:flex;align-items:center;gap:6px;padding:0 11px;border:1.5px solid #ece8f5;
-  border-radius:12px;background:#fff;cursor:pointer;font-size:14px;font-weight:700;color:#1a1040;
+.prm-country{
+  width:100%;display:flex;align-items:center;gap:10px;
+  padding:14px 15px;border:1.5px solid #ece8f5;border-radius:13px;
+  background:#fff;cursor:pointer;margin-bottom:8px;
 }
-.prm-cc img{width:22px;height:16px;object-fit:cover;border-radius:3px;}
-.prm-inp{
-  flex:1;padding:13px 14px;border:1.5px solid #ece8f5;border-radius:12px;
-  font-size:15px;color:#1a1040;outline:none;
-}
-.prm-inp:focus{border-color:#8d6cfa;}
+.prm-country:active{background:#faf8ff;}
+.prm-country img{width:26px;height:19px;object-fit:cover;border-radius:4px;flex-shrink:0;}
+.prm-country-nm{flex:1;text-align:left;font-size:15px;font-weight:700;color:#1a1040;}
 .prm-err{font-size:12px;color:#e11d48;margin-bottom:10px;display:none;}
 .prm-err.on{display:block;}
 .prm-go{
@@ -5381,18 +5378,17 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
 </style>
 <div id="phone-req-modal">
   <div class="prm-box">
-    <div class="prm-ic">📱</div>
-    <div class="prm-title">Votre numéro de téléphone</div>
-    <div class="prm-sub">Guelane adapte les marchés, la devise et les analyses au pays de votre indicatif.</div>
-    <div class="prm-row">
-      <button type="button" class="prm-cc" id="prm-cc-btn" onclick="_lsOpenCC('prm')">
-        <img id="prm-cc-flag" src="https://flagcdn.com/w40/ci.png" alt="CI">
-        <span id="prm-cc-code">+225</span>
-      </button>
-      <input class="prm-inp" id="prm-phone" type="tel" placeholder="07 12 34 56 78" autocomplete="tel">
-    </div>
+    <div class="prm-ic">🌍</div>
+    <div class="prm-title">Dans quel pays êtes-vous ?</div>
+    <div class="prm-sub">Guelane adapte les marchés, la devise et les analyses à votre pays.</div>
+    <button type="button" class="prm-country" id="prm-country-btn" onclick="_lsOpenCC('prm')">
+      <img id="prm-cc-flag" src="https://flagcdn.com/w40/ci.png" alt="CI">
+      <span class="prm-country-nm" id="prm-country-nm">Côte d'Ivoire</span>
+      <span id="prm-cc-code" style="display:none;">+225</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="13" height="13"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
     <div class="prm-err" id="prm-err"></div>
-    <button class="prm-go" id="prm-go" onclick="_prmSubmit()">Continuer</button>
+    <button class="prm-go" id="prm-go" onclick="_prmSubmit()">Confirmer</button>
   </div>
 </div>
 
@@ -6151,18 +6147,6 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
       <div class="ls-field">
         <div class="ls-field-lbl">Mot de passe</div>
         <input class="ls-inp" id="ls-em-pass" type="password" placeholder="••••••••" autocomplete="current-password">
-      </div>
-      <div class="ls-field" id="ls-em-phone-field">
-        <div class="ls-field-lbl">Numéro de téléphone</div>
-        <div class="ls-phone-row">
-          <button type="button" id="ls-emcc-btn" onclick="_lsOpenCC('em')" aria-label="Sélectionner l'indicatif pays">
-            <img id="ls-emcc-flag" src="https://flagcdn.com/w40/ci.png" alt="CI">
-            <span id="ls-emcc-code">+225</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <input class="ls-inp" id="ls-em-phone" type="tel" placeholder="Ex. 07 12 34 56 78" style="flex:1;" autocomplete="tel">
-        </div>
-        <div class="ls-em-hint">Votre pays détermine les marchés mis en avant dans Guelane.</div>
       </div>
       <button class="ls-submit" id="ls-em-btn" onclick="_lsLoginEmail()">Se connecter</button>
       <div class="ls-footer-note" style="margin-top:18px;">Mot de passe oublié ? Contactez le support Guelane.</div>
@@ -16640,59 +16624,81 @@ function _prmShow(){
   var e = document.getElementById('prm-err');
   if(e){ e.textContent = ''; e.classList.remove('on'); }
   m.classList.add('on');
-  setTimeout(function(){
-    var i = document.getElementById('prm-phone');
-    if(i) i.focus();
-  }, 320);
 }
 window._prmShow = _prmShow;
 
+/* Enregistrer le pays choisi */
 function _prmSubmit(){
-  var cc  = (window._lsSelCCPrm && window._lsSelCCPrm.d) || '225';
-  var el  = document.getElementById('prm-phone');
+  var sel = window._lsSelCCPrm || {c:'CI',n:"Côte d'Ivoire",d:'225'};
   var err = document.getElementById('prm-err');
   var btn = document.getElementById('prm-go');
-  var num = el ? (el.value || '').replace(/[^0-9]/g, '') : '';
-  if(num.charAt(0) === '0') num = num.slice(1);
   var showErr = function(msg){
     if(err){ err.textContent = msg; err.classList.add('on'); }
-    if(btn){ btn.disabled = false; btn.textContent = 'Continuer'; }
+    if(btn){ btn.disabled = false; btn.textContent = 'Confirmer'; }
   };
-  if(num.length < 6) return showErr('Veuillez saisir un numéro valide.');
-  if(btn){ btn.disabled = true; btn.textContent = 'Vérification…'; }
+  if(btn){ btn.disabled = true; btn.textContent = 'Enregistrement…'; }
+
+  /* Mémoriser localement : le choix ne doit pas être redemandé */
+  try{ localStorage.setItem('guelane_country', sel.c); }catch(e){}
 
   var headers = { 'Content-Type': 'application/json' };
   try{ if(window.PROPHET_TOKEN) headers['Authorization'] = 'Bearer ' + window.PROPHET_TOKEN; }catch(e){}
 
-  fetch(window.PROPHET_BACKEND + '/api/auth/phone', {
+  fetch(window.PROPHET_BACKEND + '/api/auth/country', {
     method: 'POST', headers: headers,
-    body: JSON.stringify({ phone: '+' + cc + num })
+    body: JSON.stringify({ country: sel.c })
   })
   .then(function(r){
     if(r.ok) return r.json();
-    return r.json().then(function(d){ throw new Error(d.detail || 'Numéro refusé'); });
+    return r.json().then(function(d){ throw new Error(d.detail || 'Pays refusé'); });
   })
   .then(function(d){
     var m = document.getElementById('phone-req-modal');
     if(m) m.classList.remove('on');
-    if(btn){ btn.disabled = false; btn.textContent = 'Continuer'; }
-    if(window.PROPHET_USER){
-      window.PROPHET_USER.phone   = d.phone;
-      window.PROPHET_USER.country = d.country;
-      window.PROPHET_USER.needs_phone = false;
-    }
+    if(btn){ btn.disabled = false; btn.textContent = 'Confirmer'; }
+    if(window.PROPHET_USER) window.PROPHET_USER.country = d.country;
     if(typeof _applyMarketContext === 'function') _applyMarketContext(d.market);
   })
-  .catch(function(e){ showErr(e.message || 'Erreur, réessayez.'); });
+  .catch(function(e){
+    /* Hors ligne : le choix local suffit, ne pas bloquer l'utilisateur */
+    var m = document.getElementById('phone-req-modal');
+    if(m) m.classList.remove('on');
+    if(btn){ btn.disabled = false; btn.textContent = 'Confirmer'; }
+  });
 }
 window._prmSubmit = _prmSubmit;
 
-/* Réclamer le numéro si le compte n'en a pas encore */
+/* Le pays est-il déjà connu ? (serveur, mémoire locale, ou numéro fourni) */
+function _prmHasCountry(user){
+  if(user && user.country) return true;
+  try{ if(localStorage.getItem('guelane_country')) return true; }catch(e){}
+  return false;
+}
+
+/* Demander le pays uniquement si nécessaire, et APRÈS les autres popups.
+   Une inscription par téléphone fournit déjà le pays : rien n'est demandé. */
 function _prmCheckNeeded(user){
-  if(!user) return;
-  if(user.needs_phone || !user.phone){
-    setTimeout(_prmShow, 900);
-  }
+  if(_prmHasCountry(user)) return;
+  var essais = 0;
+  (function attendre(){
+    essais++;
+    if(essais > 40) return;                 // ~40 s maximum, puis abandon
+    /* Ne rien afficher tant qu'un autre écran est ouvert */
+    var bloquants = ['pin-screen','login-screen','boot-splash','boot-loading',
+                     'welcome-screen','ai-level-modal','offline-screen'];
+    var occupe = bloquants.some(function(id){
+      var el = document.getElementById(id);
+      return el && getComputedStyle(el).display !== 'none';
+    });
+    /* Attendre aussi la fin de l'assistant de profil s'il est ouvert */
+    if(!occupe){
+      var pw = document.getElementById('profile-setup');
+      if(pw && getComputedStyle(pw).display !== 'none') occupe = true;
+    }
+    if(occupe) return setTimeout(attendre, 1000);
+    if(_prmHasCountry(window.PROPHET_USER)) return;
+    _prmShow();
+  })();
 }
 window._prmCheckNeeded = _prmCheckNeeded;
 
@@ -16710,6 +16716,11 @@ function _lsUpdateCCBtn(item){
     em:  ['ls-emcc-flag','ls-emcc-code','ls-em-phone'],
     prm: ['prm-cc-flag','prm-cc-code','prm-phone']
   }[t];
+  /* Popup pays : afficher le nom du pays plutôt que l'indicatif */
+  if(t === 'prm'){
+    var nmEl = document.getElementById('prm-country-nm');
+    if(nmEl) nmEl.textContent = item.n || '';
+  }
   var flagEl = document.getElementById(ids[0]);
   var codeEl = document.getElementById(ids[1]);
   var phEl   = document.getElementById(ids[2]);
@@ -17325,7 +17336,7 @@ async function _prophetAuth(email, pass, btn){
     if (r.status === 401) {
       var r2 = await fetch(backend + '/api/auth/signup', {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ email: email, password: pass, nom: '', phone: _lsEmailPhone() })
+        body: JSON.stringify({ email: email, password: pass, nom: '' })
       });
       if (r2.ok) { toast('Compte créé ✓'); finishOk(await r2.json()); return; }
       var e2 = await r2.json().catch(function(){return{};});
@@ -19383,7 +19394,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.36";
+  var GUELANE_VERSION = "3.37";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

@@ -2901,13 +2901,13 @@ body.sb-open #mobile-sidebar-btn{
 .ws-part .ws-cta{ background:linear-gradient(135deg,#8d6cfa,#7e57c2); color:#fff; box-shadow:0 6px 20px rgba(126,114,255,.35); }
 .ws-cta:hover{ transform:scale(1.03); filter:brightness(1.07); }
 
-/* ═══ GESTION DES INVESTISSEMENTS GUELANE IA ═══
+/* ═══ GESTION DES INVESTISSEMENTS GUELANE AI ═══
    Deux modes, appliqués via une classe sur le body :
-   - ai-assist : Guelane IA prépare des opérations, l'utilisateur valide
+   - ai-assist : Guelane AI prépare des opérations, l'utilisateur valide
    - ai-solo   : l'utilisateur décide seul, aucune proposition
    Les boutons d'analyse et les conseils restent visibles dans les deux cas. */
 
-/* Bandeau de conseil Guelane IA (toujours visible) */
+/* Bandeau de conseil Guelane AI (toujours visible) */
 .ai-coach{
   margin:10px 12px;padding:12px 14px;border-radius:14px;
   background:linear-gradient(135deg,rgba(232,169,62,.12),rgba(141,108,250,.12));
@@ -5293,7 +5293,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
 </div>
 
 <!-- ═══ BANNIÈRE MISE À JOUR VISUELLE (invite à mettre à jour) ═══ -->
-<!-- ═══════════ CHOIX DU NIVEAU D'ASSISTANCE GUELANE IA ═══════════ -->
+<!-- ═══════════ CHOIX DU NIVEAU D'ASSISTANCE GUELANE AI ═══════════ -->
 <style>
 #ai-level-modal{
   display:none;position:fixed;inset:0;z-index:20002;
@@ -5396,12 +5396,12 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
   <div class="alm-sheet">
     <div class="alm-ic">📊</div>
     <div class="alm-title">Gestion de vos investissements</div>
-    <div class="alm-sub">Comment souhaitez-vous que Guelane IA vous accompagne&nbsp;?</div>
+    <div class="alm-sub">Comment souhaitez-vous que Guelane AI vous accompagne&nbsp;?</div>
 
     <button class="alm-opt" id="alm-opt-assist" onclick="_aiPickLevel('assist')">
       <div class="alm-opt-ic">🤝</div>
       <div>
-        <div class="alm-opt-nm">Guelane IA prépare mes opérations <span style="color:#22a55e;font-size:11.5px;font-weight:700;">· Recommandé</span></div>
+        <div class="alm-opt-nm">Guelane AI prépare mes opérations <span style="color:#22a55e;font-size:11.5px;font-weight:700;">· Recommandé</span></div>
         <div class="alm-opt-ds">L'IA surveille le marché et prépare des opérations adaptées à votre profil. <b>Vous validez ou refusez chacune d'elles</b> — rien n'est exécuté sans votre accord.</div>
       </div>
     </button>
@@ -5410,7 +5410,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
       <div class="alm-opt-ic">✋</div>
       <div>
         <div class="alm-opt-nm">Je décide seul</div>
-        <div class="alm-opt-ds">Aucune proposition. Vous construisez vos opérations vous-même, avec les analyses de Guelane IA à la demande.</div>
+        <div class="alm-opt-ds">Aucune proposition. Vous construisez vos opérations vous-même, avec les analyses de Guelane AI à la demande.</div>
       </div>
     </button>
 
@@ -5429,7 +5429,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
       </div>
     </div>
 
-    <div class="alm-note">🧪 Les données de marché sont actuellement simulées : aucun ordre réel n'est transmis à un intermédiaire de marché. Guelane IA est un outil d'aide à la décision — vous restez seul décideur. Modifiable à tout moment dans les Paramètres.</div>
+    <div class="alm-note">🧪 Les données de marché sont actuellement simulées : aucun ordre réel n'est transmis à un intermédiaire de marché. Guelane AI est un outil d'aide à la décision — vous restez seul décideur. Modifiable à tout moment dans les Paramètres.</div>
     <button class="alm-go" id="alm-go" onclick="_aiConfirmLevel()" disabled>Confirmer</button>
   </div>
 </div>
@@ -6983,7 +6983,7 @@ function _pnLater(){ _pnDismiss(); }
       <div class="iv-header-back" onclick="navTo('explore')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
       <span class="iv-title">Entreprises</span>
       <div class="iv-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-    <div style="padding:0 12px;"><button class="btn btn-gold" style="width:100%;margin:10px 0;" onclick="guelaneAnalyzeSection('inv-companies','')">✨ Analyser avec l'IA Guelane</button></div>
+    <div style="padding:0 12px;"><button class="btn btn-gold" style="width:100%;margin:10px 0;" onclick="guelaneAnalyzeSection('inv-companies','')">✨ Analyser avec Guelane AI</button></div>
     </div>
     <div class="iv-section-hd"><span class="iv-section-title">Entreprises tendances</span></div>
     <div id="co-trending-list"></div>
@@ -7080,7 +7080,7 @@ function _pnLater(){ _pnDismiss(); }
     <div class="ph-greet-sub">Commencez votre journée en construisant votre patrimoine</div>
 
     <div class="ai-coach">
-      <div class="ai-coach-hd">✨ Guelane IA vous suggère</div>
+      <div class="ai-coach-hd">✨ Guelane AI vous suggère</div>
       <div class="ai-coach-tx" id="ai-coach-home">Commencez par le Score de survie pour évaluer la santé de votre entreprise, puis explorez les opportunités du marché BRVM.</div>
     </div>
 
@@ -7106,7 +7106,7 @@ function _pnLater(){ _pnDismiss(); }
     <div class="ph-section-hd"><span class="ph-section-title">Actions Rapides</span><span class="ph-section-link" onclick="navTo('dash')">Voir tout</span></div>
     <div class="ph-qa-grid">
       <div class="ph-qa-item" onclick="navTo('stress')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg></div><div class="ph-qa-lbl">Simulateur</div></div>
-      <div class="ph-qa-item" onclick="navTo('pred')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/></svg></div><div class="ph-qa-lbl">Guelane IA</div></div>
+      <div class="ph-qa-item" onclick="navTo('pred')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/></svg></div><div class="ph-qa-lbl">Guelane AI</div></div>
       <div class="ph-qa-item" onclick="navTo('trade')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div><div class="ph-qa-lbl">Trading</div></div>
       <div class="ph-qa-item" onclick="navTo('invest')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16"/><path d="M9 21v-4h6v4"/><path d="M9 8h.01M15 8h.01M9 12h.01M15 12h.01"/></svg></div><div class="ph-qa-lbl">Marketplace</div></div>
       <div class="ph-qa-item" onclick="navTo('inv-collections')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M3 11h18M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></div><div class="ph-qa-lbl">Collections</div></div>
@@ -7123,7 +7123,7 @@ function _pnLater(){ _pnDismiss(); }
     </div>
     <div class="ph-promo-card" onclick="navTo('chat')">
       <div class="ph-promo-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v3"/></svg></div>
-      <div class="ph-promo-txt"><div class="ph-promo-title">Besoin d'aide pour démarrer ?</div><div class="ph-promo-sub">Discutez avec l'Assistant IA Guelane</div></div>
+      <div class="ph-promo-txt"><div class="ph-promo-title">Besoin d'aide pour démarrer ?</div><div class="ph-promo-sub">Discutez avec l'Assistant Guelane AI</div></div>
       <div class="ph-promo-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
     </div>
 
@@ -7256,7 +7256,7 @@ function _pnLater(){ _pnDismiss(); }
       <div class="iv-header-back" onclick="navTo('investhub')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
       <span class="iv-title">Fonds Gérés</span>
     </div>
-    <div style="padding:0 12px;"><button class="btn btn-gold" style="width:100%;margin:10px 0;" onclick="guelaneAnalyzeSection('inv-managed','')">✨ Analyser avec l'IA Guelane</button></div>
+    <div style="padding:0 12px;"><button class="btn btn-gold" style="width:100%;margin:10px 0;" onclick="guelaneAnalyzeSection('inv-managed','')">✨ Analyser avec Guelane AI</button></div>
     <div class="iv-info-hero">
       <div class="iv-info-ic">📊</div>
       <div class="iv-info-title">Fonds Gérés Guelane</div>
@@ -7403,7 +7403,7 @@ function _pnLater(){ _pnDismiss(); }
       <div class="iv-header-back" onclick="navTo('investhub')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
       <span class="iv-title">Startups</span>
     </div>
-    <div style="padding:0 12px;"><button class="btn btn-gold" style="width:100%;margin:10px 0;" onclick="guelaneAnalyzeSection('inv-startups','')">✨ Analyser avec l'IA Guelane</button></div>
+    <div style="padding:0 12px;"><button class="btn btn-gold" style="width:100%;margin:10px 0;" onclick="guelaneAnalyzeSection('inv-startups','')">✨ Analyser avec Guelane AI</button></div>
     <div class="iv-info-hero">
       <div class="iv-info-ic">🚀</div>
       <div class="iv-info-title">Investir dans des Startups</div>
@@ -7435,7 +7435,7 @@ function _pnLater(){ _pnDismiss(); }
       <div class="iv-header-back" onclick="navTo('investhub')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></div>
       <span class="iv-title">Fonds Venture</span>
     </div>
-    <div style="padding:0 12px;"><button class="btn btn-gold" style="width:100%;margin:10px 0;" onclick="guelaneAnalyzeSection('inv-venture','')">✨ Analyser avec l'IA Guelane</button></div>
+    <div style="padding:0 12px;"><button class="btn btn-gold" style="width:100%;margin:10px 0;" onclick="guelaneAnalyzeSection('inv-venture','')">✨ Analyser avec Guelane AI</button></div>
     <div class="iv-info-hero">
       <div class="iv-info-ic">💼</div>
       <div class="iv-info-title">Pourquoi Investir dans des Fonds Venture</div>
@@ -8004,7 +8004,7 @@ function _pnLater(){ _pnDismiss(); }
           Analyser maintenant
         </button>
         <button class="btn btn-gold" style="width:100%;margin-top:8px;" onclick="guelaneAnalyzeSurvival()">
-          ✨ Analyser avec l'IA Guelane
+          ✨ Analyser avec Guelane AI
         </button>
       </div>
 
@@ -8125,7 +8125,7 @@ function _pnLater(){ _pnDismiss(); }
   <div id="dd-results" style="display:none;">
     <!-- SCORE GLOBAL -->
     <div class="pnl" style="margin-bottom:12px;">
-      <div class="ph">Score de due diligence Guelane IA</div>
+      <div class="ph">Score de due diligence Guelane AI</div>
       <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
         <div style="text-align:center;">
           <div style="font-size:42px;font-weight:700;font-family:var(--mono);color:var(--or);" id="dd-global-score">68</div>
@@ -8220,7 +8220,7 @@ function _pnLater(){ _pnDismiss(); }
         <div><div class="sv-lbl">Pays / zone</div><input id="scf-zone" class="sv-inp" type="text" placeholder="Ex: Côte d'Ivoire, UEMOA"></div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn btn-gold" style="flex:2;min-width:200px;" onclick="guelaneScanFiltered()">✨ Scanner avec l'IA Guelane</button>
+        <button class="btn btn-gold" style="flex:2;min-width:200px;" onclick="guelaneScanFiltered()">✨ Scanner avec Guelane AI</button>
         <button class="btn btn-ghost" style="flex:1;min-width:140px;" onclick="guelaneScanSummary()">📋 Résumer le scan</button>
       </div>
     </div>
@@ -8293,7 +8293,7 @@ function _pnLater(){ _pnDismiss(); }
 
 <div class="page" id="page-pred">
 <div id="pred-v" class="view">
-  <div style="margin-bottom:12px;"><div style="font-size:14px;font-weight:500;">Analyses Prédictives — Moteur IA Guelane</div><div style="font-size:11px;color:var(--t2);margin-top:2px;">Modèles ML entraînés sur 10 ans de données macro africaines · Mis à jour quotidiennement</div></div>
+  <div style="margin-bottom:12px;"><div style="font-size:14px;font-weight:500;">Analyses Prédictives — Moteur Guelane AI</div><div style="font-size:11px;color:var(--t2);margin-top:2px;">Modèles ML entraînés sur 10 ans de données macro africaines · Mis à jour quotidiennement</div></div>
 
   <!-- ✨ PRÉDICTION IA sur contexte réel -->
   <div class="pnl" style="margin-bottom:14px;border:1px solid rgba(232,169,62,.25);">
@@ -8859,7 +8859,7 @@ function _pnLater(){ _pnDismiss(); }
         <div class="reg-val-wrap">
           <div class="reg-val-orb"><div class="reg-val-orb-inner">✦</div></div>
           <div class="reg-val-title" id="reg-val-title">Analyse en cours…</div>
-          <div class="reg-val-sub" id="reg-val-sub">Les agents IA Guelane examinent votre dossier</div>
+          <div class="reg-val-sub" id="reg-val-sub">Les agents Guelane AI examinent votre dossier</div>
           <ul class="reg-val-checks">
             <li class="reg-val-check" id="rvc-0"><div class="reg-val-check-ic">1</div><span>Analyse du profil entreprise</span></li>
             <li class="reg-val-check" id="rvc-1"><div class="reg-val-check-ic">2</div><span>Évaluation des données financières</span></li>
@@ -9522,7 +9522,7 @@ function _pnLater(){ _pnDismiss(); }
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg>
               </div>
               <div>
-                <div class="nf-hd-title">Propositions Guelane IA</div>
+                <div class="nf-hd-title">Propositions Guelane AI</div>
                 <div class="nf-hd-sub" id="nfo-sub">Opérations préparées pour vous</div>
               </div>
             </div>
@@ -9914,7 +9914,7 @@ function _pnLater(){ _pnDismiss(); }
   <div class="modal" style="position:relative;">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-title" id="modal-co-name">Détails de l'entreprise</div>
-    <div class="modal-sub" id="modal-co-sub">Analyse Guelane IA</div>
+    <div class="modal-sub" id="modal-co-sub">Analyse Guelane AI</div>
     <div id="modal-body"></div>
     <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end;">
       <button class="btn btn-ghost" onclick="closeModal()">Fermer</button>
@@ -9958,7 +9958,7 @@ window.PROPHET_BACKEND = 'https://prophet-backend-production-039a.up.railway.app
 /* ═══════════════════════════
    NAVIGATION
 ═══════════════════════════ */
-const pageTitles={dash:'Dashboard — Marchés en direct',stress:'Stress Test — Simulation de crises',pred:'IA Predictive — Analyses & Prévisions',trade:'Trading & Décision',invest:'Marketplace — Investissement',wallet:'Wallet — Portefeuille',aladdin:'Aladdin Pro — Fonctionnalités avancées',agents:'Architecture Agentique',chat:'Assistant IA Guelane'};
+const pageTitles={dash:'Dashboard — Marchés en direct',stress:'Stress Test — Simulation de crises',pred:'IA Predictive — Analyses & Prévisions',trade:'Trading & Décision',invest:'Marketplace — Investissement',wallet:'Wallet — Portefeuille',aladdin:'Aladdin Pro — Fonctionnalités avancées',agents:'Architecture Agentique',chat:'Assistant Guelane AI'};
 function go(name,btn){
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('on'));
   if(btn) btn.classList.add('on');
@@ -10045,11 +10045,11 @@ function renderProfilePrompts(){
   }
 }
 
-/* ═══════════ GESTION DES INVESTISSEMENTS — GUELANE IA ═══════════
-   Guelane IA prépare des opérations, l'utilisateur valide ou ignore.
+/* ═══════════ GESTION DES INVESTISSEMENTS — GUELANE AI ═══════════
+   Guelane AI prépare des opérations, l'utilisateur valide ou ignore.
    L'utilisateur reste TOUJOURS le décideur : aucune opération n'est
    exécutée sans sa validation explicite (outil d'aide à la décision).
-     'assist' = Guelane IA prépare des propositions à valider
+     'assist' = Guelane AI prépare des propositions à valider
      'solo'   = aucune proposition, l'utilisateur décide seul
    Le profil de risque cadre les propositions : prudent / equilibre / dynamique. */
 
@@ -10086,7 +10086,7 @@ function _aiSetLevel(level, silent){
   _aiApplyLevel(level);
   try{ localStorage.setItem(_AI_LEVEL_KEY, level); }catch(e){}
   if(!silent && typeof toast === 'function'){
-    toast(level === 'assist' ? 'Guelane IA prépare vos opérations' : 'Vous décidez seul');
+    toast(level === 'assist' ? 'Guelane AI prépare vos opérations' : 'Vous décidez seul');
   }
   if(typeof _spRefreshAiLevel === 'function') _spRefreshAiLevel();
   _nfRefreshBadge();
@@ -10197,7 +10197,7 @@ function _aiPortfolioContext(){
     }
   }catch(e){}
 
-  /* ── Opérations validées via les propositions Guelane IA ── */
+  /* ── Opérations validées via les propositions Guelane AI ── */
   try{
     var val = _aiLoadOps().filter(function(o){ return o.st === 'ok'; }).slice(0, 6);
     if(val.length){
@@ -10219,7 +10219,7 @@ window._aiPendingCount = _aiPendingCount;
 var _AI_MAX_PENDING = 25;
 var _aiGenBusy = false;
 
-/* Générer une proposition via Guelane IA (analyse du marché réel + portefeuille) */
+/* Générer une proposition via Guelane AI (analyse du marché réel + portefeuille) */
 function _aiGenerateOp(manual){
   if((_aiGetLevel() || 'assist') !== 'assist') return;
   if(_aiGenBusy) return;
@@ -10310,7 +10310,7 @@ function _aiOpToast(op){
   var n = _aiPendingCount();
   var tx = document.getElementById('ai-ask-tx');
   if(tx){
-    tx.innerHTML = 'Guelane IA vous propose une opération'
+    tx.innerHTML = 'Guelane AI vous propose une opération'
       + '<span style="display:block;font-weight:600;color:var(--t3);font-size:11.5px;margin-top:1px;">'
       + (op && op.t ? op.t : '')
       + (n > 1 ? ' · ' + n + ' en attente' : '')
@@ -10416,7 +10416,7 @@ function _nfRenderOps(){
   var sub = document.getElementById('nfo-sub');
   if(lvl === 'solo'){
     if(sub) sub.textContent = 'Vous décidez seul';
-    el.innerHTML = '<div class="nfo-empty">Guelane IA ne prépare aucune opération.<br>'
+    el.innerHTML = '<div class="nfo-empty">Guelane AI ne prépare aucune opération.<br>'
       + 'Vous gardez la main sur toutes vos décisions.<br><br>'
       + '<button class="nfo-btn nfo-ok" style="max-width:260px;margin:0 auto;" onclick="_aiSetLevel(\'assist\')">Activer les propositions</button></div>';
     return;
@@ -10428,7 +10428,7 @@ function _nfRenderOps(){
   var cap = '';
   if(nPend >= _AI_MAX_PENDING){
     cap = '<div class="nfo-cap">Vous avez <b>' + _AI_MAX_PENDING + ' propositions en attente</b>. '
-        + 'Traitez-en une pour que Guelane IA puisse en préparer de nouvelles.</div>';
+        + 'Traitez-en une pour que Guelane AI puisse en préparer de nouvelles.</div>';
   } else {
     cap = '<div class="nfo-more">'
         + '<button class="nfo-more-btn" onclick="_aiGenerateOp(true)">✨ Demander une proposition</button>'
@@ -10436,7 +10436,7 @@ function _nfRenderOps(){
   }
   if(!ops.length){
     el.innerHTML = cap + '<div class="nfo-empty">Aucune proposition pour le moment.<br>'
-      + 'Guelane IA analyse le marché et vous préviendra dès qu\'une opportunité correspond à votre profil.</div>';
+      + 'Guelane AI analyse le marché et vous préviendra dès qu\'une opportunité correspond à votre profil.</div>';
     return;
   }
   /* Filtrage : par défaut, seules les propositions en attente de décision */
@@ -10556,7 +10556,7 @@ function _aiConfirmLevel(){
   if(m) m.classList.remove('on');
   _aiPendingLevel = null;
   if(typeof toast === 'function'){
-    toast(_aiGetLevel() === 'assist' ? 'Guelane IA prépare vos opérations' : 'Vous décidez seul');
+    toast(_aiGetLevel() === 'assist' ? 'Guelane AI prépare vos opérations' : 'Vous décidez seul');
   }
 }
 window._aiConfirmLevel = _aiConfirmLevel;
@@ -11067,7 +11067,7 @@ window._predDashLoaded = false;
 async function loadPredDashboard(force) {
   if (window._predDashLoaded && !force) return; // cache session : un seul appel
   var el = document.getElementById('pred-cards');
-  if (el) el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--t2);font-size:12px;">✨ L\'IA Guelane génère les prévisions réelles…</div>';
+  if (el) el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--t2);font-size:12px;">✨ Guelane AI génère les prévisions réelles…</div>';
   try {
     var profile = (typeof mode!=='undefined'&&mode==='pro')?'pro':'part';
     var fd = new FormData(); fd.append('profile', profile);
@@ -11283,7 +11283,7 @@ function openInvModal(id){
       <div class="kpi"><div class="kpi-l">Score ESG</div><div class="kpi-v" style="color:var(--te)">${c.esg}/100</div></div>
     </div>
     <div style="background:var(--bg3);border-radius:var(--r);padding:12px 14px;margin-bottom:12px;">
-      <div style="font-size:10px;color:var(--t2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;">Analyse Guelane IA</div>
+      <div style="font-size:10px;color:var(--t2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;">Analyse Guelane AI</div>
       <div style="font-size:12px;color:var(--t);line-height:1.6;">${c.desc} Score de confiance Guelane : <strong style="color:${scolor}">${sc}/10</strong>. ESG : ${c.esg}/100. Recommandation : ${sc>=8.5?'<span style="color:var(--gr)">INVESTIR — Fort potentiel</span>':sc>=7.5?'<span style="color:var(--gold)">OPPORTUNITÉ — Vérifications complémentaires conseillées</span>':'<span style="color:var(--or)">À ANALYSER — Due diligence approfondie requise</span>'}.</div>
     </div>
     <div style="font-size:11px;color:var(--t2);">Pour procéder à un investissement, notre équipe vous mettra en contact direct avec ${c.name}. Un NDA et un data room sécurisé seront fournis.</div>
@@ -11306,7 +11306,7 @@ function openInvModalByName(name){
   document.getElementById('modal-co-sub').textContent = 'Deal actif · En cours de financement';
   document.getElementById('modal-body').innerHTML =
     '<div style="background:var(--bg3);border-radius:var(--r);padding:12px 14px;margin-bottom:12px;">'
-    + '<div style="font-size:10px;color:var(--t2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;">Analyse Guelane IA</div>'
+    + '<div style="font-size:10px;color:var(--t2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;">Analyse Guelane AI</div>'
     + '<div style="font-size:12px;color:var(--t);line-height:1.6;">Cette opportunité est actuellement en cours de levée de fonds. '
     + 'Pour procéder à un investissement, notre équipe vous mettra en contact direct avec <strong>' + name + '</strong>.'
     + ' Un NDA et un data room sécurisé seront fournis.</div></div>'
@@ -12706,7 +12706,7 @@ function _prophetShowResult(title, htmlContent) {
   ov.innerHTML = '<div class="modal" style="max-width:560px;max-height:85vh;overflow-y:auto;position:relative;">' +
     '<button class="modal-close" onclick="document.getElementById(\'prophet-ai-result\').remove()">✕</button>' +
     '<div class="modal-title" style="display:flex;align-items:center;gap:8px;">✨ ' + title + '</div>' +
-    '<div class="modal-sub">Analyse générée par Guelane IA</div>' +
+    '<div class="modal-sub">Analyse générée par Guelane AI</div>' +
     '<div style="margin-top:16px;font-size:13px;line-height:1.6;color:var(--t);">' + htmlContent + '</div>' +
     '</div>';
   document.body.appendChild(ov);
@@ -12918,7 +12918,7 @@ function _prophetInjectScanResults(res) {
   // Bandeau de synthèse en haut
   var cnt = document.getElementById('opp-count');
   if (cnt) cnt.textContent = (res.opportunites ? res.opportunites.length : 0) + ' opportunités (IA)';
-  el.innerHTML = '<div style="grid-column:1/-1;padding:14px;background:linear-gradient(135deg,rgba(232,169,62,.1),rgba(141,108,250,.06));border:1px solid rgba(232,169,62,.3);border-radius:12px;margin-bottom:12px;"><div style="font-weight:700;font-size:13px;margin-bottom:4px;">✨ Résultats IA Guelane</div><div style="font-size:12px;color:var(--t2);">' + (res.synthese||'') + '</div></div>';
+  el.innerHTML = '<div style="grid-column:1/-1;padding:14px;background:linear-gradient(135deg,rgba(232,169,62,.1),rgba(141,108,250,.06));border:1px solid rgba(232,169,62,.3);border-radius:12px;margin-bottom:12px;"><div style="font-weight:700;font-size:13px;margin-bottom:4px;">✨ Résultats Guelane AI</div><div style="font-size:12px;color:var(--t2);">' + (res.synthese||'') + '</div></div>';
   (res.opportunites||[]).forEach(function(o, i){
     var sc = o.score_prophet;
     var col = sc >= 7.5 ? 'var(--gr)' : sc >= 5 ? 'var(--gold)' : 'var(--or)';
@@ -13088,13 +13088,13 @@ async function guelaneAnalyzeSection(section, contexte) {
     html += sect('Recommandations', res.recommandations, '✅', 'var(--grd)');
     html += sect('Points de vigilance', res.vigilance, '⚠️', 'var(--red)');
     if (res.analyse) html += '<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--b2);font-size:12.5px;color:var(--t2);line-height:1.6;">'+res.analyse+'</div>';
-    _prophetShowResult('Analyse IA Guelane', html);
+    _prophetShowResult('Analyse Guelane AI', html);
   } catch(e) { _prophetError(e.message); }
 }
 
 // Génère le HTML d'un bouton d'analyse IA (à insérer dans les modules)
 function _prophetSectionBtn(section, contexteFn) {
-  return '<button class="btn btn-gold" style="width:100%;margin:10px 0;" onclick="guelaneAnalyzeSection(\''+section+'\', '+(contexteFn||'\'\'')+')">✨ Analyser avec l\'IA Guelane</button>';
+  return '<button class="btn btn-gold" style="width:100%;margin:10px 0;" onclick="guelaneAnalyzeSection(\''+section+'\', '+(contexteFn||'\'\'')+')">✨ Analyser avec Guelane AI</button>';
 }
 
 // Analyse du portefeuille : collecte les vraies positions avant d'appeler l'IA
@@ -15217,7 +15217,7 @@ function closeProfilePanel(){
             </div>
           </div>
           <div class="sp-toggle-sub" style="margin-top:8px;padding:0 2px;">
-            Guelane IA prépare des opérations, vous validez ou refusez chacune d'elles. Données simulées : aucun ordre réel n'est transmis.
+            Guelane AI prépare des opérations, vous validez ou refusez chacune d'elles. Données simulées : aucun ordre réel n'est transmis.
           </div>
         </div>
       </div>
@@ -16364,7 +16364,7 @@ function _syncSettingsUI(){
   // Mode d'utilisation
   document.getElementById('sp-mode-pro') && document.getElementById('sp-mode-pro').classList.toggle('active', mode==='pro');
   document.getElementById('sp-mode-part') && document.getElementById('sp-mode-part').classList.toggle('active', mode==='part');
-  // Niveau d'assistance Guelane IA
+  // Niveau d'assistance Guelane AI
   _spRefreshAiLevel();
   // Plan
   /* Le plan du serveur prime sur la valeur locale */
@@ -19394,7 +19394,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.38";
+  var GUELANE_VERSION = "3.39";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

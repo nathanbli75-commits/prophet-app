@@ -6191,7 +6191,7 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
       </div>
       <div class="ob-disclaimer">
         Les services d'investissement sont fournis par Guelane et ses partenaires. Tout investissement comporte des risques.
-        <a href="javascript:void(0)" onclick="if(typeof navTo==='function')navTo('legal')">Lire les mentions légales</a>
+        <a href="javascript:void(0)" onclick="_guelaneLegal()">Lire les mentions légales</a>
       </div>
       <button class="ob-signup" id="ob-signup" type="button">S'inscrire</button>
       <button class="ob-login" id="ob-login-btn" type="button">Se connecter</button>
@@ -13271,6 +13271,31 @@ function _prophetBadge(level) {
 }
 
 // Overlay de résultat réutilisable pour les 3 modules
+/* Mentions légales : modale d'information (l'écran dédié viendra plus tard) */
+function _guelaneLegal(){
+  var contenu = ''
+    + '<div style="font-size:13px;line-height:1.65;color:var(--t2);">'
+    + '<p><strong>Guelane</strong> est une plateforme d\'intelligence financière. '
+    + 'Les informations, analyses et propositions présentées ont un caractère '
+    + 'informatif et pédagogique : elles ne constituent ni un conseil en '
+    + 'investissement personnalisé, ni une sollicitation d\'achat ou de vente '
+    + 'd\'instruments financiers.</p>'
+    + '<p>Tout investissement comporte des risques, notamment de perte en '
+    + 'capital. Les performances passées ne préjugent pas des performances '
+    + 'futures. Chaque décision d\'investissement relève de la seule '
+    + 'responsabilité de l\'utilisateur, qui la valide explicitement.</p>'
+    + '<p>Les données de marché peuvent être différées ou simulées à des fins '
+    + 'de démonstration. Les mentions complètes (éditeur, données personnelles, '
+    + 'conditions d\'utilisation) seront publiées avec la version finale du service.</p>'
+    + '</div>';
+  if(typeof _prophetShowResult === 'function'){
+    _prophetShowResult('Mentions légales', contenu);
+  } else if(typeof toast === 'function'){
+    toast('Mentions légales disponibles prochainement');
+  }
+}
+window._guelaneLegal = _guelaneLegal;
+
 function _prophetShowResult(title, htmlContent) {
   var existing = document.getElementById('prophet-ai-result');
   if (existing) existing.remove();
@@ -20191,7 +20216,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.54";
+  var GUELANE_VERSION = "3.55";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

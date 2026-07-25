@@ -20108,10 +20108,6 @@ var _ivDetailPages = {'inv-collection-detail':1,'inv-group':1,'inv-category-deta
     if(_ivDetailPages[name] && _currentPageName && !_ivDetailPages[_currentPageName]){
       _ivPrevPage = _currentPageName;
     }
-    /* Guelane Store : retenir la page d'origine pour le bouton retour */
-    if(name === 'store' && _currentPageName && _currentPageName !== 'store'){
-      window._gsPrevPage = _currentPageName;
-    }
     _navToWithParam(name);
     if(name === 'inv-collection-detail') ivRenderCollectionDetail(param);
     else if(name === 'inv-group') ivRenderGroup(param);
@@ -20120,17 +20116,10 @@ var _ivDetailPages = {'inv-collection-detail':1,'inv-group':1,'inv-category-deta
   };
 })();
 function navBack(){
+  /* Regle unique : quitter un ecran ramene toujours a l'accueil du mode actif
+     (Entrepreneur = 'home', Particulier = 'dash'). */
   var pro = document.body.classList.contains('profile-pro');
-  var target;
-  if(_currentPageName === 'store'){
-    /* Retour depuis le Store : la page d'où l'on est venu */
-    target = window._gsPrevPage || (pro ? 'home' : 'dash');
-  } else {
-    target = _ivPrevPage;
-  }
-  /* En mode Entrepreneur, l'accueil est 'home' et non 'dash' */
-  if(target === 'dash' && pro) target = 'home';
-  navTo(target);
+  navTo(pro ? 'home' : 'dash');
 }
 
 // ═══ GESTION DU BOUTON RETOUR (méthode simple et fiable) ═══
@@ -20177,10 +20166,9 @@ function navBack(){
     }
 
     // ─── Sinon : aller à la page précédente dans l'app ───
-    if(_stack.length > 0) _stack.pop();           // retirer la page actuelle
-    /* Repli : l'accueil dépend du mode actif (Entrepreneur = home, Particulier = dash) */
-    var fallback = document.body.classList.contains('profile-pro') ? 'home' : 'dash';
-    var prev = _stack[_stack.length-1] || fallback;
+    /* Meme regle que le bouton retour : on rejoint l'accueil du mode actif */
+    var prev = document.body.classList.contains('profile-pro') ? 'home' : 'dash';
+    _stack = [prev];   // l'accueil devient le seul point de retour restant
 
     if(typeof navTo === 'function'){
       window._navBackInProgress = true;   // empêche navTo de ré-empiler
@@ -20237,7 +20225,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.57";
+  var GUELANE_VERSION = "3.58";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

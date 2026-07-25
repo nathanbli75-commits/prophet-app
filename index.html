@@ -13426,11 +13426,72 @@ function _prophetLoader(title) {
   _prophetShowResult(title, '<div style="text-align:center;padding:30px 0;"><div style="font-size:32px;margin-bottom:12px;">⏳</div><div style="color:var(--t2);">Analyse IA en cours…<br><span style="font-size:11px;color:var(--t3);">Guelane analyse, quelques secondes…</span></div></div>');
 }
 
-function _prophetError(msg) {
-  // Cas spécial : le verrou Premium est déjà affiché, ne pas montrer d'erreur
-  if (msg === '__premium__') return;
-  _prophetShowResult('Erreur', '<div style="padding:16px;background:var(--red);border-radius:10px;color:var(--re);">⚠️ ' + msg + '<br><br><span style="font-size:11px;color:var(--t3);">Vérifiez que le backend Guelane est démarré.</span></div>');
+/* Ouvre l'ecran de connexion depuis un message d'erreur */
+function _prophetGoLogin(){
+  var m = document.getElementById('prophet-ai-result');
+  if(m) m.remove();
+  var ls = document.getElementById('login-screen');
+  if(ls){
+    ls.style.setProperty('display','block','important');
+    ls.classList.remove('ls-out');
+    ls.style.opacity=''; ls.style.transform=''; ls.style.pointerEvents='';
+  }
+  if(typeof _lsShowStep === 'function') _lsShowStep('select', false);
 }
+window._prophetGoLogin = _prophetGoLogin;
+
+/* Message d'erreur adapte a la cause reelle.
+   Trois situations distinctes, au lieu d'un unique message sur le backend :
+   - saisie incomplete  -> on indique simplement ce qui manque ;
+   - session absente    -> on propose de se connecter ;
+   - serveur injoignable -> la seule ou le reseau est en cause. */
+function _prophetError(msg) {
+  // Cas special : le verrou Premium est deja affiche, ne pas montrer d'erreur
+  if (msg === '__premium__') return;
+
+  var texte = String(msg || 'Une erreur est survenue.');
+  var bas = texte.toLowerCase();
+
+  var authRequis = bas.indexOf('connexion requise') !== -1
+                || bas.indexOf('session expir') !== -1
+                || bas.indexOf('non authentifi') !== -1
+                || bas.indexOf('401') !== -1;
+
+  var reseau = bas.indexOf('failed to fetch') !== -1
+            || bas.indexOf('networkerror') !== -1
+            || bas.indexOf('load failed') !== -1
+            || bas.indexOf('timeout') !== -1
+            || bas.indexOf('injoignable') !== -1;
+
+  /* Formulations qui s'adressent a l'utilisateur : il manque une saisie */
+  var saisie = /^(indiquez|collez|decrivez|d\u00e9crivez|precisez|pr\u00e9cisez|veuillez|lancez|posez|ajoutez|renseignez|choisissez|selectionnez|s\u00e9lectionnez|remplissez|symbole manquant)/i.test(texte.trim());
+
+  var titre, couleur, fond, aide = '';
+
+  if (authRequis) {
+    titre = 'Connexion requise';
+    couleur = 'var(--bl)'; fond = 'var(--bld)';
+    texte = 'Ce module necessite un compte Guelane.';
+    aide = '<div style="margin-top:14px;"><button class="btn btn-gold" style="width:100%;" '
+         + 'onclick="_prophetGoLogin()">Se connecter</button></div>';
+  } else if (reseau) {
+    titre = 'Serveur injoignable';
+    couleur = 'var(--re)'; fond = 'var(--red)';
+    aide = '<br><br><span style="font-size:11px;color:var(--t3);">'
+         + 'Verifiez votre connexion internet, puis reessayez.</span>';
+  } else if (saisie) {
+    titre = 'Information manquante';
+    couleur = 'var(--gold)'; fond = 'var(--gd)';
+  } else {
+    titre = 'Erreur';
+    couleur = 'var(--re)'; fond = 'var(--red)';
+  }
+
+  _prophetShowResult(titre,
+    '<div style="padding:16px;background:' + fond + ';border-radius:10px;color:' + couleur + ';">'
+    + '\u26a0\ufe0f ' + texte + aide + '</div>');
+}
+
 
 // ── MODULE 1 : SCORE SURVIE PME ──
 async function guelaneAnalyzeSurvival() {
@@ -20322,7 +20383,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.60";
+  var GUELANE_VERSION = "3.61";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

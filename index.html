@@ -12387,7 +12387,7 @@ function showDDResults(){
   },100);
 }
 function exportReport(){alert('📄 Rapport Due Diligence Guelane\n\nLe rapport PDF sera généré et envoyé à votre email dans 2 minutes.\nIl contiendra :\n• Résumé exécutif\n• Liste des 10 anomalies classifiées\n• Recommandations juridiques\n• Score de due diligence 68/100\n• Plan d\'action priorisé');}
-function askDDQuestion(){navTo('chat');var ta=document.getElementById('ch-ta');if(ta){ta.value='Sur la base des documents analysés, quels sont les 3 risques juridiques les plus urgents à traiter avant de signer ?';chResize(ta);ta.focus();}}
+function askDDQuestion(){navTo('chat');var ta=document.getElementById('ch-ta');if(ta){ta.value='Sur la base des documents analysés, quels sont les 3 risques juridiques les plus urgents à traiter avant de signer ?';chResize(ta);if(_chAutoFocusOk())ta.focus();}}
 
 /* ══════════════════════════════════════════
    MODULE 3 — SCANNER D'OPPORTUNITÉS
@@ -12476,7 +12476,7 @@ function buildOpps(filter='all'){
   });
 }
 function filterOpps(f){buildOpps(f==='undervalued'?'undervalued':f==='emerging'?'emerging':'all');}
-function analyzeOpp(name){navTo('chat');var ta=document.getElementById('ch-ta');if(ta){ta.value="Analyse approfondie de l'opportunité : "+name+". Quels sont les risques, le potentiel de retour et la stratégie d'entrée recommandée ?";chResize(ta);ta.focus();}}
+function analyzeOpp(name){navTo('chat');var ta=document.getElementById('ch-ta');if(ta){ta.value="Analyse approfondie de l'opportunité : "+name+". Quels sont les risques, le potentiel de retour et la stratégie d'entrée recommandée ?";chResize(ta);if(_chAutoFocusOk())ta.focus();}}
 function investOpp(name){alert(`💼 Investissement dans "${name}"\n\nNotre équipe Deal Flow va vous contacter dans les 24h pour :\n• Partager le data room complet\n• Organiser une rencontre avec l'équipe\n• Préparer la term sheet\n\nEmail : invest@guelane-africa.io`);}
 function launchScan(){
   const prog=document.getElementById('scan-progress');prog.style.display='block';prog.style.animation='tabpanel-in .2s ease';
@@ -12736,7 +12736,7 @@ function navTo(name) {
   if (name === 'chat') {
     var cp = document.getElementById('page-chat');
     cp.classList.add('active');
-    setTimeout(function(){ var ta=document.getElementById('ch-ta'); if(ta) ta.focus(); }, 60);
+    setTimeout(function(){ var ta=document.getElementById('ch-ta'); if(ta && _chAutoFocusOk()) ta.focus(); }, 60);
     if (window.innerWidth <= 840) closeMobileSidebar();
     return;
   }
@@ -12788,7 +12788,7 @@ function slAskMkt(m) {
   var ta = document.getElementById('ch-ta');
   if (ta) { ta.value = q[m]; chResize(ta); }
   navTo('chat');
-  if (ta) ta.focus();
+  if (ta && _chAutoFocusOk()) ta.focus();
 }
 
 /* ── Sidebar: mode toggle ── */
@@ -12923,8 +12923,18 @@ async function chSend() {
   }
   chBusy = false;
   if (sb) sb.disabled = false;
-  if (ta) ta.focus();
+  if (ta && _chAutoFocusOk()) ta.focus();
 }
+
+/* Le focus automatique ouvre le clavier sur mobile : on le réserve
+   aux appareils pointés à la souris, où aucun clavier ne surgit. */
+function _chAutoFocusOk(){
+  try{
+    if(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches) return true;
+  }catch(e){}
+  return false;
+}
+window._chAutoFocusOk = _chAutoFocusOk;
 
 function chAddU(t) {
   var el = document.getElementById('ch-msgs'); if (!el) return;
@@ -20227,7 +20237,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.56";
+  var GUELANE_VERSION = "3.57";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

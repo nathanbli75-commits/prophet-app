@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <title>Guelane — Intelligence Financière Panafricaine</title>
 <link id="prophet-favicon" rel="icon" type="image/jpeg" href="">
 <!-- PWA : application installable -->
@@ -2393,9 +2393,9 @@ body::after{ content:''; position:fixed; inset:0; pointer-events:none; z-index:0
   .tb-sep{display:none!important;}
 
   /* Pages: fill remaining height, scroll internally */
-  .page{position:absolute!important;top:0;left:0;right:0;bottom:0;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch;padding:74px 9px 110px!important;}
+  .page{position:absolute!important;top:0;left:0;right:0;bottom:0;overflow-y:auto!important;overflow-x:hidden!important;padding-top:env(safe-area-inset-top,0px);-webkit-overflow-scrolling:touch;padding:74px 9px 110px!important;}
   .page::-webkit-scrollbar{width:3px;}
-  #page-chat{position:absolute!important;top:64px!important;left:0;right:0;bottom:0;display:flex!important;flex-direction:column!important;overflow:hidden!important;}
+  #page-chat{position:absolute!important;top:0!important;left:0;right:0;bottom:0;display:flex!important;flex-direction:column!important;overflow:hidden!important;}
 
   /* All grids → simplified layout */
   .g2{grid-template-columns:1fr!important;}
@@ -2509,7 +2509,7 @@ body::after{ content:''; position:fixed; inset:0; pointer-events:none; z-index:0
   .cash-bar-val{width:66px;font-size:9px;}
 
   /* Chat */
-  #ch-top{padding:0 10px!important;min-height:44px!important;flex-wrap:nowrap!important;gap:5px!important;}
+  #ch-top{padding-top:env(safe-area-inset-top,0px)!important;padding-left:10px!important;padding-right:10px!important;min-height:calc(44px + env(safe-area-inset-top,0px))!important;flex-wrap:nowrap!important;gap:5px!important;background:#f9f7ff!important;}
   #ch-title{font-size:12px!important;}
   #ch-desc,#ch-mchip{display:none!important;}
   .ch-btn{font-size:10px!important;padding:4px 8px!important;}
@@ -3347,6 +3347,12 @@ tr:hover td{ background:rgba(141,108,250,.04) !important; }
 /* ── Chat ── */
 #page-chat{ background:#f9f7ff !important; }
 #ch-top{
+  /* Occupe la zone haute laissée libre par la barre système :
+     la hauteur s'ajuste au lieu de rester fixe à 50px */
+  height:auto !important;
+  min-height:50px !important;
+  padding-top:env(safe-area-inset-top,0px) !important;
+  box-sizing:content-box !important;
   background:#ffffff !important;
   border-bottom:1px solid rgba(46,39,71,.09) !important;
   box-shadow:0 2px 8px rgba(46,39,71,.05) !important;
@@ -19806,7 +19812,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.40";
+  var GUELANE_VERSION = "3.41";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

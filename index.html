@@ -2966,6 +2966,47 @@ body.sb-open #mobile-sidebar-btn{
 }
 .nfo-done.ok{background:rgba(34,165,94,.12);color:#22a55e;}
 .nfo-done.no{background:var(--bg3);color:var(--t3);}
+/* ═══ HISTORIQUE DES CONVERSATIONS (chat) ═══ */
+#ch-hist-panel{
+  display:none;position:fixed;inset:0;z-index:19600;
+  background:rgba(10,4,32,.55);backdrop-filter:blur(5px);
+  align-items:flex-end;justify-content:center;
+}
+#ch-hist-panel.on{display:flex;}
+.chh-sheet{
+  width:100%;max-width:520px;background:#fff;
+  border-radius:20px 20px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom,0px));
+  max-height:78vh;display:flex;flex-direction:column;
+  animation:chhUp .3s cubic-bezier(.2,.9,.3,1);
+}
+@keyframes chhUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.chh-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.chh-hd-title{font-size:16.5px;font-weight:800;color:#1a1040;}
+.chh-close{
+  width:30px;height:30px;border:none;border-radius:50%;background:#f2eff8;
+  color:#6b6685;font-size:13px;cursor:pointer;
+}
+.chh-note{font-size:12px;line-height:1.45;color:#8b86a3;margin-bottom:12px;}
+#ch-hist-list{overflow-y:auto;flex:1;}
+.chh-item{
+  display:flex;align-items:center;gap:9px;padding:12px 13px;margin-bottom:8px;
+  border-radius:13px;background:#faf9fd;border:1px solid #ece8f5;
+}
+.chh-bd{flex:1;min-width:0;cursor:pointer;}
+.chh-title{
+  font-size:13.5px;font-weight:700;color:#1a1040;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.chh-meta{font-size:11.5px;color:#8b86a3;margin-top:2px;}
+.chh-del{
+  width:32px;height:32px;border:none;border-radius:9px;background:transparent;
+  color:#b7b2c9;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.chh-del:active{background:#f6e9ec;color:#e11d48;}
+.chh-empty{
+  padding:30px 16px;text-align:center;color:#8b86a3;font-size:13px;line-height:1.5;
+}
+
 /* ═══════════════ GUELANE STORE ═══════════════ */
 .gs-wrap{padding:0 0 90px;}
 .gs-header{display:flex;align-items:center;gap:11px;padding:16px 14px 12px;}
@@ -9806,9 +9847,20 @@ function _pnLater(){ _pnDismiss(); }
         <div><div id="ch-title">Assistant IA — Guelane</div><div id="ch-desc">Intelligence financière panafricaine · 4 marchés · Temps réel</div></div>
         <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
           <span class="mchip pro" id="ch-mchip">PRO</span>
+          <button class="ch-btn" onclick="_chcHistOpen()" title="Historique des conversations"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg> Historique</button>
           <button class="ch-btn" onclick="chExport()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Export</button>
           <button class="ch-btn" onclick="chClear()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Effacer</button>
           <button class="ch-btn" onclick="showApiKeyModal()" title="Configurer la clé API Anthropic" id="ch-api-btn" style="position:relative;display:none;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="1.7"/></svg>⚙️ Backend</button>
+        </div>
+      </div>
+      <div id="ch-hist-panel">
+        <div class="chh-sheet">
+          <div class="chh-hd">
+            <div class="chh-hd-title">Historique des conversations</div>
+            <button class="chh-close" onclick="_chcHistClose()" aria-label="Fermer">✕</button>
+          </div>
+          <div class="chh-note">Vos conversations sont enregistrées automatiquement. Touchez-en une pour la reprendre.</div>
+          <div id="ch-hist-list"></div>
         </div>
       </div>
       <div id="ch-msgs">
@@ -12678,6 +12730,7 @@ async function chSend() {
   if (cc) cc.textContent = '0 / 2000';
 
   chAddU(txt);
+  if(typeof _chcRecord === 'function') _chcRecord('u', txt);
 
   var mc  = mode === 'pro' ? '[Profil: Professionnel — analyste, institutionnel, gestion multi-actifs]' : '[Profil: Particulier — investissement progressif, pédagogie simple, protection du capital]';
   var profileInstructions = mode === 'pro'
@@ -12759,6 +12812,7 @@ async function chSend() {
     if (!rep.trim()) throw new Error('Réponse vide du serveur');
     chH.push({ role: 'assistant', content: rep });
     chAddP(rep);
+    if(typeof _chcRecord === 'function') _chcRecord('b', rep);
     // Ajouter à l'historique sidebar
     var short = txt.length > 44 ? txt.slice(0, 44) + '…' : txt;
     _hist.unshift(short);
@@ -12849,12 +12903,211 @@ function buildWelcomeHtml() {
 
 function chClear() {
   chH = []; _hist = [];
+  /* Effacement volontaire : la conversation en cours n'est pas archivée */
+  try{ localStorage.removeItem('guelane_chat_current'); }catch(e){}
   var el = document.getElementById('ch-msgs'); if (!el) return;
   el.innerHTML = buildWelcomeHtml();
   renderProfilePrompts();
   var hl=document.getElementById('sl-hlist'); if(hl) hl.innerHTML='';
   toast('Conversation effacée');
 }
+
+/* ═══════════ HISTORIQUE DES CONVERSATIONS ═══════════
+   Règles :
+   - Fermeture complète de l'app → la conversation en cours est archivée
+     et le chat repart à zéro (reprise possible depuis l'Historique).
+   - Arrière-plan < 5 min → rien ne change, la conversation continue.
+   - Arrière-plan ≥ 5 min → archivage + réinitialisation, comme une fermeture. */
+
+var _CHC_CUR   = 'guelane_chat_current';   // conversation en cours
+var _CHC_ARCH  = 'guelane_chat_convs';     // conversations archivées
+var _CHC_BG    = 'guelane_chat_bg';        // départ en arrière-plan
+var _CHC_LIVE  = 'guelane_chat_live';      // session encore vivante (reload interne)
+var _CHC_LIMIT = 5 * 60 * 1000;            // 5 minutes
+var _chRestoring = false;
+
+function _chcLoadCur(){
+  try{ return JSON.parse(localStorage.getItem(_CHC_CUR) || 'null') || {msgs:[],api:[],ts:Date.now()}; }
+  catch(e){ return {msgs:[],api:[],ts:Date.now()}; }
+}
+function _chcSaveCur(c){
+  try{ localStorage.setItem(_CHC_CUR, JSON.stringify(c)); }catch(e){}
+}
+function _chcLoadArch(){
+  try{ return JSON.parse(localStorage.getItem(_CHC_ARCH) || '[]'); }catch(e){ return []; }
+}
+function _chcSaveArch(a){
+  try{ localStorage.setItem(_CHC_ARCH, JSON.stringify(a.slice(0, 30))); }catch(e){}
+}
+
+/* Enregistrer un message de la conversation en cours */
+function _chcRecord(role, content){
+  if(_chRestoring) return;
+  var c = _chcLoadCur();
+  c.msgs.push({ r: role, c: content });
+  c.api = chH.slice(-40);   // contexte API pour reprendre plus tard
+  c.ts = Date.now();
+  _chcSaveCur(c);
+}
+
+/* Archiver la conversation en cours puis repartir à zéro */
+function _chcArchiveCurrent(){
+  var c = _chcLoadCur();
+  if(!c.msgs || !c.msgs.length){ return false; }
+  var premier = '';
+  for(var i=0;i<c.msgs.length;i++){
+    if(c.msgs[i].r === 'u'){ premier = c.msgs[i].c; break; }
+  }
+  var arch = _chcLoadArch();
+  arch.unshift({
+    id: 'c' + Date.now(),
+    titre: (premier || 'Conversation').slice(0, 60),
+    ts: c.ts || Date.now(),
+    n: c.msgs.length,
+    msgs: c.msgs,
+    api: c.api || []
+  });
+  _chcSaveArch(arch);
+  try{ localStorage.removeItem(_CHC_CUR); }catch(e){}
+  return true;
+}
+
+/* Réinitialiser l'affichage du chat (sans toast) */
+function _chcResetUI(){
+  chH = []; _hist = [];
+  var el = document.getElementById('ch-msgs');
+  if(el){ el.innerHTML = buildWelcomeHtml(); }
+  if(typeof renderProfilePrompts === 'function') renderProfilePrompts();
+  var hl = document.getElementById('sl-hlist'); if(hl) hl.innerHTML = '';
+}
+
+/* Restaurer une conversation dans l'affichage */
+function _chcRestore(conv){
+  _chRestoring = true;
+  try{
+    var el = document.getElementById('ch-msgs');
+    if(el) el.innerHTML = '';
+    (conv.msgs || []).forEach(function(m){
+      if(m.r === 'u') chAddU(m.c);
+      else chAddP(m.c);
+    });
+    chH = (conv.api || []).slice();
+  }catch(e){}
+  _chRestoring = false;
+}
+
+/* ── Reprendre / supprimer depuis l'Historique ── */
+function _chcResume(id){
+  var arch = _chcLoadArch();
+  var conv = null;
+  var reste = arch.filter(function(x){
+    if(x.id === id){ conv = x; return false; }
+    return true;
+  });
+  if(!conv) return;
+  /* La conversation en cours, si non vide, est archivée avant la reprise ;
+     puis la conversation reprise est retirée de l'archive (elle redevient courante) */
+  _chcArchiveCurrent();
+  _chcSaveArch(_chcLoadArch().filter(function(x){ return x.id !== id; }));
+  _chcRestore(conv);
+  _chcSaveCur({ msgs: conv.msgs, api: conv.api, ts: Date.now() });
+  _chcHistClose();
+  if(typeof toast === 'function') toast('Conversation reprise');
+}
+window._chcResume = _chcResume;
+
+function _chcDelete(id){
+  _chcSaveArch(_chcLoadArch().filter(function(x){ return x.id !== id; }));
+  _chcHistRender();
+  if(typeof toast === 'function') toast('Conversation supprimée');
+}
+window._chcDelete = _chcDelete;
+
+/* ── Panneau Historique ── */
+function _chcHistOpen(){
+  var p = document.getElementById('ch-hist-panel');
+  if(!p) return;
+  _chcHistRender();
+  p.classList.add('on');
+}
+function _chcHistClose(){
+  var p = document.getElementById('ch-hist-panel');
+  if(p) p.classList.remove('on');
+}
+window._chcHistOpen = _chcHistOpen;
+window._chcHistClose = _chcHistClose;
+
+function _chcHistRender(){
+  var host = document.getElementById('ch-hist-list');
+  if(!host) return;
+  var arch = _chcLoadArch();
+  if(!arch.length){
+    host.innerHTML = '<div class="chh-empty">Aucune conversation enregistrée.<br>'
+      + 'Vos échanges avec Guelane AI apparaîtront ici automatiquement.</div>';
+    return;
+  }
+  host.innerHTML = arch.map(function(c){
+    var d = new Date(c.ts);
+    var quand = d.toLocaleDateString('fr-FR') + ' · '
+              + d.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
+    return '<div class="chh-item">'
+      + '<div class="chh-bd" onclick="_chcResume(\'' + c.id + '\')">'
+      +   '<div class="chh-title">' + _chcEsc(c.titre) + '</div>'
+      +   '<div class="chh-meta">' + quand + ' · ' + (c.n || 0) + ' messages</div>'
+      + '</div>'
+      + '<button class="chh-del" onclick="_chcDelete(\'' + c.id + '\')" aria-label="Supprimer">'
+      +   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg>'
+      + '</button></div>';
+  }).join('');
+}
+function _chcEsc(s){
+  return String(s || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ── Cycle de vie ──
+   Au chargement de la page :
+   - reload interne (Android recharge parfois en arrière-plan) et absence
+     courte → restaurer la conversation telle quelle ;
+   - vraie fermeture ou absence de 5 min et plus → archiver et repartir à zéro. */
+(function(){
+  function boot(){
+    var vivant = false, bgOk = true;
+    try{
+      vivant = sessionStorage.getItem(_CHC_LIVE) === '1';
+      var bg = parseInt(sessionStorage.getItem(_CHC_BG) || '0', 10);
+      if(bg && (Date.now() - bg) >= _CHC_LIMIT) bgOk = false;
+    }catch(e){}
+    var cur = _chcLoadCur();
+    if(vivant && bgOk && cur.msgs && cur.msgs.length){
+      _chcRestore(cur);            // même session : on reprend où on en était
+    } else if(cur.msgs && cur.msgs.length){
+      _chcArchiveCurrent();        // fermeture ou longue absence : archiver
+      _chcResetUI();
+    }
+    try{
+      sessionStorage.setItem(_CHC_LIVE, '1');
+      sessionStorage.removeItem(_CHC_BG);
+    }catch(e){}
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+
+  /* Arrière-plan : noter le départ ; au retour, appliquer la règle des 5 minutes */
+  document.addEventListener('visibilitychange', function(){
+    try{
+      if(document.visibilityState === 'hidden'){
+        sessionStorage.setItem(_CHC_BG, String(Date.now()));
+      } else {
+        var bg = parseInt(sessionStorage.getItem(_CHC_BG) || '0', 10);
+        sessionStorage.removeItem(_CHC_BG);
+        if(bg && (Date.now() - bg) >= _CHC_LIMIT){
+          if(_chcArchiveCurrent()) _chcResetUI();
+        }
+        /* Moins de 5 minutes : la conversation continue, rien à faire */
+      }
+    }catch(e){}
+  });
+})();
 
 function chExport() {
   if (!chH.length) { toast('Aucune conversation à exporter'); return; }
@@ -19812,7 +20065,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.41";
+  var GUELANE_VERSION = "3.42";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

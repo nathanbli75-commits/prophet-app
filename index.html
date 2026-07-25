@@ -2973,8 +2973,13 @@ body.sb-open #mobile-sidebar-btn{
   top:calc(env(safe-area-inset-top,0px) + 56px);
   z-index:60;
   display:flex;align-items:center;gap:2px;
-  background:transparent;border-radius:22px;padding:5px 7px;
-  box-shadow:none;border:none;
+  /* Verre dépoli : translucide, le contenu derrière est flouté */
+  background:rgba(255,255,255,.45);
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);
+  backdrop-filter:blur(14px) saturate(1.4);
+  border-radius:22px;padding:5px 7px;
+  border:1px solid rgba(255,255,255,.55);
+  box-shadow:0 6px 22px rgba(20,8,60,.10);
 }
 .ch-fab-btn{
   display:flex;align-items:center;gap:6px;
@@ -20131,7 +20136,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.47";
+  var GUELANE_VERSION = "3.48";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

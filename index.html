@@ -2957,6 +2957,35 @@ body.profile-part #mn-dash .mn-ic-b{display:block;}
 body.profile-pro #mn-wallet .mn-ic-a{display:none;}
 body.profile-pro #mn-wallet .mn-ic-b{display:block;}
 
+/* ═══ FICHES ENTREPRISES : COMPACTES, DÉPLIÉES AU CLIC ═══
+   Trois fiches tiennent à l'écran ; le nom de l'entreprise prédomine.
+   Le clic sur l'en-tête déplie la fiche complète (une seule à la fois). */
+.co-body{display:none;}
+.co-card.open .co-body{display:block;}
+.co-card{padding:13px !important;}
+.co-top{margin-bottom:0;cursor:pointer;}
+.co-card.open .co-top{margin-bottom:11px;}
+.co-htx{flex:1;min-width:0;}
+.co-name{font-size:15.5px !important;font-weight:800 !important;margin-bottom:1px;}
+.co-card.open .co-name{font-size:13.5px !important;}
+.co-sector{font-size:10.5px;}
+
+/* Score compact + chevron, toujours à l'extrême droite */
+.co-right{order:3;display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:6px;}
+.co-cscore{font-size:14px;font-weight:800;font-family:var(--mono);}
+.co-card.open .co-cscore{display:none;}
+.co-chev{width:16px;height:16px;color:var(--t3);transition:transform .24s ease;}
+.co-card.open .co-chev{transform:rotate(180deg);}
+
+/* Badge VEDETTE : étoile dorée quand la fiche est compacte (pas de collision),
+   badge complet une fois dépliée */
+.co-card.featured::after{display:none;}
+.co-card.featured.open::after{display:block;}
+.co-card.featured:not(.open) .co-name::before{content:'★ ';color:var(--gold);font-size:12px;}
+
+/* Pas de soulèvement au survol : la liste compacte reste stable */
+.co-card:hover{transform:none !important;}
+
 /* ═══ BARRES DE DÉFILEMENT MASQUÉES PARTOUT ═══
    Le défilement reste entièrement fonctionnel (doigt, molette, clavier) :
    seule la barre visuelle disparaît, sur tous les écrans et navigateurs. */
@@ -11604,7 +11633,8 @@ function buildCompanyGrid(){
       ? '<span style="margin-left:auto;font-size:9px;font-weight:700;padding:3px 7px;border-radius:10px;background:rgba(141,108,250,.14);color:var(--gold);border:1px solid rgba(141,108,250,.3);">🏢 Ma société</span>'
       : (inWatch?'<span style="margin-left:auto;font-size:9px;font-weight:700;padding:3px 7px;border-radius:10px;background:rgba(30,200,176,.13);color:var(--gr);border:1px solid rgba(30,200,176,.3);">✓ Watchlist</span>':'');
     grid.innerHTML+=`<div class="co-card${c.featured?' featured':''}" id="co-card-${c.id}">
-      <div class="co-top"><div class="co-logo" style="background:var(--bg4)">${c.logo}</div><div><div class="co-name">${c.name}</div><div class="co-sector">${c.sector.toUpperCase()} · ${c.country} · ${c.type}</div></div>${topBadge}</div>
+      <div class="co-top" onclick="_coToggle(${c.id})"><div class="co-logo" style="background:var(--bg4)">${c.logo}</div><div class="co-htx"><div class="co-name">${c.name}</div><div class="co-sector">${c.sector.toUpperCase()} · ${c.country} · ${c.type}</div></div>${topBadge}<div class="co-right"><span class="co-cscore" style="color:${scolor}">${sc}</span><svg class="co-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div></div>
+      <div class="co-body">
       <div class="co-score"><span style="font-size:10px;color:var(--t2)">Score Guelane</span><div class="co-score-bar"><div class="co-score-fill" style="width:${sc*10}%;background:${scolor}"></div></div><span class="co-score-v" style="color:${scolor}">${sc}</span></div>
       <div class="co-metrics">
         <div class="co-metric"><div class="co-m-l">Capital recherché</div><div class="co-m-v" style="color:var(--gold)">${c.raise}</div></div>
@@ -11618,10 +11648,27 @@ function buildCompanyGrid(){
         ${investBtns}
         <button class="co-btn co-btn-info" onclick="openCompanyDetail(${c.id})">Suivre</button>
       </div>
+      </div>
     </div>`;
   });
   document.getElementById('stat-cos').textContent=companies.length;
 }
+/* Deplie une fiche entreprise et replie les autres */
+function _coToggle(id){
+  var card = document.getElementById('co-card-' + id);
+  if(!card) return;
+  var ouvrir = !card.classList.contains('open');
+  document.querySelectorAll('.co-card.open').forEach(function(c){ c.classList.remove('open'); });
+  if(ouvrir){
+    card.classList.add('open');
+    /* Garder la fiche visible apres le depliage */
+    setTimeout(function(){
+      try{ card.scrollIntoView({ block:'nearest', behavior:'smooth' }); }catch(e){}
+    }, 70);
+  }
+}
+window._coToggle = _coToggle;
+
 function filterSector(s,btn){curSector=s;document.querySelectorAll('.inv-filter').forEach(b=>b.classList.remove('on'));btn.classList.add('on');cosLoaded=9;buildCompanyGrid();}
 function filterCompanies(){buildCompanyGrid();}
 function sortCompanies(val){const sorted=[...companies];if(val==='score')sorted.sort((a,b)=>b.score-a.score);else if(val==='raise')sorted.sort((a,b)=>parseFloat(b.raise)-parseFloat(a.raise));else if(val==='growth')sorted.sort((a,b)=>parseFloat(b.growth)-parseFloat(a.growth));companies.splice(0);companies.push(...sorted);buildCompanyGrid();}
@@ -20225,7 +20272,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.58";
+  var GUELANE_VERSION = "3.59";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

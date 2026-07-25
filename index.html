@@ -2957,6 +2957,62 @@ body.profile-part #mn-dash .mn-ic-b{display:block;}
 body.profile-pro #mn-wallet .mn-ic-a{display:none;}
 body.profile-pro #mn-wallet .mn-ic-b{display:block;}
 
+/* ═══ SELECTEUR MAISON ═══
+   Le panneau natif du systeme (radios, Prev./Next/Done) casse l'identite
+   visuelle. Le <select> reste en place et garde son style ; un calque
+   transparent capte le clic et ouvre un panneau aux couleurs de Guelane. */
+.gsel-wrap{position:relative;display:block;}
+.gsel-wrap > select{pointer-events:none;}
+.gsel-hit{
+  position:absolute;inset:0;z-index:3;
+  background:transparent;border:none;padding:0;margin:0;
+  cursor:pointer;border-radius:inherit;
+}
+.gsel-hit:focus-visible{outline:2px solid #8d6cfa;outline-offset:2px;}
+
+#gsel-sheet{
+  display:none;position:fixed;inset:0;z-index:19700;
+  background:rgba(10,4,32,.55);
+  -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+  align-items:flex-end;justify-content:center;
+}
+#gsel-sheet.on{display:flex;}
+.gsel-panel{
+  width:100%;max-width:520px;background:var(--bg2);
+  border-radius:20px 20px 0 0;
+  padding:16px 14px calc(16px + env(safe-area-inset-bottom,0px));
+  max-height:74vh;display:flex;flex-direction:column;
+  animation:gselUp .28s cubic-bezier(.2,.9,.3,1);
+}
+@keyframes gselUp{from{transform:translateY(26px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.gsel-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;}
+.gsel-title{font-size:16px;font-weight:800;color:var(--t);}
+.gsel-close{
+  width:30px;height:30px;flex-shrink:0;border:none;border-radius:50%;
+  background:var(--bg3);color:var(--t2);font-size:13px;cursor:pointer;
+}
+.gsel-list{overflow-y:auto;flex:1;}
+.gsel-opt{
+  display:flex;align-items:center;gap:11px;
+  padding:13px 12px;margin-bottom:5px;border-radius:12px;
+  font-size:14.5px;font-weight:600;color:var(--t);cursor:pointer;
+}
+.gsel-opt:active{background:var(--bg3);}
+.gsel-opt.on{background:rgba(141,108,250,.10);}
+.gsel-dot{
+  width:18px;height:18px;flex-shrink:0;border-radius:50%;
+  border:2px solid var(--b3);position:relative;
+}
+.gsel-opt.on .gsel-dot{border-color:#8d6cfa;}
+.gsel-opt.on .gsel-dot::after{
+  content:'';position:absolute;inset:3px;border-radius:50%;background:#8d6cfa;
+}
+.gsel-txt{flex:1;min-width:0;}
+@media(min-width:841px){
+  #gsel-sheet{align-items:center;}
+  .gsel-panel{border-radius:18px;max-height:66vh;padding-bottom:16px;}
+}
+
 /* ═══ FILTRES MARKETPLACE : TROIS LIGNES PLEINE LARGEUR ═══
    1. recherche  2. catégories (un seul bouton)  3. tri */
 .invf{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
@@ -11695,6 +11751,147 @@ function buildCompanyGrid(){
   });
   document.getElementById('stat-cos').textContent=companies.length;
 }
+/* ═══════════ SELECTEUR MAISON (remplace le panneau natif) ═══════════
+   Le <select> d'origine reste dans la page : sa valeur, son id et ses
+   gestionnaires onchange continuent de fonctionner sans modification. */
+(function(){
+  var _gselCur = null, _gselTimer = null;
+
+  /* Intitule du panneau : on reprend le libelle affiche au-dessus du champ */
+  function _gselTitle(sel){
+    var lab = null;
+    var boite = sel.closest ? sel.closest('.tf,.eco-field,.sv-field,.gs-field') : null;
+    if(boite) lab = boite.querySelector('label,.eco-lbl,.sv-lbl,.gs-field-lbl');
+    if(!lab){
+      var ref = sel.parentNode && sel.parentNode.classList.contains('gsel-wrap')
+              ? sel.parentNode : sel;
+      var prec = ref.previousElementSibling;
+      if(prec && prec.textContent && prec.textContent.trim().length <= 44) lab = prec;
+    }
+    var t = lab ? lab.textContent.replace(/\*/g,'').trim() : '';
+    return t || 'Choisir une option';
+  }
+
+  function _gselSheet(){
+    var s = document.getElementById('gsel-sheet');
+    if(s) return s;
+    s = document.createElement('div');
+    s.id = 'gsel-sheet';
+    s.setAttribute('role','dialog');
+    s.setAttribute('aria-modal','true');
+    s.innerHTML = '<div class="gsel-panel">'
+      + '<div class="gsel-hd"><div class="gsel-title" id="gsel-title">Choisir</div>'
+      + '<button class="gsel-close" type="button" aria-label="Fermer">\u2715</button></div>'
+      + '<div class="gsel-list" id="gsel-list"></div></div>';
+    s.addEventListener('click', function(e){ if(e.target === s) _gselClose(); });
+    s.querySelector('.gsel-close').onclick = _gselClose;
+    document.body.appendChild(s);
+    return s;
+  }
+
+  function _gselClose(){
+    var s = document.getElementById('gsel-sheet');
+    if(s) s.classList.remove('on');
+    _gselCur = null;
+  }
+  window._gselClose = _gselClose;
+
+  function _gselPick(i){
+    if(_gselCur){
+      _gselCur.selectedIndex = i;
+      /* Evenement reel : les onchange existants s'executent normalement */
+      try{ _gselCur.dispatchEvent(new Event('change', { bubbles:true })); }
+      catch(e){
+        var ev = document.createEvent('HTMLEvents');
+        ev.initEvent('change', true, false);
+        _gselCur.dispatchEvent(ev);
+      }
+    }
+    _gselClose();
+  }
+
+  function _gselOpen(sel){
+    if(sel.disabled) return;
+    _gselCur = sel;
+    var s = _gselSheet();
+    var t = document.getElementById('gsel-title');
+    if(t) t.textContent = _gselTitle(sel);
+    var list = document.getElementById('gsel-list');
+    list.innerHTML = '';
+    for(var i = 0; i < sel.options.length; i++){
+      var o = sel.options[i];
+      if(o.disabled) continue;
+      var d = document.createElement('div');
+      d.className = 'gsel-opt' + (i === sel.selectedIndex ? ' on' : '');
+      d.innerHTML = '<span class="gsel-dot"></span><span class="gsel-txt"></span>';
+      d.querySelector('.gsel-txt').textContent = (o.textContent || '').trim();
+      d.onclick = (function(idx){ return function(){ _gselPick(idx); }; })(i);
+      list.appendChild(d);
+    }
+    s.classList.add('on');
+    /* Amener l'option courante dans le champ de vision */
+    var actif = list.querySelector('.gsel-opt.on');
+    if(actif && actif.scrollIntoView){
+      try{ actif.scrollIntoView({ block:'nearest' }); }catch(e){}
+    }
+  }
+
+  /* Habille tous les selects pas encore traites */
+  function _gselEnhance(){
+    var liste = document.querySelectorAll('select:not([data-gsel])');
+    for(var i = 0; i < liste.length; i++){
+      var sel = liste[i];
+      sel.setAttribute('data-gsel','1');
+      if(sel.multiple || sel.size > 1) continue;   /* listes multiples : inchangees */
+
+      var wrap = document.createElement('span');
+      wrap.className = 'gsel-wrap';
+      /* Conserver le comportement de mise en page du champ d'origine */
+      try{
+        var pere = sel.parentNode;
+        if(pere && getComputedStyle(pere).display.indexOf('flex') !== -1){
+          wrap.style.flex = '1 1 auto';
+          wrap.style.minWidth = '0';
+        }
+      }catch(e){}
+
+      sel.parentNode.insertBefore(wrap, sel);
+      wrap.appendChild(sel);
+
+      var hit = document.createElement('button');
+      hit.type = 'button';
+      hit.className = 'gsel-hit';
+      hit.setAttribute('aria-label', 'Ouvrir la liste : ' + _gselTitle(sel));
+      hit.onclick = (function(s){ return function(e){
+        e.preventDefault(); e.stopPropagation(); _gselOpen(s);
+      }; })(sel);
+      wrap.appendChild(hit);
+    }
+  }
+  window._gselEnhance = _gselEnhance;
+
+  /* Fermeture au clavier */
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') _gselClose();
+  });
+
+  function _gselBoot(){
+    _gselEnhance();
+    /* Les ecrans sont generes au fil de la navigation : on repasse
+       apres chaque salve de modifications, sans surcharger. */
+    try{
+      new MutationObserver(function(){
+        if(_gselTimer) return;
+        _gselTimer = setTimeout(function(){
+          _gselTimer = null; _gselEnhance();
+        }, 450);
+      }).observe(document.body, { childList:true, subtree:true });
+    }catch(e){}
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _gselBoot);
+  else _gselBoot();
+})();
+
 /* Deplie une fiche entreprise et replie les autres */
 function _coToggle(id){
   var card = document.getElementById('co-card-' + id);
@@ -20383,7 +20580,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.61";
+  var GUELANE_VERSION = "3.62";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

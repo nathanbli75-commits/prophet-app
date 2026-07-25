@@ -2966,38 +2966,80 @@ body.sb-open #mobile-sidebar-btn{
 }
 .nfo-done.ok{background:rgba(34,165,94,.12);color:#22a55e;}
 .nfo-done.no{background:var(--bg3);color:var(--t3);}
-/* ═══ POPOVER D'ACTIONS DU CHAT (PC + mobile) ═══
-   Même langage visuel que le dock de navigation : pilule blanche flottante. */
+/* ═══ UX DU CHAT : EN-TÊTE, ACTIONS, SAISIE (PC + mobile) ═══ */
+
+/* Pilule d'actions, intégrée à la rangée du titre — verre dépoli */
 #ch-fab{
-  position:absolute;right:14px;
-  top:calc(env(safe-area-inset-top,0px) + 56px);
-  z-index:60;
   display:flex;align-items:center;gap:2px;
-  /* Verre dépoli : translucide, le contenu derrière est flouté */
-  background:rgba(255,255,255,.45);
-  -webkit-backdrop-filter:blur(14px) saturate(1.4);
-  backdrop-filter:blur(14px) saturate(1.4);
-  border-radius:22px;padding:5px 7px;
-  border:1px solid rgba(255,255,255,.55);
-  box-shadow:0 6px 22px rgba(20,8,60,.10);
+  background:rgba(255,255,255,.5);
+  -webkit-backdrop-filter:blur(12px) saturate(1.3);
+  backdrop-filter:blur(12px) saturate(1.3);
+  border-radius:18px;padding:3px 5px;
+  border:1px solid rgba(141,108,250,.18);
+  box-shadow:0 4px 14px rgba(20,8,60,.08);
 }
 .ch-fab-btn{
   display:flex;align-items:center;gap:6px;
-  padding:8px 11px;border:none;border-radius:16px;
+  padding:7px 10px;border:none;border-radius:13px;
   background:transparent;color:#514a6b;
-  font-size:12px;font-weight:700;cursor:pointer;
-  transition:background .15s,color .15s;
+  font-size:11.5px;font-weight:700;cursor:pointer;
+  transition:background .15s,color .15s,transform .12s;
 }
-.ch-fab-btn svg{width:15px;height:15px;flex-shrink:0;}
-.ch-fab-btn:hover{background:#f3f0fb;color:#2d2057;}
-.ch-fab-btn:active{background:#2d2057;color:#fff;}
+.ch-fab-btn svg{width:14px;height:14px;flex-shrink:0;}
+.ch-fab-btn:hover{background:rgba(141,108,250,.12);color:#2d2057;}
+.ch-fab-btn:active{background:#2d2057;color:#fff;transform:scale(.95);}
 @media(max-width:840px){
-  #ch-fab{right:10px;top:calc(env(safe-area-inset-top,0px) + 52px);padding:4px 5px;}
-  .ch-fab-btn{padding:8px 9px;}
+  .ch-fab-btn{padding:7px 8px;}
   .ch-fab-btn span{display:none;}   /* icônes seules sur petit écran */
 }
 
-/* ═══ DOCK DE NAVIGATION SUR PC ═══
+/* En-tête : marque en dégradé + statut animé, fond subtilement teinté */
+#ch-top{
+  background:linear-gradient(135deg,#ffffff 30%,#f4effe) !important;
+  border-bottom:1px solid rgba(141,108,250,.14) !important;
+}
+.ch-brand{
+  font-weight:800;
+  background:linear-gradient(90deg,#e8a93e,#8d6cfa);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+.ch-live{
+  display:inline-flex;align-items:center;gap:4px;
+  margin-left:9px;font-size:10px;font-weight:700;color:#22a55e;
+  vertical-align:1px;
+}
+.ch-live-dot{
+  width:6px;height:6px;border-radius:50%;background:#22a55e;
+  box-shadow:0 0 0 0 rgba(34,165,94,.5);
+  animation:chLive 2s ease-out infinite;
+}
+@keyframes chLive{
+  0%{box-shadow:0 0 0 0 rgba(34,165,94,.45);}
+  70%{box-shadow:0 0 0 6px rgba(34,165,94,0);}
+  100%{box-shadow:0 0 0 0 rgba(34,165,94,0);}
+}
+
+/* Zone de saisie : carte élevée, halo au focus, envoi plus vivant */
+#ch-inp{
+  background:linear-gradient(180deg,#ffffff,#f7f4fe) !important;
+  border-top:1px solid rgba(141,108,250,.12) !important;
+}
+#ch-wrap{
+  border-radius:18px !important;
+  border:1.5px solid rgba(141,108,250,.22) !important;
+  box-shadow:0 4px 18px rgba(45,32,87,.07) !important;
+  transition:border-color .2s, box-shadow .2s;
+}
+#ch-wrap:focus-within{
+  border-color:#8d6cfa !important;
+  box-shadow:0 0 0 4px rgba(141,108,250,.13), 0 6px 22px rgba(45,32,87,.10) !important;
+}
+#ch-ta::placeholder{color:#a49dbd;font-weight:500;}
+#ch-sb{border-radius:13px !important;}
+#ch-sb:active{transform:scale(.92);}
+
+/* ═══ DOCK DE NAVIGATION SUR PC ═══ *//* ═══ DOCK DE NAVIGATION SUR PC ═══
    La même barre que sur mobile, avec l'espace réservé pour ne rien recouvrir. */
 @media(min-width:841px){
   #mob-nav{display:flex;}
@@ -9898,15 +9940,9 @@ function _pnLater(){ _pnDismiss(); }
     <!-- CHAT PAGE -->
     <div id="page-chat">
       <div id="ch-top">
-        <div><div id="ch-title">Assistant IA — Guelane</div><div id="ch-desc">Intelligence financière panafricaine · 4 marchés · Temps réel</div></div>
+        <div><div id="ch-title">Assistant IA — <span class="ch-brand">Guelane</span><span class="ch-live"><span class="ch-live-dot"></span>En ligne</span></div><div id="ch-desc">Intelligence financière panafricaine · 4 marchés · Temps réel</div></div>
         <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
-          <span class="mchip pro" id="ch-mchip">PRO</span>
-          <button class="ch-btn" onclick="showApiKeyModal()" title="Configurer la clé API Anthropic" id="ch-api-btn" style="position:relative;display:none;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="1.7"/></svg>⚙️ Backend</button>
-        </div>
-      </div>
-
-      <!-- Actions du chat : popover flottant, coin supérieur droit (PC + mobile) -->
-      <div id="ch-fab" role="toolbar" aria-label="Actions du chat">
+          <div id="ch-fab" role="toolbar" aria-label="Actions du chat">
         <button class="ch-fab-btn" onclick="_chcHistOpen()" title="Historique des conversations">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
           <span>Historique</span>
@@ -9920,6 +9956,12 @@ function _pnLater(){ _pnDismiss(); }
           <span>Effacer</span>
         </button>
       </div>
+          <span class="mchip pro" id="ch-mchip">PRO</span>
+          <button class="ch-btn" onclick="showApiKeyModal()" title="Configurer la clé API Anthropic" id="ch-api-btn" style="position:relative;display:none;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="1.7"/></svg>⚙️ Backend</button>
+        </div>
+      </div>
+
+      
       
       <div id="ch-msgs">
         <div id="ch-welcome">
@@ -20136,7 +20178,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.48";
+  var GUELANE_VERSION = "3.49";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

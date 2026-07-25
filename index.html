@@ -2904,11 +2904,11 @@ body.sb-open #mobile-sidebar-btn{
 .nfc-row{display:flex;gap:8px;padding:12px 12px 4px;}
 .nfc-tab{
   flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
-  padding:11px 8px;border-radius:13px;border:1.5px solid var(--bd);
+  padding:11px 8px;border-radius:13px;border:1.5px solid var(--b2);
   background:var(--bg2);cursor:pointer;position:relative;
   font-size:12.5px;font-weight:700;color:var(--t2);transition:all .18s;
 }
-.nfc-tab.on{border-color:#8d6cfa;background:rgba(141,108,250,.08);color:var(--t1);}
+.nfc-tab.on{border-color:#8d6cfa;background:rgba(141,108,250,.08);color:var(--t);}
 .nfc-ic{font-size:15px;}
 .nfc-badge{
   background:var(--re);color:#fff;font-size:10.5px;font-weight:800;
@@ -2924,7 +2924,7 @@ body.sb-open #mobile-sidebar-btn{
 }
 .nfo-card{
   margin:0 12px 11px;padding:14px;border-radius:15px;
-  background:var(--bg2);border:1px solid var(--bd);
+  background:var(--bg2);border:1px solid var(--b2);
 }
 .nfo-top{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
 .nfo-kind{
@@ -2934,10 +2934,10 @@ body.sb-open #mobile-sidebar-btn{
 .nfo-kind.sell{background:rgba(225,29,72,.12);color:#e11d48;}
 .nfo-kind.rebal{background:rgba(141,108,250,.14);color:#8d6cfa;}
 .nfo-time{font-size:11px;color:var(--t3);margin-left:auto;}
-.nfo-title{font-size:14.5px;font-weight:800;color:var(--t1);margin-bottom:3px;}
+.nfo-title{font-size:14.5px;font-weight:800;color:var(--t);margin-bottom:3px;}
 .nfo-amount{font-size:13px;font-weight:700;color:var(--gold);margin-bottom:7px;}
 .nfo-why{font-size:12.5px;line-height:1.5;color:var(--t2);margin-bottom:11px;}
-.nfo-why b{color:var(--t1);}
+.nfo-why b{color:var(--t);}
 .nfo-acts{display:flex;gap:8px;}
 .nfo-btn{
   flex:1;padding:10px;border:none;border-radius:11px;
@@ -2956,6 +2956,36 @@ body.profile-part #mn-dash .mn-ic-a{display:none;}
 body.profile-part #mn-dash .mn-ic-b{display:block;}
 body.profile-pro #mn-wallet .mn-ic-a{display:none;}
 body.profile-pro #mn-wallet .mn-ic-b{display:block;}
+
+/* ═══ FILTRES MARKETPLACE : TROIS LIGNES PLEINE LARGEUR ═══
+   1. recherche  2. catégories (un seul bouton)  3. tri */
+.invf{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
+.invf-search{
+  position:relative;display:flex;align-items:center;width:100%;
+}
+.invf-search-ic{
+  position:absolute;left:13px;width:16px;height:16px;
+  color:var(--t3);pointer-events:none;
+}
+.invf-input{
+  width:100%;padding:12px 14px 12px 37px;
+  border:1.5px solid var(--b2);border-radius:13px;
+  background:var(--bg2);color:var(--t);
+  font-size:14px;font-family:inherit;outline:none;
+}
+.invf-input::placeholder{color:var(--t3);}
+.invf-input:focus{
+  border-color:#8d6cfa;
+  box-shadow:0 0 0 3px rgba(141,108,250,.12);
+}
+.invf-select{
+  width:100%;padding:12px 14px;
+  border:1.5px solid var(--b2);border-radius:13px;
+  background:var(--bg2);color:var(--t);
+  font-size:14px;font-weight:600;font-family:inherit;
+  outline:none;cursor:pointer;
+}
+.invf-select:focus{border-color:#8d6cfa;}
 
 /* ═══ FICHES ENTREPRISES : COMPACTES, DÉPLIÉES AU CLIC ═══
    Trois fiches tiennent à l'écran ; le nom de l'entreprise prédomine.
@@ -3129,7 +3159,7 @@ body.profile-pro #mn-wallet .mn-ic-b{display:block;}
   display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
 }
 .gs-header-back svg{width:17px;height:17px;}
-.gs-title{font-size:19px;font-weight:800;color:var(--t1);}
+.gs-title{font-size:19px;font-weight:800;color:var(--t);}
 .gs-sub{font-size:12.5px;color:var(--t3);margin-top:1px;}
 
 .gs-balance{
@@ -3142,24 +3172,24 @@ body.profile-pro #mn-wallet .mn-ic-b{display:block;}
 
 .gs-tabs{display:flex;gap:7px;padding:0 14px 14px;}
 .gs-tab{
-  flex:1;padding:9px 6px;border-radius:11px;border:1.5px solid var(--bd);
+  flex:1;padding:9px 6px;border-radius:11px;border:1.5px solid var(--b2);
   background:var(--bg2);font-size:12.5px;font-weight:700;color:var(--t2);cursor:pointer;
 }
-.gs-tab.on{border-color:#8d6cfa;background:rgba(141,108,250,.09);color:var(--t1);}
+.gs-tab.on{border-color:#8d6cfa;background:rgba(141,108,250,.09);color:var(--t);}
 
 .gs-cats{display:flex;gap:7px;padding:0 14px 13px;overflow-x:auto;scrollbar-width:none;}
 .gs-cats::-webkit-scrollbar{display:none;}
 .gs-cat{
-  flex-shrink:0;padding:7px 13px;border-radius:10px;border:1px solid var(--bd);
+  flex-shrink:0;padding:7px 13px;border-radius:10px;border:1px solid var(--b2);
   background:var(--bg2);font-size:12px;font-weight:700;color:var(--t2);
   cursor:pointer;white-space:nowrap;
 }
-.gs-cat.on{border-color:#e8a93e;background:rgba(232,169,62,.10);color:var(--t1);}
+.gs-cat.on{border-color:#e8a93e;background:rgba(232,169,62,.10);color:var(--t);}
 
 .gs-partners{padding:0 14px;}
 .gs-card{
   display:flex;gap:12px;padding:14px;margin-bottom:11px;
-  border-radius:15px;background:var(--bg2);border:1px solid var(--bd);
+  border-radius:15px;background:var(--bg2);border:1px solid var(--b2);
 }
 .gs-logo{
   width:46px;height:46px;border-radius:12px;flex-shrink:0;
@@ -3167,7 +3197,7 @@ body.profile-pro #mn-wallet .mn-ic-b{display:block;}
   font-size:20px;font-weight:800;color:#fff;
 }
 .gs-card-bd{flex:1;min-width:0;}
-.gs-card-nm{font-size:14.5px;font-weight:800;color:var(--t1);margin-bottom:2px;}
+.gs-card-nm{font-size:14.5px;font-weight:800;color:var(--t);margin-bottom:2px;}
 .gs-card-cat{
   display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;
   border-radius:6px;background:rgba(141,108,250,.12);color:#8d6cfa;margin-bottom:6px;
@@ -3186,15 +3216,15 @@ body.profile-pro #mn-wallet .mn-ic-b{display:block;}
   background:rgba(141,108,250,.07);border:1px solid rgba(141,108,250,.20);
   font-size:12.5px;line-height:1.5;color:var(--t2);
 }
-.gs-hist-hd{padding:0 16px 8px;font-size:13px;font-weight:800;color:var(--t1);}
+.gs-hist-hd{padding:0 16px 8px;font-size:13px;font-weight:800;color:var(--t);}
 .gs-hist{padding:0 14px;}
 .gs-hist-row{
   display:flex;align-items:center;gap:11px;padding:12px 14px;margin-bottom:8px;
-  border-radius:13px;background:var(--bg2);border:1px solid var(--bd);
+  border-radius:13px;background:var(--bg2);border:1px solid var(--b2);
 }
 .gs-hist-ic{font-size:17px;flex-shrink:0;}
 .gs-hist-bd{flex:1;min-width:0;}
-.gs-hist-nm{font-size:13.5px;font-weight:700;color:var(--t1);}
+.gs-hist-nm{font-size:13.5px;font-weight:700;color:var(--t);}
 .gs-hist-dt{font-size:11.5px;color:var(--t3);margin-top:1px;}
 .gs-hist-amt{font-size:14px;font-weight:800;flex-shrink:0;}
 .gs-hist-amt.pos{color:#22a55e;}
@@ -3208,8 +3238,8 @@ body.profile-pro #mn-wallet .mn-ic-b{display:block;}
 .gs-field{margin-bottom:13px;}
 .gs-field-lbl{font-size:12.5px;font-weight:700;color:var(--t2);margin-bottom:6px;}
 .gs-inp{
-  width:100%;padding:12px 14px;border:1.5px solid var(--bd);border-radius:12px;
-  background:var(--bg2);font-size:14px;color:var(--t1);outline:none;font-family:inherit;
+  width:100%;padding:12px 14px;border:1.5px solid var(--b2);border-radius:12px;
+  background:var(--bg2);font-size:14px;color:var(--t);outline:none;font-family:inherit;
 }
 .gs-inp:focus{border-color:#8d6cfa;}
 .gs-ta{min-height:88px;resize:vertical;}
@@ -3239,21 +3269,21 @@ body.profile-pro #mn-wallet .mn-ic-b{display:block;}
 .nfo-filter-row::-webkit-scrollbar{display:none;}
 .nfo-ftab{
   flex-shrink:0;padding:7px 13px;border-radius:10px;
-  border:1px solid var(--bd);background:var(--bg2);
+  border:1px solid var(--b2);background:var(--bg2);
   font-size:12px;font-weight:700;color:var(--t2);cursor:pointer;white-space:nowrap;
 }
-.nfo-ftab.on{border-color:#8d6cfa;background:rgba(141,108,250,.10);color:var(--t1);}
+.nfo-ftab.on{border-color:#8d6cfa;background:rgba(141,108,250,.10);color:var(--t);}
 .nfo-cap{
   margin:0 12px 11px;padding:11px 13px;border-radius:12px;
   background:rgba(225,29,72,.07);border:1px solid rgba(225,29,72,.20);
   font-size:12.5px;line-height:1.5;color:var(--t2);
 }
-.nfo-cap b{color:var(--t1);}
+.nfo-cap b{color:var(--t);}
 .nfo-more{
   margin:0 12px 12px;display:flex;align-items:center;gap:10px;
 }
 .nfo-more-btn{
-  flex:1;padding:10px;border:1.5px dashed var(--bd);border-radius:12px;
+  flex:1;padding:10px;border:1.5px dashed var(--b2);border-radius:12px;
   background:transparent;color:var(--t2);font-size:12.5px;font-weight:700;cursor:pointer;
 }
 .nfo-more-btn:active{background:var(--bg3);}
@@ -9086,22 +9116,34 @@ function _pnLater(){ _pnDismiss(); }
 
   <!-- BROWSE -->
   <div id="inv-browse">
-    <div class="inv-filters">
-      <input class="inv-search" id="co-search" placeholder="🔍 Rechercher une entreprise…" oninput="filterCompanies()"/>
-      <button class="inv-filter on" onclick="filterSector('all',this)">Tous</button>
-      <button class="inv-filter" onclick="filterSector('fintech',this)">Fintech</button>
-      <button class="inv-filter" onclick="filterSector('tech',this)">Tech</button>
-      <button class="inv-filter" onclick="filterSector('immo',this)">Immobilier</button>
-      <button class="inv-filter" onclick="filterSector('energie',this)">Énergie</button>
-      <button class="inv-filter" onclick="filterSector('sante',this)">Santé</button>
-      <div style="display:flex;gap:6px;margin-left:auto;">
-        <select class="inv-search" style="max-width:160px;" onchange="sortCompanies(this.value)">
-          <option value="">Trier par…</option>
-          <option value="score">Score Guelane</option>
-          <option value="raise">Capital recherché</option>
-          <option value="growth">Croissance</option>
-        </select>
+    <div class="invf">
+
+      <!-- 1re ligne : recherche -->
+      <div class="invf-search">
+        <svg class="invf-search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+        <input class="invf-input" id="co-search" placeholder="Rechercher une entreprise" oninput="filterCompanies()"/>
       </div>
+
+      <!-- 2e ligne : toutes les catégories dans un seul bouton -->
+      <select class="invf-select" id="co-sector" onchange="filterSectorSelect(this.value)">
+        <option value="all">Toutes les catégories</option>
+        <option value="fintech">Fintech</option>
+        <option value="tech">Tech</option>
+        <option value="immo">Immobilier</option>
+        <option value="energie">Énergie</option>
+        <option value="sante">Santé</option>
+      </select>
+
+      <!-- 3e ligne : tri -->
+      <select class="invf-select" id="co-sort" onchange="sortCompanies(this.value)">
+        <option value="">Trier par…</option>
+        <option value="score">Score Guelane</option>
+        <option value="raise">Capital recherché</option>
+        <option value="growth">Croissance</option>
+        <option value="az">Nom : A → Z</option>
+        <option value="za">Nom : Z → A</option>
+      </select>
+
     </div>
     <div class="company-grid" id="company-grid"></div>
     <div style="text-align:center;padding:10px 0;"><button class="btn btn-ghost" onclick="loadMoreCompanies()">Charger plus d'entreprises →</button></div>
@@ -11670,8 +11712,16 @@ function _coToggle(id){
 window._coToggle = _coToggle;
 
 function filterSector(s,btn){curSector=s;document.querySelectorAll('.inv-filter').forEach(b=>b.classList.remove('on'));btn.classList.add('on');cosLoaded=9;buildCompanyGrid();}
+/* Catégories regroupées : filtre piloté par la liste déroulante */
+function filterSectorSelect(s){
+  curSector = s;
+  cosLoaded = 9;
+  buildCompanyGrid();
+}
+window.filterSectorSelect = filterSectorSelect;
+
 function filterCompanies(){buildCompanyGrid();}
-function sortCompanies(val){const sorted=[...companies];if(val==='score')sorted.sort((a,b)=>b.score-a.score);else if(val==='raise')sorted.sort((a,b)=>parseFloat(b.raise)-parseFloat(a.raise));else if(val==='growth')sorted.sort((a,b)=>parseFloat(b.growth)-parseFloat(a.growth));companies.splice(0);companies.push(...sorted);buildCompanyGrid();}
+function sortCompanies(val){const sorted=[...companies];if(val==='score')sorted.sort((a,b)=>b.score-a.score);else if(val==='raise')sorted.sort((a,b)=>parseFloat(b.raise)-parseFloat(a.raise));else if(val==='growth')sorted.sort((a,b)=>parseFloat(b.growth)-parseFloat(a.growth));else if(val==='az')sorted.sort((a,b)=>a.name.localeCompare(b.name,'fr',{sensitivity:'base'}));else if(val==='za')sorted.sort((a,b)=>b.name.localeCompare(a.name,'fr',{sensitivity:'base'}));companies.splice(0);companies.push(...sorted);buildCompanyGrid();}
 function loadMoreCompanies(){cosLoaded+=6;buildCompanyGrid();}
 function openInvModal(id){
   if(typeof _appMode!=='undefined' && _appMode==='normal'){
@@ -20272,7 +20322,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.59";
+  var GUELANE_VERSION = "3.60";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

@@ -2950,6 +2950,12 @@ body.sb-open #mobile-sidebar-btn{
 }
 .nfo-done.ok{background:rgba(34,165,94,.12);color:#22a55e;}
 .nfo-done.no{background:var(--bg3);color:var(--t3);}
+/* ═══ BARRES DE DÉFILEMENT MASQUÉES PARTOUT ═══
+   Le défilement reste entièrement fonctionnel (doigt, molette, clavier) :
+   seule la barre visuelle disparaît, sur tous les écrans et navigateurs. */
+*{scrollbar-width:none !important;-ms-overflow-style:none !important;}
+*::-webkit-scrollbar{display:none !important;width:0 !important;height:0 !important;}
+
 /* ═══ UX DU CHAT : EN-TÊTE, ACTIONS, SAISIE (PC + mobile) ═══ */
 
 /* Pilule d'actions, intégrée à la rangée du titre — verre dépoli */
@@ -20164,7 +20170,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.52";
+  var GUELANE_VERSION = "3.53";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

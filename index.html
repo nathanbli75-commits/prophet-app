@@ -2976,9 +2976,8 @@ body.profile-pro #mn-wallet .mn-ic-a{display:none;}
 body.profile-pro #mn-wallet .mn-ic-b{display:block;}
 
 /* ═══ SELECTEUR MAISON ═══
-   Le panneau natif du systeme (radios, Prev./Next/Done) casse l'identite
-   visuelle. Le <select> reste en place et garde son style ; un calque
-   transparent capte le clic et ouvre un panneau aux couleurs de Guelane. */
+   Le panneau natif du systeme casse l'identite visuelle. Le <select> reste
+   en place avec son style ; un calque transparent capte le clic. */
 .gsel-wrap{position:relative;display:block;}
 .gsel-wrap > select{pointer-events:none;}
 .gsel-hit{
@@ -2987,7 +2986,6 @@ body.profile-pro #mn-wallet .mn-ic-b{display:block;}
   cursor:pointer;border-radius:inherit;
 }
 .gsel-hit:focus-visible{outline:2px solid #8d6cfa;outline-offset:2px;}
-
 #gsel-sheet{
   display:none;position:fixed;inset:0;z-index:19700;
   background:rgba(10,4,32,.55);
@@ -3022,9 +3020,7 @@ body.profile-pro #mn-wallet .mn-ic-b{display:block;}
   border:2px solid var(--b3);position:relative;
 }
 .gsel-opt.on .gsel-dot{border-color:#8d6cfa;}
-.gsel-opt.on .gsel-dot::after{
-  content:'';position:absolute;inset:3px;border-radius:50%;background:#8d6cfa;
-}
+.gsel-opt.on .gsel-dot::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#8d6cfa;}
 .gsel-txt{flex:1;min-width:0;}
 @media(min-width:841px){
   #gsel-sheet{align-items:center;}
@@ -3399,7 +3395,7 @@ body.profile-part .part-card{ display:block!important; }
 .part-kpi-box .pk-fill{ height:100%;border-radius:4px; }
 .part-kpi-box .pk-desc{ font-size:10px;color:var(--t2);margin-top:6px;line-height:1.5; }
 .part-explain-box{ background:rgba(30,200,176,.06);border:1px solid rgba(30,200,176,.18);border-radius:12px;padding:12px 14px;margin-top:10px;font-size:11px;color:var(--t2);line-height:1.65; }
-.part-explain-box strong{ color:var(--fg); }
+.part-explain-box strong{ color:var(--t); }
 .part-market-row{ display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05); }
 .part-market-row:last-child{ border-bottom:none; }
 .part-market-flag{ font-size:20px;width:28px;text-align:center; }
@@ -4676,7 +4672,7 @@ body.plan-gratuit [data-premium-only]::before{content:'Premium';position:absolut
 .ep-avatar-ring svg.ep-av-icon{width:44px;height:44px;color:#fff;flex-shrink:0;}
 .ep-avatar-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(46,39,71,.55);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s;}
 .ep-avatar-ring:hover .ep-avatar-overlay,.ep-avatar-ring:active .ep-avatar-overlay{opacity:1;}
-.ep-avatar-lbl{margin-top:12px;font-size:13px;font-weight:600;color:var(--a);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+.ep-avatar-lbl{margin-top:12px;font-size:13px;font-weight:600;color:var(--gold);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
 .ep-avatar-del{display:none;margin-top:6px;background:none;border:none;color:#e11d48;font-size:12.5px;font-weight:600;font-family:var(--font);cursor:pointer;padding:5px 12px;border-radius:8px;transition:background .15s;}
 .ep-avatar-del:hover{background:rgba(225,29,72,.09);}
 body.theme-dark .ep-avatar-del{color:#f4667d;}
@@ -4684,7 +4680,7 @@ body.theme-dark .ep-avatar-del:hover{background:rgba(244,102,125,.1);}
 .ep-section{margin-bottom:20px;}
 .ep-field-lbl{font-size:11.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
 .ep-input{width:100%;border:1.5px solid rgba(46,39,71,.13);border-radius:12px;padding:13px 16px;font-size:15px;font-weight:600;color:#16054e;font-family:var(--font);outline:none;transition:border-color .18s;box-sizing:border-box;background:#fff;}
-.ep-input:focus{border-color:var(--a);}
+.ep-input:focus{border-color:var(--gold);}
 .ep-save{width:100%;margin-top:24px;background:linear-gradient(135deg,#2d2057 0%,#2d2057 100%);color:#fff;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:700;font-family:var(--font);cursor:pointer;box-shadow:0 4px 16px rgba(46,39,71,.22);transition:opacity .18s,transform .12s;}
 .ep-save:hover{opacity:.9;}
 .ep-save:active{transform:scale(.97);}
@@ -4692,7 +4688,7 @@ body.theme-dark .ep-avatar-del:hover{background:rgba(244,102,125,.1);}
 
 /* ═══════════════════════════ PAGE ALERTES ═══════════════════════════ */
 #notif-v{padding:0 0 32px;}
-.nf-header{padding:22px 18px 18px;border-bottom:1px solid var(--brd);margin-bottom:0;}
+.nf-header{padding:22px 18px 18px;border-bottom:1px solid var(--b2);margin-bottom:0;}
 .nf-hd-row{display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .nf-hd-left{display:flex;align-items:center;gap:12px;}
 .nf-hd-ic{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,rgba(141,108,250,.16),rgba(141,108,250,.06));border:1.5px solid rgba(141,108,250,.22);display:flex;align-items:center;justify-content:center;color:var(--gold);flex-shrink:0;}
@@ -4700,16 +4696,16 @@ body.theme-dark .ep-avatar-del:hover{background:rgba(244,102,125,.1);}
 .nf-hd-sub{font-size:11.5px;color:var(--t2);margin-top:2px;line-height:1.4;}
 .nf-live-pill{font-size:9px;font-weight:800;letter-spacing:.08em;background:rgba(85,205,108,.12);color:var(--gr);border:1px solid rgba(85,205,108,.22);border-radius:20px;padding:5px 11px;flex-shrink:0;animation:notifpulse 2s ease-in-out infinite;}
 .nf-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px 18px 0;}
-.nf-stat-card{background:var(--card);border:1.5px solid var(--brd);border-radius:14px;padding:13px 10px;text-align:center;}
+.nf-stat-card{background:var(--bg2);border:1.5px solid var(--b2);border-radius:14px;padding:13px 10px;text-align:center;}
 .nf-stat-v{font-size:22px;font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:4px;}
 .nf-stat-l{font-size:9.5px;color:var(--t3);font-weight:600;line-height:1.3;}
 .nf-filter-row{display:flex;gap:6px;padding:16px 18px 12px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
 .nf-filter-row::-webkit-scrollbar{display:none;}
-.nf-ftab{flex-shrink:0;background:transparent;border:1.5px solid var(--brd);border-radius:20px;padding:7px 15px;font-size:12px;font-weight:700;color:var(--t2);cursor:pointer;font-family:var(--font);transition:all .18s;}
+.nf-ftab{flex-shrink:0;background:transparent;border:1.5px solid var(--b2);border-radius:20px;padding:7px 15px;font-size:12px;font-weight:700;color:var(--t2);cursor:pointer;font-family:var(--font);transition:all .18s;}
 .nf-ftab.on{background:var(--gold);border-color:var(--gold);color:#fff;}
 .nf-ftab:hover:not(.on){border-color:var(--gold);color:var(--gold);}
 .nf-list{display:flex;flex-direction:column;gap:10px;padding:0 18px;}
-.nf-card{background:var(--card);border:1.5px solid var(--brd);border-radius:18px;padding:16px 16px 13px;position:relative;overflow:hidden;transition:transform .14s,box-shadow .14s;}
+.nf-card{background:var(--bg2);border:1.5px solid var(--b2);border-radius:18px;padding:16px 16px 13px;position:relative;overflow:hidden;transition:transform .14s,box-shadow .14s;}
 .nf-card:active{transform:scale(.99);}
 .nf-card.nf-al-g{border-left:4px solid var(--gr);}
 .nf-card.nf-al-r{border-left:4px solid var(--re);}
@@ -8821,7 +8817,7 @@ function _pnLater(){ _pnDismiss(); }
           <div class="cw" style="height:180px;"><canvas id="roiC"></canvas></div>
         </div>
         <div class="part-card">
-          <div style="font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.6;">Si vous investissez <strong style="color:var(--fg)">100 000 FCFA</strong> maintenant, voici ce que l'IA prévoit :</div>
+          <div style="font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.6;">Si vous investissez <strong style="color:var(--t)">100 000 FCFA</strong> maintenant, voici ce que l'IA prévoit :</div>
           <div class="part-roi-row">
             <div class="part-roi-card">
               <div class="pr-emoji">📅</div>
@@ -8875,7 +8871,7 @@ function _pnLater(){ _pnDismiss(); }
 
       <!-- 🇨🇮 Côte d'Ivoire -->
       <div id="mpt-ci" class="part-macro-row">
-        <div style="font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.6;">Ce que les économistes prévoient pour la <strong style="color:var(--fg)">Côte d'Ivoire</strong> d'ici 2028 :</div>
+        <div style="font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.6;">Ce que les économistes prévoient pour la <strong style="color:var(--t)">Côte d'Ivoire</strong> d'ici 2028 :</div>
         <div class="part-macro-item">
           <div class="part-macro-icon">📈</div>
           <div class="part-macro-info" style="flex:1;">
@@ -8929,7 +8925,7 @@ function _pnLater(){ _pnDismiss(); }
 
       <!-- 🌍 Afrique de l'Ouest -->
       <div id="mpt-ao" class="part-macro-row" style="display:none;">
-        <div style="font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.6;">Ce que les économistes prévoient pour l'<strong style="color:var(--fg)">Afrique de l'Ouest</strong> d'ici 2028 :</div>
+        <div style="font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.6;">Ce que les économistes prévoient pour l'<strong style="color:var(--t)">Afrique de l'Ouest</strong> d'ici 2028 :</div>
         <div class="part-macro-item">
           <div class="part-macro-icon">📈</div>
           <div class="part-macro-info" style="flex:1;">
@@ -8983,7 +8979,7 @@ function _pnLater(){ _pnDismiss(); }
 
       <!-- 🌐 Afrique -->
       <div id="mpt-af" class="part-macro-row" style="display:none;">
-        <div style="font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.6;">Ce que les économistes prévoient pour le continent <strong style="color:var(--fg)">Africain</strong> d'ici 2028 :</div>
+        <div style="font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.6;">Ce que les économistes prévoient pour le continent <strong style="color:var(--t)">Africain</strong> d'ici 2028 :</div>
         <div class="part-macro-item">
           <div class="part-macro-icon">📈</div>
           <div class="part-macro-info" style="flex:1;">
@@ -9037,7 +9033,7 @@ function _pnLater(){ _pnDismiss(); }
 
       <!-- 🗺️ Monde -->
       <div id="mpt-wl" class="part-macro-row" style="display:none;">
-        <div style="font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.6;">Ce que les économistes prévoient pour le <strong style="color:var(--fg)">Marché Mondial</strong> d'ici 2028 :</div>
+        <div style="font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.6;">Ce que les économistes prévoient pour le <strong style="color:var(--t)">Marché Mondial</strong> d'ici 2028 :</div>
         <div class="part-macro-item">
           <div class="part-macro-icon">📈</div>
           <div class="part-macro-info" style="flex:1;">
@@ -19972,6 +19968,7 @@ function ivRenderCollectionDetail(id){
 }
 
 function _ivSeededPath(seed, w, h){
+  seed = String(seed == null ? '' : seed);
   var s = 0; for(var i=0;i<seed.length;i++) s += seed.charCodeAt(i)*(i+1);
   var pts = [], n = 12;
   for(var j=0;j<=n;j++){
@@ -19982,6 +19979,13 @@ function _ivSeededPath(seed, w, h){
 }
 
 function ivRenderStockDetail(ticker){
+  /* Ouverture sans titre precis (retour arriere, lien direct) :
+     on affiche la premiere valeur plutot que de planter l'ecran. */
+  if(!ticker){
+    var dispo = Object.keys(IV_COMPANIES || {});
+    if(!dispo.length) return;
+    ticker = dispo[0];
+  }
   var c = IV_COMPANIES[ticker] || {name:ticker, price:1000, chg:0};
   document.getElementById('sd-ticker').textContent = ticker;
   document.getElementById('sd-name').textContent = c.name;
@@ -20523,7 +20527,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.64";
+  var GUELANE_VERSION = "3.66";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -20681,23 +20685,28 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
 })();
 </script>
 
+
 <script>
-/* Bloc autonome : ce module doit fonctionner meme si un autre
-   script de la page echoue avant lui. */
-/* ═══════════ SELECTEUR MAISON (remplace le panneau natif) ═══════════
-   Le <select> d'origine reste dans la page : sa valeur, son id et ses
-   gestionnaires onchange continuent de fonctionner sans modification. */
+/* ═══════════ SELECTEUR MAISON — bloc autonome ═══════════
+   Remplace le panneau natif du systeme par un panneau aux couleurs de
+   Guelane. Le <select> d'origine reste dans la page : sa valeur, son id
+   et ses gestionnaires onchange continuent de fonctionner tels quels.
+
+   IMPORTANT — aucune surveillance de fond. La version precedente observait
+   toutes les modifications de la page et relancait une recherche complete
+   toutes les 450 ms, ce qui figeait l'interface sur telephone. Ici, la
+   preparation se fait uniquement a l'ouverture d'un ecran. */
 (function(){
-  var _gselCur = null, _gselTimer = null;
+  var _cur = null;
 
   /* Intitule du panneau : on reprend le libelle affiche au-dessus du champ */
-  function _gselTitle(sel){
+  function titre(sel){
     var lab = null;
     var boite = sel.closest ? sel.closest('.tf,.eco-field,.sv-field,.gs-field') : null;
     if(boite) lab = boite.querySelector('label,.eco-lbl,.sv-lbl,.gs-field-lbl');
     if(!lab){
-      var ref = sel.parentNode && sel.parentNode.classList.contains('gsel-wrap')
-              ? sel.parentNode : sel;
+      var ref = (sel.parentNode && sel.parentNode.classList
+                 && sel.parentNode.classList.contains('gsel-wrap')) ? sel.parentNode : sel;
       var prec = ref.previousElementSibling;
       if(prec && prec.textContent && prec.textContent.trim().length <= 44) lab = prec;
     }
@@ -20705,7 +20714,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
     return t || 'Choisir une option';
   }
 
-  function _gselSheet(){
+  function panneau(){
     var s = document.getElementById('gsel-sheet');
     if(s) return s;
     s = document.createElement('div');
@@ -20716,41 +20725,39 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
       + '<div class="gsel-hd"><div class="gsel-title" id="gsel-title">Choisir</div>'
       + '<button class="gsel-close" type="button" aria-label="Fermer">\u2715</button></div>'
       + '<div class="gsel-list" id="gsel-list"></div></div>';
-    s.addEventListener('click', function(e){ if(e.target === s) _gselClose(); });
-    s.querySelector('.gsel-close').onclick = _gselClose;
+    s.addEventListener('click', function(e){ if(e.target === s) fermer(); });
+    s.querySelector('.gsel-close').onclick = fermer;
     document.body.appendChild(s);
     return s;
   }
 
-  function _gselClose(){
+  function fermer(){
     var s = document.getElementById('gsel-sheet');
     if(s) s.classList.remove('on');
-    _gselCur = null;
+    _cur = null;
   }
-  window._gselClose = _gselClose;
 
-  function _gselPick(i){
-    if(_gselCur){
-      _gselCur.selectedIndex = i;
-      /* Evenement reel : les onchange existants s'executent normalement */
-      try{ _gselCur.dispatchEvent(new Event('change', { bubbles:true })); }
+  function choisir(i){
+    if(_cur){
+      _cur.selectedIndex = i;
+      try{ _cur.dispatchEvent(new Event('change', { bubbles:true })); }
       catch(e){
         var ev = document.createEvent('HTMLEvents');
         ev.initEvent('change', true, false);
-        _gselCur.dispatchEvent(ev);
+        _cur.dispatchEvent(ev);
       }
     }
-    _gselClose();
+    fermer();
   }
 
-  function _gselOpen(sel){
-    if(sel.disabled) return;
-    _gselCur = sel;
-    var s = _gselSheet();
+  function ouvrir(sel){
+    if(!sel || sel.disabled) return;
+    _cur = sel;
+    var s = panneau();
     var t = document.getElementById('gsel-title');
-    if(t) t.textContent = _gselTitle(sel);
-    var list = document.getElementById('gsel-list');
-    list.innerHTML = '';
+    if(t) t.textContent = titre(sel);
+    var liste = document.getElementById('gsel-list');
+    liste.innerHTML = '';
     for(var i = 0; i < sel.options.length; i++){
       var o = sel.options[i];
       if(o.disabled) continue;
@@ -20758,71 +20765,79 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
       d.className = 'gsel-opt' + (i === sel.selectedIndex ? ' on' : '');
       d.innerHTML = '<span class="gsel-dot"></span><span class="gsel-txt"></span>';
       d.querySelector('.gsel-txt').textContent = (o.textContent || '').trim();
-      d.onclick = (function(idx){ return function(){ _gselPick(idx); }; })(i);
-      list.appendChild(d);
+      d.onclick = (function(idx){ return function(){ choisir(idx); }; })(i);
+      liste.appendChild(d);
     }
     s.classList.add('on');
-    /* Amener l'option courante dans le champ de vision */
-    var actif = list.querySelector('.gsel-opt.on');
-    if(actif && actif.scrollIntoView){
-      try{ actif.scrollIntoView({ block:'nearest' }); }catch(e){}
-    }
+    var actif = liste.querySelector('.gsel-opt.on');
+    if(actif && actif.scrollIntoView){ try{ actif.scrollIntoView({ block:'nearest' }); }catch(e){} }
   }
 
-  /* Habille tous les selects pas encore traites */
-  function _gselEnhance(){
-    var liste = document.querySelectorAll('select:not([data-gsel])');
-    for(var i = 0; i < liste.length; i++){
-      var sel = liste[i];
-      sel.setAttribute('data-gsel','1');
-      if(sel.multiple || sel.size > 1) continue;   /* listes multiples : inchangees */
+  /* Prepare un select : le <select> garde son apparence, un calque capte le clic */
+  function preparer(sel){
+    if(!sel || sel.getAttribute('data-gsel')) return;
+    sel.setAttribute('data-gsel','1');
+    if(sel.multiple || sel.size > 1) return;   /* listes multiples : inchangees */
 
-      var wrap = document.createElement('span');
-      wrap.className = 'gsel-wrap';
-      /* Conserver le comportement de mise en page du champ d'origine */
-      try{
-        var pere = sel.parentNode;
-        if(pere && getComputedStyle(pere).display.indexOf('flex') !== -1){
-          wrap.style.flex = '1 1 auto';
-          wrap.style.minWidth = '0';
-        }
-      }catch(e){}
-
-      sel.parentNode.insertBefore(wrap, sel);
-      wrap.appendChild(sel);
-
-      var hit = document.createElement('button');
-      hit.type = 'button';
-      hit.className = 'gsel-hit';
-      hit.setAttribute('aria-label', 'Ouvrir la liste : ' + _gselTitle(sel));
-      hit.onclick = (function(s){ return function(e){
-        e.preventDefault(); e.stopPropagation(); _gselOpen(s);
-      }; })(sel);
-      wrap.appendChild(hit);
-    }
-  }
-  window._gselEnhance = _gselEnhance;
-
-  /* Fermeture au clavier */
-  document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape') _gselClose();
-  });
-
-  function _gselBoot(){
-    _gselEnhance();
-    /* Les ecrans sont generes au fil de la navigation : on repasse
-       apres chaque salve de modifications, sans surcharger. */
+    var wrap = document.createElement('span');
+    wrap.className = 'gsel-wrap';
     try{
-      new MutationObserver(function(){
-        if(_gselTimer) return;
-        _gselTimer = setTimeout(function(){
-          _gselTimer = null; _gselEnhance();
-        }, 450);
-      }).observe(document.body, { childList:true, subtree:true });
+      var pere = sel.parentNode;
+      if(pere && getComputedStyle(pere).display.indexOf('flex') !== -1){
+        wrap.style.flex = '1 1 auto';
+        wrap.style.minWidth = '0';
+      }
     }catch(e){}
+    sel.parentNode.insertBefore(wrap, sel);
+    wrap.appendChild(sel);
+
+    var hit = document.createElement('button');
+    hit.type = 'button';
+    hit.className = 'gsel-hit';
+    hit.setAttribute('aria-label', 'Ouvrir la liste : ' + titre(sel));
+    hit.onclick = function(e){ e.preventDefault(); e.stopPropagation(); ouvrir(sel); };
+    wrap.appendChild(hit);
   }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _gselBoot);
-  else _gselBoot();
+
+  /* Prepare les selects d'une zone donnee (par defaut : la page entiere) */
+  function preparerTout(zone){
+    var l = (zone || document).querySelectorAll('select:not([data-gsel])');
+    for(var i = 0; i < l.length; i++) preparer(l[i]);
+  }
+  window._gselEnhance = preparerTout;
+  window._gselClose = fermer;
+
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') fermer(); });
+
+  /* Filet : un select cree apres coup (ecran genere dynamiquement) est
+     pris en charge au moment ou l'utilisateur le touche, sans aucun
+     travail de fond. La phase de capture precede l'ouverture du panneau
+     natif du systeme. */
+  document.addEventListener('pointerdown', function(e){
+    var n = e.target;
+    while(n && n.nodeName !== 'SELECT' && n !== document.body) n = n.parentNode;
+    if(!n || n.nodeName !== 'SELECT') return;
+    if(n.getAttribute('data-gsel')) return;    /* deja prepare : le calque agit */
+    e.preventDefault(); e.stopPropagation();
+    preparer(n);
+    ouvrir(n);
+  }, true);
+
+  function demarrer(){
+    preparerTout();
+    /* Chaque ouverture d'ecran prepare les champs qu'il contient */
+    if(typeof window.navTo === 'function' && !window._gselNavHooked){
+      var origine = window.navTo;
+      window.navTo = function(){
+        var r = origine.apply(this, arguments);
+        try{ preparerTout(); }catch(e){}
+        return r;
+      };
+      window._gselNavHooked = true;
+    }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer);
+  else demarrer();
 })();
 </script>
 </body>

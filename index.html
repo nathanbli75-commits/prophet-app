@@ -47,6 +47,7 @@ if ('serviceWorker' in navigator) {
     canvas.width  = size;
     canvas.height = size;
     var ctx = canvas.getContext('2d');
+    if(!ctx) return;   /* canvas indisponible : on renonce sans casser la suite */
     /* Clip arrondi */
     ctx.beginPath();
     ctx.moveTo(radius, 0);
@@ -77,6 +78,23 @@ if ('serviceWorker' in navigator) {
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+/* Filet de securite : si le CDN des graphiques n'a pas repondu (reseau lent,
+   coupure, blocage), on installe un substitut inoffensif. Sans lui, le premier
+   graphique rencontre interrompt TOUT le JavaScript qui suit. */
+(function(){
+  if (typeof window.Chart !== 'undefined') return;
+  window.GUELANE_CHARTS_KO = true;
+  var Faux = function(){
+    return { destroy:function(){}, update:function(){}, resize:function(){},
+             data:{datasets:[],labels:[]}, options:{} };
+  };
+  Faux.register = function(){};
+  Faux.defaults = { font:{}, plugins:{}, scale:{}, scales:{} };
+  Faux.registerables = [];
+  window.Chart = Faux;
+})();
+</script>
 <script src="https://accounts.google.com/gsi/client" async></script>
 <style>
 
@@ -11778,146 +11796,7 @@ function buildCompanyGrid(){
   });
   document.getElementById('stat-cos').textContent=companies.length;
 }
-/* ═══════════ SELECTEUR MAISON (remplace le panneau natif) ═══════════
-   Le <select> d'origine reste dans la page : sa valeur, son id et ses
-   gestionnaires onchange continuent de fonctionner sans modification. */
-(function(){
-  var _gselCur = null, _gselTimer = null;
 
-  /* Intitule du panneau : on reprend le libelle affiche au-dessus du champ */
-  function _gselTitle(sel){
-    var lab = null;
-    var boite = sel.closest ? sel.closest('.tf,.eco-field,.sv-field,.gs-field') : null;
-    if(boite) lab = boite.querySelector('label,.eco-lbl,.sv-lbl,.gs-field-lbl');
-    if(!lab){
-      var ref = sel.parentNode && sel.parentNode.classList.contains('gsel-wrap')
-              ? sel.parentNode : sel;
-      var prec = ref.previousElementSibling;
-      if(prec && prec.textContent && prec.textContent.trim().length <= 44) lab = prec;
-    }
-    var t = lab ? lab.textContent.replace(/\*/g,'').trim() : '';
-    return t || 'Choisir une option';
-  }
-
-  function _gselSheet(){
-    var s = document.getElementById('gsel-sheet');
-    if(s) return s;
-    s = document.createElement('div');
-    s.id = 'gsel-sheet';
-    s.setAttribute('role','dialog');
-    s.setAttribute('aria-modal','true');
-    s.innerHTML = '<div class="gsel-panel">'
-      + '<div class="gsel-hd"><div class="gsel-title" id="gsel-title">Choisir</div>'
-      + '<button class="gsel-close" type="button" aria-label="Fermer">\u2715</button></div>'
-      + '<div class="gsel-list" id="gsel-list"></div></div>';
-    s.addEventListener('click', function(e){ if(e.target === s) _gselClose(); });
-    s.querySelector('.gsel-close').onclick = _gselClose;
-    document.body.appendChild(s);
-    return s;
-  }
-
-  function _gselClose(){
-    var s = document.getElementById('gsel-sheet');
-    if(s) s.classList.remove('on');
-    _gselCur = null;
-  }
-  window._gselClose = _gselClose;
-
-  function _gselPick(i){
-    if(_gselCur){
-      _gselCur.selectedIndex = i;
-      /* Evenement reel : les onchange existants s'executent normalement */
-      try{ _gselCur.dispatchEvent(new Event('change', { bubbles:true })); }
-      catch(e){
-        var ev = document.createEvent('HTMLEvents');
-        ev.initEvent('change', true, false);
-        _gselCur.dispatchEvent(ev);
-      }
-    }
-    _gselClose();
-  }
-
-  function _gselOpen(sel){
-    if(sel.disabled) return;
-    _gselCur = sel;
-    var s = _gselSheet();
-    var t = document.getElementById('gsel-title');
-    if(t) t.textContent = _gselTitle(sel);
-    var list = document.getElementById('gsel-list');
-    list.innerHTML = '';
-    for(var i = 0; i < sel.options.length; i++){
-      var o = sel.options[i];
-      if(o.disabled) continue;
-      var d = document.createElement('div');
-      d.className = 'gsel-opt' + (i === sel.selectedIndex ? ' on' : '');
-      d.innerHTML = '<span class="gsel-dot"></span><span class="gsel-txt"></span>';
-      d.querySelector('.gsel-txt').textContent = (o.textContent || '').trim();
-      d.onclick = (function(idx){ return function(){ _gselPick(idx); }; })(i);
-      list.appendChild(d);
-    }
-    s.classList.add('on');
-    /* Amener l'option courante dans le champ de vision */
-    var actif = list.querySelector('.gsel-opt.on');
-    if(actif && actif.scrollIntoView){
-      try{ actif.scrollIntoView({ block:'nearest' }); }catch(e){}
-    }
-  }
-
-  /* Habille tous les selects pas encore traites */
-  function _gselEnhance(){
-    var liste = document.querySelectorAll('select:not([data-gsel])');
-    for(var i = 0; i < liste.length; i++){
-      var sel = liste[i];
-      sel.setAttribute('data-gsel','1');
-      if(sel.multiple || sel.size > 1) continue;   /* listes multiples : inchangees */
-
-      var wrap = document.createElement('span');
-      wrap.className = 'gsel-wrap';
-      /* Conserver le comportement de mise en page du champ d'origine */
-      try{
-        var pere = sel.parentNode;
-        if(pere && getComputedStyle(pere).display.indexOf('flex') !== -1){
-          wrap.style.flex = '1 1 auto';
-          wrap.style.minWidth = '0';
-        }
-      }catch(e){}
-
-      sel.parentNode.insertBefore(wrap, sel);
-      wrap.appendChild(sel);
-
-      var hit = document.createElement('button');
-      hit.type = 'button';
-      hit.className = 'gsel-hit';
-      hit.setAttribute('aria-label', 'Ouvrir la liste : ' + _gselTitle(sel));
-      hit.onclick = (function(s){ return function(e){
-        e.preventDefault(); e.stopPropagation(); _gselOpen(s);
-      }; })(sel);
-      wrap.appendChild(hit);
-    }
-  }
-  window._gselEnhance = _gselEnhance;
-
-  /* Fermeture au clavier */
-  document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape') _gselClose();
-  });
-
-  function _gselBoot(){
-    _gselEnhance();
-    /* Les ecrans sont generes au fil de la navigation : on repasse
-       apres chaque salve de modifications, sans surcharger. */
-    try{
-      new MutationObserver(function(){
-        if(_gselTimer) return;
-        _gselTimer = setTimeout(function(){
-          _gselTimer = null; _gselEnhance();
-        }, 450);
-      }).observe(document.body, { childList:true, subtree:true });
-    }catch(e){}
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _gselBoot);
-  else _gselBoot();
-})();
 
 /* Deplie une fiche entreprise et replie les autres */
 function _coToggle(id){
@@ -20644,7 +20523,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.63";
+  var GUELANE_VERSION = "3.64";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -20802,5 +20681,149 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
 })();
 </script>
 
+<script>
+/* Bloc autonome : ce module doit fonctionner meme si un autre
+   script de la page echoue avant lui. */
+/* ═══════════ SELECTEUR MAISON (remplace le panneau natif) ═══════════
+   Le <select> d'origine reste dans la page : sa valeur, son id et ses
+   gestionnaires onchange continuent de fonctionner sans modification. */
+(function(){
+  var _gselCur = null, _gselTimer = null;
+
+  /* Intitule du panneau : on reprend le libelle affiche au-dessus du champ */
+  function _gselTitle(sel){
+    var lab = null;
+    var boite = sel.closest ? sel.closest('.tf,.eco-field,.sv-field,.gs-field') : null;
+    if(boite) lab = boite.querySelector('label,.eco-lbl,.sv-lbl,.gs-field-lbl');
+    if(!lab){
+      var ref = sel.parentNode && sel.parentNode.classList.contains('gsel-wrap')
+              ? sel.parentNode : sel;
+      var prec = ref.previousElementSibling;
+      if(prec && prec.textContent && prec.textContent.trim().length <= 44) lab = prec;
+    }
+    var t = lab ? lab.textContent.replace(/\*/g,'').trim() : '';
+    return t || 'Choisir une option';
+  }
+
+  function _gselSheet(){
+    var s = document.getElementById('gsel-sheet');
+    if(s) return s;
+    s = document.createElement('div');
+    s.id = 'gsel-sheet';
+    s.setAttribute('role','dialog');
+    s.setAttribute('aria-modal','true');
+    s.innerHTML = '<div class="gsel-panel">'
+      + '<div class="gsel-hd"><div class="gsel-title" id="gsel-title">Choisir</div>'
+      + '<button class="gsel-close" type="button" aria-label="Fermer">\u2715</button></div>'
+      + '<div class="gsel-list" id="gsel-list"></div></div>';
+    s.addEventListener('click', function(e){ if(e.target === s) _gselClose(); });
+    s.querySelector('.gsel-close').onclick = _gselClose;
+    document.body.appendChild(s);
+    return s;
+  }
+
+  function _gselClose(){
+    var s = document.getElementById('gsel-sheet');
+    if(s) s.classList.remove('on');
+    _gselCur = null;
+  }
+  window._gselClose = _gselClose;
+
+  function _gselPick(i){
+    if(_gselCur){
+      _gselCur.selectedIndex = i;
+      /* Evenement reel : les onchange existants s'executent normalement */
+      try{ _gselCur.dispatchEvent(new Event('change', { bubbles:true })); }
+      catch(e){
+        var ev = document.createEvent('HTMLEvents');
+        ev.initEvent('change', true, false);
+        _gselCur.dispatchEvent(ev);
+      }
+    }
+    _gselClose();
+  }
+
+  function _gselOpen(sel){
+    if(sel.disabled) return;
+    _gselCur = sel;
+    var s = _gselSheet();
+    var t = document.getElementById('gsel-title');
+    if(t) t.textContent = _gselTitle(sel);
+    var list = document.getElementById('gsel-list');
+    list.innerHTML = '';
+    for(var i = 0; i < sel.options.length; i++){
+      var o = sel.options[i];
+      if(o.disabled) continue;
+      var d = document.createElement('div');
+      d.className = 'gsel-opt' + (i === sel.selectedIndex ? ' on' : '');
+      d.innerHTML = '<span class="gsel-dot"></span><span class="gsel-txt"></span>';
+      d.querySelector('.gsel-txt').textContent = (o.textContent || '').trim();
+      d.onclick = (function(idx){ return function(){ _gselPick(idx); }; })(i);
+      list.appendChild(d);
+    }
+    s.classList.add('on');
+    /* Amener l'option courante dans le champ de vision */
+    var actif = list.querySelector('.gsel-opt.on');
+    if(actif && actif.scrollIntoView){
+      try{ actif.scrollIntoView({ block:'nearest' }); }catch(e){}
+    }
+  }
+
+  /* Habille tous les selects pas encore traites */
+  function _gselEnhance(){
+    var liste = document.querySelectorAll('select:not([data-gsel])');
+    for(var i = 0; i < liste.length; i++){
+      var sel = liste[i];
+      sel.setAttribute('data-gsel','1');
+      if(sel.multiple || sel.size > 1) continue;   /* listes multiples : inchangees */
+
+      var wrap = document.createElement('span');
+      wrap.className = 'gsel-wrap';
+      /* Conserver le comportement de mise en page du champ d'origine */
+      try{
+        var pere = sel.parentNode;
+        if(pere && getComputedStyle(pere).display.indexOf('flex') !== -1){
+          wrap.style.flex = '1 1 auto';
+          wrap.style.minWidth = '0';
+        }
+      }catch(e){}
+
+      sel.parentNode.insertBefore(wrap, sel);
+      wrap.appendChild(sel);
+
+      var hit = document.createElement('button');
+      hit.type = 'button';
+      hit.className = 'gsel-hit';
+      hit.setAttribute('aria-label', 'Ouvrir la liste : ' + _gselTitle(sel));
+      hit.onclick = (function(s){ return function(e){
+        e.preventDefault(); e.stopPropagation(); _gselOpen(s);
+      }; })(sel);
+      wrap.appendChild(hit);
+    }
+  }
+  window._gselEnhance = _gselEnhance;
+
+  /* Fermeture au clavier */
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') _gselClose();
+  });
+
+  function _gselBoot(){
+    _gselEnhance();
+    /* Les ecrans sont generes au fil de la navigation : on repasse
+       apres chaque salve de modifications, sans surcharger. */
+    try{
+      new MutationObserver(function(){
+        if(_gselTimer) return;
+        _gselTimer = setTimeout(function(){
+          _gselTimer = null; _gselEnhance();
+        }, 450);
+      }).observe(document.body, { childList:true, subtree:true });
+    }catch(e){}
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _gselBoot);
+  else _gselBoot();
+})();
+</script>
 </body>
 </html>

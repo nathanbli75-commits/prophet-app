@@ -3290,6 +3290,17 @@ body.profile-pro #mn-wallet .mn-ic-b{display:block;}
   color:var(--t3);font-size:13px;line-height:1.5;
 }
 
+.gs-hint{font-size:11.5px;line-height:1.5;color:var(--t3);margin-top:6px;}
+.gs-note{
+  margin:0 0 13px;padding:12px 14px;border-radius:12px;
+  background:var(--bg3);border:1px solid var(--b2);
+  font-size:12.5px;line-height:1.55;color:var(--t2);
+}
+.gs-note-go{
+  background:rgba(232,169,62,.09);
+  border-color:rgba(232,169,62,.28);
+  color:var(--t2);
+}
 .gs-form{padding:0 14px;}
 .gs-field{margin-bottom:13px;}
 .gs-field-lbl{font-size:12.5px;font-weight:700;color:var(--t2);margin-bottom:6px;}
@@ -7660,8 +7671,24 @@ function _pnLater(){ _pnDismiss(); }
           <textarea class="gs-inp gs-ta" id="gsj-desc" placeholder="Décrivez brièvement vos produits ou services"></textarea>
         </div>
         <div class="gs-field">
-          <div class="gs-field-lbl">Site web ou boutique en ligne</div>
-          <input class="gs-inp" id="gsj-url" type="url" placeholder="https://">
+          <div class="gs-field-lbl">Présence en ligne</div>
+          <select class="gs-inp" id="gsj-web-mode" onchange="_gsJoinWebMode(this.value)">
+            <option value="has">J'ai un site ou une boutique en ligne</option>
+            <option value="none">Je n'en ai pas encore</option>
+            <option value="want">Je n'en ai pas et j'en souhaite un</option>
+          </select>
+        </div>
+        <div class="gs-field" id="gsj-link-field">
+          <div class="gs-field-lbl">Lien ou numéro de votre boutique</div>
+          <input class="gs-inp" id="gsj-url" type="text" placeholder="https://… ou +225 07 00 00 00 00">
+          <div class="gs-hint">Adresse de votre site, lien de votre page boutique, ou le numéro sur lequel vos clients vous joignent.</div>
+        </div>
+        <div class="gs-note" id="gsj-none-note" style="display:none;">
+          Votre fiche dans Guelane Store fera office de vitrine. Vous pourrez ajouter un lien plus tard, quand vous en aurez un.
+        </div>
+        <div class="gs-note gs-note-go" id="gsj-want-note" style="display:none;">
+          ✨ Guelane étudiera la création d'un site ou d'une boutique en ligne pour votre activité.
+          Notre équipe vous contactera pour en définir le contenu et les conditions.
         </div>
         <div class="gs-field">
           <div class="gs-field-lbl">Email de contact</div>
@@ -14664,6 +14691,7 @@ function _gsTab(t){
     if(b) b.classList.toggle('on', k === t);
   });
   if(t !== 'join') _gsRender();
+  else if(typeof _gsJoinReset === 'function') _gsJoinReset();
 }
 window._gsTab = _gsTab;
 
@@ -14682,6 +14710,31 @@ function _gsVisit(id){
 window._gsVisit = _gsVisit;
 
 /* ── Candidature partenaire ── */
+/* Presence en ligne : le partenaire a deja une vitrine, n'en a pas,
+   ou souhaite que Guelane lui en cree une. */
+function _gsJoinWebMode(v){
+  var champ = document.getElementById('gsj-link-field');
+  var sansNote = document.getElementById('gsj-none-note');
+  var voeuNote = document.getElementById('gsj-want-note');
+  if(champ)    champ.style.display    = (v === 'has')  ? '' : 'none';
+  if(sansNote) sansNote.style.display = (v === 'none') ? '' : 'none';
+  if(voeuNote) voeuNote.style.display = (v === 'want') ? '' : 'none';
+  /* Le lien saisi n'a plus de sens si l'on declare ne pas en avoir */
+  if(v !== 'has'){
+    var u = document.getElementById('gsj-url');
+    if(u) u.value = '';
+  }
+}
+window._gsJoinWebMode = _gsJoinWebMode;
+
+/* Remet le formulaire dans son etat initial */
+function _gsJoinReset(){
+  var sel = document.getElementById('gsj-web-mode');
+  if(sel) sel.selectedIndex = 0;
+  _gsJoinWebMode('has');
+}
+window._gsJoinReset = _gsJoinReset;
+
 function _gsJoinSubmit(){
   var g = function(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; };
   var err = document.getElementById('gsj-err');
@@ -14691,14 +14744,22 @@ function _gsJoinSubmit(){
     if(btn){ btn.disabled = false; btn.textContent = 'Envoyer ma candidature'; }
   };
   var nom = g('gsj-name'), desc = g('gsj-desc'), mail = g('gsj-email');
+  var selW = document.getElementById('gsj-web-mode');
+  var mode = selW ? selW.value : 'has';
   if(!nom)  return showErr("Indiquez le nom de votre entreprise.");
   if(!desc) return showErr("Décrivez ce que vous proposez.");
+  if(mode === 'has' && !g('gsj-url')){
+    return showErr("Indiquez le lien de votre boutique ou le numéro sur lequel vos clients vous joignent.");
+  }
   if(!mail || mail.indexOf('@') === -1) return showErr("Indiquez un email de contact valide.");
 
   if(btn){ btn.disabled = true; btn.textContent = 'Envoi…'; }
   var demande = {
     nom: nom, categorie: g('gsj-cat'), description: desc,
-    url: g('gsj-url'), email: mail, ts: Date.now()
+    presence: mode,                    /* has | none | want */
+    url: (mode === 'has') ? g('gsj-url') : '',
+    demande_site: (mode === 'want'),   /* Guelane doit lui creer une vitrine */
+    email: mail, ts: Date.now()
   };
   try{
     var q = JSON.parse(localStorage.getItem('guelane_store_apps') || '[]');
@@ -14711,9 +14772,12 @@ function _gsJoinSubmit(){
     ['gsj-name','gsj-desc','gsj-url','gsj-email'].forEach(function(id){
       var e = document.getElementById(id); if(e) e.value = '';
     });
-    if(err){ err.classList.remove('on'); }
+    if(err){ err.textContent = ''; err.classList.remove('on'); }
+    _gsJoinReset();
     if(typeof toast === 'function'){
-      toast('Candidature envoyée — l\'équipe Guelane vous recontactera');
+      toast(mode === 'want'
+        ? 'Candidature envoyée — Guelane vous recontactera pour votre boutique en ligne'
+        : 'Candidature envoyée — l\'équipe Guelane vous recontactera');
     }
   }, 700);
 }
@@ -20580,7 +20644,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.62";
+  var GUELANE_VERSION = "3.63";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

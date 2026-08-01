@@ -6035,6 +6035,37 @@ body{ background:#f7f6fb !important; }
   .page{ padding-bottom:104px !important; }
   #dash-mob-hero{ padding-bottom:6px; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   REFONTE MAGPIE — ÉTAPE 4 : ICÔNES
+   Magpie n'emploie qu'un seul style : trait fin et régulier,
+   extrémités arrondies, pas de remplissage. On harmonise
+   l'épaisseur partout — elle variait de 2 à 2.4 selon les écrans.
+   ══════════════════════════════════════════════════════════════ */
+.mn-item svg,
+.mg-act-ic svg,
+.mg-row-ic svg,
+.ph-qa-ic svg,
+.dmh-cat-ic svg,
+.sl-outil-ic svg,
+.gs-card svg,
+.ch-fab-btn svg{
+  stroke-width:1.9 !important;
+  stroke-linecap:round !important;
+  stroke-linejoin:round !important;
+  fill:none !important;
+}
+
+/* L'étincelle de Guelane AI est pleine : elle garde son remplissage */
+.mn-item#mn-chat svg path,
+.mg-act svg path[d^="M12 3l1.6"],
+.mg-act svg path[d^="M18.5 14.5"]{
+  fill:currentColor !important;
+  stroke-width:0 !important;
+}
+
+/* Pastilles d'icônes : cercle net, comme Magpie */
+.mg-act-ic,.mg-row-ic{ border:1px solid rgba(46,39,71,.04); }
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -7241,9 +7272,8 @@ function _pnLater(){ _pnDismiss(); }
   <!-- Assistant IA -->
   <button class="mn-item" id="mn-chat" onclick="mobNavChatOrInvest(this)" aria-label="Assistant IA">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 2l1.68 3.41 3.77.55-2.73 2.66.64 3.76L12 10.77l-3.36 1.61.64-3.76L6.55 5.96l3.77-.55L12 2z"/>
-      <path d="M5 14c0 3.87 3.13 7 7 7s7-3.13 7-7"/>
-      <path d="M9 17h6"/>
+      <path d="M12 3l1.6 4.1 4.1 1.6-4.1 1.6L12 14.4l-1.6-4.1L6.3 8.7l4.1-1.6z"/>
+      <path d="M18.5 14.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>
     </svg>
     <span id="mn-chat-lbl">Assistant IA</span>
   </button>
@@ -8311,7 +8341,7 @@ function _pnLater(){ _pnDismiss(); }
           <span class="mg-act-lb">Store</span>
         </button>
         <button class="mg-act" onclick="navTo('chat')">
-          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6 4.6 1.9-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/></svg></span>
+          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 4.1 4.1 1.6-4.1 1.6L12 14.4l-1.6-4.1L6.3 8.7l4.1-1.6z"/><path d="M18.5 14.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg></span>
           <span class="mg-act-lb">Guelane AI</span>
         </button>
       </div>
@@ -20774,7 +20804,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.68";
+  var GUELANE_VERSION = "3.69";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

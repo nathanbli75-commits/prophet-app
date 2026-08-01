@@ -5982,6 +5982,67 @@ body{ background:#f7f6fb !important; }
 .mg-act-ic,.mg-row-ic{ border:1px solid rgba(46,39,71,.04); }
 
 /* ══════════════════════════════════════════════════════════════
+   REFONTE MAGPIE — ÉTAPE 3 : BARRE DE NAVIGATION
+   La structure était déjà celle de Magpie (pilule blanche
+   flottante, actif en pilule sombre). On aligne la matière sur
+   la nouvelle fondation : blanc franc, ombre plus diffuse,
+   et l'espace réservé pour ne rien recouvrir.
+   ══════════════════════════════════════════════════════════════ */
+#mob-nav{
+  background:#ffffff !important;
+  -webkit-backdrop-filter:blur(16px) !important;
+  backdrop-filter:blur(16px) !important;
+  border:1px solid rgba(46,39,71,.045) !important;
+  box-shadow:0 10px 34px rgba(45,32,87,.13), 0 2px 6px rgba(45,32,87,.05) !important;
+  padding:7px 9px !important;
+  padding-bottom:max(7px, env(safe-area-inset-bottom,7px)) !important;
+}
+/* Élément actif : violet Guelane plutôt que le presque-noir */
+.mn-item.on{
+  background:linear-gradient(135deg,#523ca6,#2d2057) !important;
+  box-shadow:0 5px 16px rgba(82,60,166,.34) !important;
+}
+.mn-item{ color:rgba(46,39,71,.42) !important; }
+.mn-item:active{ transform:scale(.92) !important; }
+
+/* Le contenu s'arrête au-dessus du dock, jamais dessous */
+@media(max-width:840px){
+  .page{ padding-bottom:104px !important; }
+  #dash-mob-hero{ padding-bottom:6px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   REFONTE MAGPIE — ÉTAPE 4 : ICÔNES
+   Magpie n'emploie qu'un seul style : trait fin et régulier,
+   extrémités arrondies, pas de remplissage. On harmonise
+   l'épaisseur partout — elle variait de 2 à 2.4 selon les écrans.
+   ══════════════════════════════════════════════════════════════ */
+.mn-item svg,
+.mg-act-ic svg,
+.mg-row-ic svg,
+.ph-qa-ic svg,
+.dmh-cat-ic svg,
+.sl-outil-ic svg,
+.gs-card svg,
+.ch-fab-btn svg{
+  stroke-width:1.9 !important;
+  stroke-linecap:round !important;
+  stroke-linejoin:round !important;
+  fill:none !important;
+}
+
+/* L'étincelle de Guelane AI est pleine : elle garde son remplissage */
+.mn-item#mn-chat svg path,
+.mg-act svg path[d^="M12 3l1.6"],
+.mg-act svg path[d^="M18.5 14.5"]{
+  fill:currentColor !important;
+  stroke-width:0 !important;
+}
+
+/* Pastilles d'icônes : cercle net, comme Magpie */
+.mg-act-ic,.mg-row-ic{ border:1px solid rgba(46,39,71,.04); }
+
+/* ══════════════════════════════════════════════════════════════
    REFONTE MAGPIE — HERO (Particulier + Entrepreneur)
    Reproduit la composition de la maquette : salutation, pile de
    cartes dont deux dépassent au-dessus, pilule à cheval sur le
@@ -6122,6 +6183,174 @@ body{ background:#f7f6fb !important; }
 }
 
 /* Sur grand écran, le hero mobile reste masqué (inchangé) */
+
+/* ── Un seul hero à l'écran ──
+   Sur mobile, le hero Magpie porte déjà la salutation, la cloche et
+   l'avatar : l'ancienne barre de bienvenue ferait double emploi.
+   Elle reste en place sur grand écran, où le hero n'apparaît pas. */
+@media(max-width:840px){
+  #dash-welcome-bar{ display:none !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CORRECTIF : UN SEUL HERO PAR ÉCRAN
+   Sur mobile, le hero Magpie porte déjà la salutation, la cloche
+   et l'avatar. L'ancienne barre de bienvenue faisait doublon
+   juste au-dessus : on la masque en mobile, on la garde sur
+   ordinateur où le hero mobile ne s'affiche pas.
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:840px){
+  .dmh-welcome-bar{ display:none !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HERO MAGPIE — reproduit d'après la maquette
+   Salutation avec sous-titre, cloche à pastille, avatar en carré
+   arrondi. Carte violette avec une carte or qui dépasse au-dessus.
+   Pilule « Recharger » à cheval en bas à droite. Puis les quatre
+   actions, réunies dans une carte blanche.
+   ══════════════════════════════════════════════════════════════ */
+.mg-hero{ padding:2px 0 2px; }
+
+/* ── Salutation ── */
+.mg-greet{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin-bottom:22px;
+}
+.mg-greet-tx{min-width:0;}
+.mg-greet-nm{
+  font-size:19px;font-weight:800;color:var(--t);letter-spacing:-.025em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:56vw;
+}
+.mg-greet-sub{font-size:11.5px;color:var(--t3);margin-top:2px;}
+.mg-greet-ic{display:flex;align-items:center;gap:9px;flex-shrink:0;}
+.mg-ic-btn{
+  position:relative;width:39px;height:39px;border-radius:50%;
+  background:#fff;border:1px solid rgba(46,39,71,.05);
+  box-shadow:var(--mg-sh-sm);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--t);cursor:pointer;
+}
+.mg-ic-btn svg{width:17px;height:17px;stroke-width:1.9;}
+.mg-ic-dot{
+  position:absolute;top:9px;right:10px;width:7px;height:7px;
+  border-radius:50%;background:var(--re);border:1.5px solid #fff;display:none;
+}
+.mg-ic-dot.on{display:block;}
+/* Avatar : carré arrondi, comme sur la maquette */
+.mg-avatar{
+  width:39px;height:39px;border-radius:13px;padding:0;overflow:hidden;
+  border:none;cursor:pointer;
+  background:linear-gradient(135deg,#523ca6,#2d2057);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--mg-sh-sm);
+}
+.mg-avatar svg{width:22px;height:22px;color:#fff;}
+.mg-avatar img{width:100%;height:100%;object-fit:cover;}
+
+/* ── Carte ── */
+.mg-stack{position:relative;margin-bottom:16px;}
+
+/* Carte or qui dépasse au-dessus */
+.mg-stack-bg.b1{
+  position:absolute;top:-14px;left:12px;right:12px;height:44px;
+  border-radius:var(--mg-r-lg);
+  background:linear-gradient(115deg,#e8a93e,#d68f2b);
+  box-shadow:0 -3px 12px rgba(45,32,87,.12);
+  display:flex;align-items:flex-start;justify-content:flex-end;
+  padding:7px 16px 0;
+}
+.mg-bg-num{font-size:10px;color:rgba(255,255,255,.72);font-family:var(--mono);letter-spacing:.05em;}
+
+.mg-card{
+  position:relative;
+  background:linear-gradient(125deg,#6247c4 0%,#4a35a0 55%,#2d2057 100%);
+  border-radius:var(--mg-r-lg);
+  padding:17px 19px 19px;
+  box-shadow:0 14px 34px rgba(45,32,87,.30);
+  overflow:hidden;
+}
+.mg-card::after{
+  content:'';position:absolute;top:-50%;right:-22%;
+  width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle,rgba(232,169,62,.20),transparent 68%);
+  pointer-events:none;
+}
+.mg-card-top{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;position:relative;z-index:1;
+}
+.mg-card-brand{
+  font-size:17px;font-weight:800;color:#fff;
+  letter-spacing:.03em;font-style:italic;
+}
+.mg-card-num{font-size:10.5px;color:rgba(255,255,255,.68);font-family:var(--mono);letter-spacing:.06em;}
+
+.mg-card-mid{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:12px;position:relative;z-index:1;margin-bottom:14px;
+}
+.mg-card-lbl{
+  font-size:9.5px;color:rgba(255,255,255,.52);
+  font-weight:600;letter-spacing:.04em;margin-bottom:2px;
+}
+.mg-card-amt{
+  font-size:27px;font-weight:800;color:#fff;
+  letter-spacing:-.03em;font-family:var(--mono);line-height:1.05;
+}
+.mg-card-exp{text-align:right;flex-shrink:0;}
+.mg-card-expv{font-size:12.5px;font-weight:700;color:#fff;font-family:var(--mono);}
+.mg-card-nml{position:relative;z-index:1;}
+.mg-card-hold{
+  font-size:12.5px;color:rgba(255,255,255,.88);
+  position:relative;z-index:1;letter-spacing:.02em;
+}
+
+/* Pilule à cheval, en bas à droite */
+.mg-add{
+  position:absolute;right:16px;bottom:-17px;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:9px 15px 9px 9px;border:none;border-radius:var(--mg-r-pill);
+  background:#171029;color:#fff;
+  font-size:12.5px;font-weight:700;font-family:var(--font);cursor:pointer;
+  box-shadow:0 7px 20px rgba(23,16,41,.38);
+  z-index:2;white-space:nowrap;
+}
+.mg-add-p{
+  width:24px;height:24px;border-radius:50%;background:#fff;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.mg-add-p svg{width:14px;height:14px;stroke-width:2.6;color:#171029;}
+.mg-add:active{transform:scale(.95);}
+
+/* ── Quatre actions, réunies dans une carte blanche ── */
+.mg-acts{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:4px;
+  background:#fff;border-radius:var(--mg-r);
+  padding:16px 8px 14px;margin:30px 0 20px;
+  box-shadow:var(--mg-sh-sm);
+  border:1px solid rgba(46,39,71,.04);
+}
+.mg-act{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  background:none;border:none;cursor:pointer;padding:0;font-family:var(--font);
+}
+.mg-act-ic{
+  width:46px;height:46px;border-radius:50%;
+  background:#f4f2f9;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--t);transition:transform .16s, background .16s;
+}
+.mg-act-ic svg{width:19px;height:19px;}
+.mg-act:active .mg-act-ic{transform:scale(.92);background:#eae5f6;}
+.mg-act-lb{font-size:10.5px;font-weight:700;color:var(--t2);}
+
+@media(max-width:380px){
+  .mg-card-amt{font-size:23px;}
+  .mg-greet-nm{font-size:17px;}
+  .mg-act-ic{width:42px;height:42px;}
+  .mg-act-lb{font-size:9.5px;}
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -7742,17 +7971,13 @@ function _pnLater(){ _pnDismiss(); }
 <div class="page" id="page-home">
   <div class="ph-wrap">
 
-    <!-- ═══════════ HERO MAGPIE ═══════════
-         Salutation + cloche + avatar, pile de cartes, pilule
-         « Recharger » à cheval sur le bas de la carte, puis les
-         quatre actions rondes. Identique dans les deux modes. -->
+    <!-- ═══════════ HERO MAGPIE ═══════════ -->
     <div class="mg-hero">
 
-      <!-- Salutation -->
       <div class="mg-greet">
         <div class="mg-greet-tx">
-          <span class="mg-greet-hi">Bonjour</span>
-          <span class="mg-greet-nm" id="mg-greet-nm-pro">.Guelane</span>
+          <div class="mg-greet-nm" id="mg-greet-nm-pro">Bonjour</div>
+          <div class="mg-greet-sub">Faisons fructifier votre argent.</div>
         </div>
         <div class="mg-greet-ic">
           <button class="mg-ic-btn" onclick="navTo('notif')" aria-label="Notifications">
@@ -7765,29 +7990,36 @@ function _pnLater(){ _pnDismiss(); }
         </div>
       </div>
 
-      <!-- Pile de cartes : deux cartes dépassent au-dessus -->
       <div class="mg-stack">
-        <div class="mg-stack-bg b2"></div>
-        <div class="mg-stack-bg b1"></div>
+        <div class="mg-stack-bg b1"><span class="mg-bg-num">•••• •••• 2585</span></div>
 
         <div class="mg-card">
           <div class="mg-card-top">
             <span class="mg-card-brand">GUELANE</span>
-            <span class="mg-card-num" id="mg-card-tag-pro">•••• 4293</span>
+            <span class="mg-card-num">•••• •••• 7845</span>
           </div>
-          <div class="mg-card-amt" id="mg-card-amt-pro">0 FCFA</div>
+
+          <div class="mg-card-mid">
+            <div>
+              <div class="mg-card-lbl">Solde</div>
+              <div class="mg-card-amt" id="mg-card-amt-pro">0 FCFA</div>
+            </div>
+            <div class="mg-card-exp">
+              <div class="mg-card-lbl">Compte</div>
+              <div class="mg-card-expv" id="mg-card-type-pro">PART.</div>
+            </div>
+          </div>
+
+          <div class="mg-card-lbl mg-card-nml">Titulaire</div>
           <div class="mg-card-hold" id="mg-card-hold-pro">guelane</div>
-          <span class="mg-card-type" id="mg-card-type-pro">PARTICULIER</span>
         </div>
 
-        <!-- Pilule à cheval sur le bord bas de la carte -->
         <button class="mg-add" onclick="navTo('wallet')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span class="mg-add-p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
           Recharger
         </button>
       </div>
 
-      <!-- Quatre actions rondes -->
       <div class="mg-acts">
         <button class="mg-act" onclick="navTo('trade')">
           <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="21 12 21 7 16 7"/></svg></span>
@@ -7807,7 +8039,6 @@ function _pnLater(){ _pnDismiss(); }
         </button>
       </div>
     </div>
-
 
     <div class="ai-coach">
       <div class="ai-coach-hd">✨ Guelane AI vous suggère</div>
@@ -8410,17 +8641,13 @@ function _pnLater(){ _pnDismiss(); }
   <!-- ═══ MOBILE HERO (visible uniquement sur mobile ≤840px) ═══ -->
   <div id="dash-mob-hero">
 
-    <!-- ═══════════ HERO MAGPIE ═══════════
-         Salutation + cloche + avatar, pile de cartes, pilule
-         « Recharger » à cheval sur le bas de la carte, puis les
-         quatre actions rondes. Identique dans les deux modes. -->
+    <!-- ═══════════ HERO MAGPIE ═══════════ -->
     <div class="mg-hero">
 
-      <!-- Salutation -->
       <div class="mg-greet">
         <div class="mg-greet-tx">
-          <span class="mg-greet-hi">Bonjour</span>
-          <span class="mg-greet-nm" id="mg-greet-nm">.Guelane</span>
+          <div class="mg-greet-nm" id="mg-greet-nm">Bonjour</div>
+          <div class="mg-greet-sub">Faisons fructifier votre argent.</div>
         </div>
         <div class="mg-greet-ic">
           <button class="mg-ic-btn" onclick="navTo('notif')" aria-label="Notifications">
@@ -8433,29 +8660,36 @@ function _pnLater(){ _pnDismiss(); }
         </div>
       </div>
 
-      <!-- Pile de cartes : deux cartes dépassent au-dessus -->
       <div class="mg-stack">
-        <div class="mg-stack-bg b2"></div>
-        <div class="mg-stack-bg b1"></div>
+        <div class="mg-stack-bg b1"><span class="mg-bg-num">•••• •••• 2585</span></div>
 
         <div class="mg-card">
           <div class="mg-card-top">
             <span class="mg-card-brand">GUELANE</span>
-            <span class="mg-card-num" id="mg-card-tag">•••• 4293</span>
+            <span class="mg-card-num">•••• •••• 7845</span>
           </div>
-          <div class="mg-card-amt" id="mg-card-amt">0 FCFA</div>
+
+          <div class="mg-card-mid">
+            <div>
+              <div class="mg-card-lbl">Solde</div>
+              <div class="mg-card-amt" id="mg-card-amt">0 FCFA</div>
+            </div>
+            <div class="mg-card-exp">
+              <div class="mg-card-lbl">Compte</div>
+              <div class="mg-card-expv" id="mg-card-type">PART.</div>
+            </div>
+          </div>
+
+          <div class="mg-card-lbl mg-card-nml">Titulaire</div>
           <div class="mg-card-hold" id="mg-card-hold">guelane</div>
-          <span class="mg-card-type" id="mg-card-type">PARTICULIER</span>
         </div>
 
-        <!-- Pilule à cheval sur le bord bas de la carte -->
         <button class="mg-add" onclick="navTo('wallet')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span class="mg-add-p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
           Recharger
         </button>
       </div>
 
-      <!-- Quatre actions rondes -->
       <div class="mg-acts">
         <button class="mg-act" onclick="navTo('trade')">
           <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="21 12 21 7 16 7"/></svg></span>
@@ -20933,7 +21167,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.70";
+  var GUELANE_VERSION = "3.72";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -21283,7 +21517,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
        !document.getElementById('mg-card-amt-pro')) return;
     poser('mg-card-amt', fmt(solde()));
 
-    poser('mg-card-type', pro() ? 'ENTREPRENEUR' : 'PARTICULIER');
+    poser('mg-card-type', pro() ? 'PRO' : 'PART.');
 
     /* Nom du titulaire, repris du profil */
     /* Nom repris du profil, pour la salutation et la carte */
@@ -21297,7 +21531,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
     }catch(e){}
     n = String(n || 'Guelane').slice(0, 20);
 
-    poser('mg-greet-nm', '.' + n);
+    poser('mg-greet-nm', 'Bonjour ' + n);
     poser('mg-card-hold', n.toLowerCase());
 
     /* Pastille de notifications */

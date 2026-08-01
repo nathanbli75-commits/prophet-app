@@ -6290,16 +6290,6 @@ body{ background:#f7f6fb !important; }
 }
 
 /* Le hero va d'un bord à l'autre de l'écran */
-@media(max-width:840px){
-  /* La page a 18px de retrait lateral : on les annule puis on les
-     redonne a l'interieur, pour que le hero touche les bords. */
-  #dash-mob-hero, #page-home .mg-hero{
-    margin-left:-18px;
-    margin-right:-18px;
-    padding-left:18px;
-    padding-right:18px;
-  }
-}
 
 /* Avatar : l'identité Guelane d'origine */
 .mg-avatar{
@@ -6324,6 +6314,54 @@ body{ background:#f7f6fb !important; }
   align-items:center; justify-content:center; line-height:1;
 }
 .mg-ic-dot.on{ display:flex !important; }
+
+/* ── Rectifications d'après le rendu réel ── */
+
+/* 1. La carte or doit dépasser proprement : le numéro doit tenir
+      entièrement dans la bande visible, sinon il paraît coupé. */
+.mg-stack-bg.b1{
+  top:-17px !important;
+  height:44px !important;
+  padding:3px 18px 0 !important;
+}
+.mg-bg-num{ font-size:9.5px !important; line-height:1.1; }
+
+/* 2. Le texte de la barre de recherche tient sur une ligne. */
+.dmh-search-ph{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  min-width:0;
+}
+
+/* 3. La pilule « Recharger » descend sous la carte plutôt que de
+      recouvrir son coin, et laisse le titulaire lisible. */
+.mg-add{ bottom:-19px !important; right:14px !important; }
+.mg-card{ padding-bottom:26px !important; }
+.mg-stack{ margin-bottom:22px !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   LARGEUR DE CONTENU — MOBILE
+   Les cartes s'étendent au plus près des bords de l'écran, de
+   façon UNIFORME sur toutes les pages, pour qu'aucun alignement
+   ne se casse. Deux retraits se cumulaient : 9px sur la page et
+   20px sur la vue. On ramène l'ensemble à 10px.
+   Un filet de 10px est conservé : à zéro, les textes et les
+   ombres des cartes viendraient toucher le bord de l'écran.
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:840px){
+  .page{ padding-left:10px !important; padding-right:10px !important; }
+  .view{ padding-left:0 !important; padding-right:0 !important; }
+  .gs-wrap{ padding-left:0 !important; padding-right:0 !important; }
+  /* Les sections internes du Store suivent la même largeur */
+  .gs-header,.gs-balance,.gs-tabs,.gs-cats,.gs-partners,
+  .gs-info,.gs-hist,.gs-hist-hd,.gs-form{
+    padding-left:0 !important; padding-right:0 !important;
+    margin-left:0 !important; margin-right:0 !important;
+  }
+  /* Marketplace et fiches : même alignement */
+  .invf,.company-grid{ padding-left:0 !important; padding-right:0 !important; }
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -21147,7 +21185,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.77";
+  var GUELANE_VERSION = "3.79";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

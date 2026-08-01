@@ -6043,156 +6043,6 @@ body{ background:#f7f6fb !important; }
 .mg-act-ic,.mg-row-ic{ border:1px solid rgba(46,39,71,.04); }
 
 /* ══════════════════════════════════════════════════════════════
-   REFONTE MAGPIE — HERO (Particulier + Entrepreneur)
-   Reproduit la composition de la maquette : salutation, pile de
-   cartes dont deux dépassent au-dessus, pilule à cheval sur le
-   bord bas de la carte, puis quatre actions rondes.
-   ══════════════════════════════════════════════════════════════ */
-.mg-hero{ padding:2px 0 2px; }
-
-/* ── Salutation ── */
-.mg-greet{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:26px;
-}
-.mg-greet-tx{display:flex;align-items:baseline;gap:0;min-width:0;}
-.mg-greet-hi{font-size:19px;font-weight:800;color:var(--t);letter-spacing:-.02em;}
-.mg-greet-nm{
-  font-size:19px;font-weight:800;color:var(--mg-act);letter-spacing:-.02em;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:47vw;
-}
-.mg-greet-ic{display:flex;align-items:center;gap:9px;flex-shrink:0;}
-.mg-ic-btn{
-  position:relative;width:38px;height:38px;border-radius:50%;
-  background:#fff;border:1px solid rgba(46,39,71,.05);
-  box-shadow:var(--mg-sh-sm);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--t);cursor:pointer;
-}
-.mg-ic-btn svg{width:17px;height:17px;stroke-width:1.9;}
-.mg-ic-dot{
-  position:absolute;top:8px;right:9px;width:7px;height:7px;
-  border-radius:50%;background:var(--re);border:1.5px solid #fff;display:none;
-}
-.mg-ic-dot.on{display:block;}
-.mg-avatar{
-  width:38px;height:38px;border-radius:50%;padding:0;overflow:hidden;
-  border:1px solid rgba(46,39,71,.05);cursor:pointer;
-  background:linear-gradient(135deg,#523ca6,#2d2057);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:var(--mg-sh-sm);
-}
-.mg-avatar svg{width:21px;height:21px;color:#fff;}
-.mg-avatar img{width:100%;height:100%;object-fit:cover;}
-
-/* ── Pile de cartes ── */
-.mg-stack{position:relative;margin-bottom:34px;}
-
-/* Cartes de fond : elles dépassent AU-DESSUS de la carte principale */
-.mg-stack-bg{
-  position:absolute;height:46px;border-radius:var(--mg-r-lg);
-}
-.mg-stack-bg.b1{
-  top:-11px;left:11px;right:11px;
-  background:linear-gradient(135deg,#e8a93e,#c4882a);
-  box-shadow:0 -2px 10px rgba(45,32,87,.10);
-}
-.mg-stack-bg.b2{
-  top:-22px;left:23px;right:23px;
-  background:linear-gradient(135deg,#22a55e,#15803d);
-  box-shadow:0 -2px 10px rgba(45,32,87,.08);
-}
-
-/* Carte principale */
-.mg-card{
-  position:relative;
-  background:linear-gradient(135deg,#5a43b4 0%,#2d2057 100%);
-  border-radius:var(--mg-r-lg);
-  padding:18px 19px 21px;
-  box-shadow:0 14px 36px rgba(45,32,87,.30);
-  overflow:hidden;
-}
-.mg-card::after{
-  content:'';position:absolute;top:-45%;right:-20%;
-  width:230px;height:230px;border-radius:50%;
-  background:radial-gradient(circle,rgba(232,169,62,.22),transparent 68%);
-  pointer-events:none;
-}
-.mg-card-top{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:22px;position:relative;z-index:1;
-}
-.mg-card-brand{font-size:15px;font-weight:800;color:#fff;letter-spacing:.06em;}
-.mg-card-num{font-size:11.5px;color:rgba(255,255,255,.62);font-family:var(--mono);letter-spacing:.06em;}
-.mg-card-amt{
-  font-size:31px;font-weight:800;color:#fff;
-  letter-spacing:-.03em;font-family:var(--mono);
-  position:relative;z-index:1;line-height:1.05;
-}
-.mg-card-hold{
-  font-size:11.5px;color:rgba(255,255,255,.58);
-  margin-top:7px;position:relative;z-index:1;letter-spacing:.02em;
-}
-.mg-card-type{
-  position:absolute;right:19px;bottom:20px;z-index:1;
-  font-size:9px;font-weight:800;letter-spacing:.09em;
-  padding:4px 10px;border-radius:var(--mg-r-pill);
-  background:rgba(232,169,62,.20);color:#f2c473;
-}
-
-/* Pilule à cheval sur le bord bas de la carte */
-.mg-add{
-  position:absolute;left:50%;bottom:-19px;transform:translateX(-50%);
-  display:inline-flex;align-items:center;gap:7px;
-  padding:11px 20px;border:none;border-radius:var(--mg-r-pill);
-  background:var(--mg-dark);color:#fff;
-  font-size:12.5px;font-weight:700;font-family:var(--font);cursor:pointer;
-  box-shadow:0 7px 20px rgba(45,32,87,.34);
-  z-index:2;white-space:nowrap;
-}
-.mg-add svg{width:14px;height:14px;stroke-width:2.4;}
-.mg-add:active{transform:translateX(-50%) scale(.95);}
-
-/* ── Quatre actions rondes ── */
-.mg-acts{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:4px;margin-bottom:22px;
-}
-.mg-act{
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  background:none;border:none;cursor:pointer;padding:2px 0;
-  font-family:var(--font);
-}
-.mg-act-ic{
-  width:52px;height:52px;border-radius:50%;
-  background:#fff;box-shadow:var(--mg-sh-sm);
-  border:1px solid rgba(46,39,71,.04);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--mg-act);transition:transform .16s, background .16s;
-}
-.mg-act-ic svg{width:21px;height:21px;}
-.mg-act:active .mg-act-ic{transform:scale(.92);background:#f3edfb;}
-.mg-act-lb{font-size:11px;font-weight:700;color:var(--t2);}
-
-@media(max-width:380px){
-  .mg-card-amt{font-size:26px;}
-  .mg-greet-hi,.mg-greet-nm{font-size:17px;}
-  .mg-act-ic{width:47px;height:47px;}
-  .mg-act-ic svg{width:19px;height:19px;}
-  .mg-act-lb{font-size:10px;}
-}
-
-/* Sur grand écran, le hero mobile reste masqué (inchangé) */
-
-/* ── Un seul hero à l'écran ──
-   Sur mobile, le hero Magpie porte déjà la salutation, la cloche et
-   l'avatar : l'ancienne barre de bienvenue ferait double emploi.
-   Elle reste en place sur grand écran, où le hero n'apparaît pas. */
-@media(max-width:840px){
-  #dash-welcome-bar{ display:none !important; }
-}
-
-/* ══════════════════════════════════════════════════════════════
    CORRECTIF : UN SEUL HERO PAR ÉCRAN
    Sur mobile, le hero Magpie porte déjà la salutation, la cloche
    et l'avatar. L'ancienne barre de bienvenue faisait doublon
@@ -6351,6 +6201,75 @@ body{ background:#f7f6fb !important; }
   .mg-act-ic{width:42px;height:42px;}
   .mg-act-lb{font-size:9.5px;}
 }
+
+/* ══════════════════════════════════════════════════════════════
+   CORRECTIF : PAS DE RANGÉE D'ACTIONS EN DOUBLE
+   Le hero porte déjà Trading / Marketplace / Store / Guelane AI.
+   L'ancienne grille de raccourcis faisait doublon juste en dessous.
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:840px){
+  .dmh-cats{ display:none !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   AJUSTEMENTS DU HERO d'après le rendu réel
+   - la salutation et son sous-titre s'empilent, sans troncature
+   - la pilule « Recharger » revient à sa taille de maquette
+   - la carte or dépasse proprement au-dessus
+   ══════════════════════════════════════════════════════════════ */
+.mg-greet-tx{ display:block !important; min-width:0; flex:1; }
+.mg-greet-nm{
+  font-size:18px !important;
+  max-width:100% !important;
+  white-space:normal !important;
+  overflow:visible !important;
+  line-height:1.2;
+}
+.mg-greet-sub{
+  font-size:11px !important;
+  margin-top:3px !important;
+  max-width:210px;
+  line-height:1.35;
+}
+
+/* Pilule : plus compacte, franchement à droite */
+.mg-add{
+  right:14px !important;
+  bottom:-16px !important;
+  padding:7px 14px 7px 7px !important;
+  font-size:11.5px !important;
+  gap:6px !important;
+}
+.mg-add-p{ width:21px !important; height:21px !important; }
+.mg-add-p svg{ width:12px !important; height:12px !important; }
+
+/* Le montant ne doit jamais déborder */
+.mg-card-amt{ font-size:25px !important; word-break:keep-all; }
+.mg-card-mid{ margin-bottom:12px !important; }
+
+/* Carte or : visible sans être coupée */
+.mg-stack{ margin-top:16px; }
+.mg-stack-bg.b1{ top:-13px !important; height:40px !important; }
+
+/* Espace sous la carte pour laisser passer la pilule */
+.mg-acts{ margin-top:28px !important; }
+
+/* ── Montant : police proportionnelle, comme la maquette ──
+   La chasse fixe étirait « 500 000 FCFA » sur toute la carte. */
+.mg-card-amt{
+  font-family:var(--font) !important;
+  font-size:29px !important;
+  letter-spacing:-.035em !important;
+  font-weight:800 !important;
+}
+.mg-card-num,.mg-bg-num{ letter-spacing:.12em !important; }
+.mg-card-hold{ font-family:var(--font) !important; }
+
+/* La carte laisse de la place à la pilule sans la chevaucher */
+.mg-card{ padding-bottom:22px !important; }
+.mg-card-hold{ max-width:62%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+@media(max-width:380px){ .mg-card-amt{ font-size:25px !important; } }
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -21167,7 +21086,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.72";
+  var GUELANE_VERSION = "3.74";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

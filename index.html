@@ -6274,22 +6274,56 @@ body{ background:#f7f6fb !important; }
 /* Les trois points du bouton « Plus » sont pleins, pas en contour */
 .mg-act svg circle{ fill:currentColor; stroke:none; }
 
-/* ── Bandeau de salutation, d'après l'agrandissement ──
-   Deux corrections : l'avatar est rond (et non carré arrondi),
-   et l'ensemble repose sur une surface claire arrondie plutôt
-   que directement sur le fond de l'écran. */
+
+/* ── Bandeau de salutation : rectifications ──
+   - Pas de fond : le hero repose directement sur l'écran, comme
+     sur l'agrandissement (le gris de l'image était l'écran même).
+   - Le hero occupe toute la largeur, bord à bord.
+   - L'avatar reprend l'identité d'origine de Guelane (dégradé
+     violet, liseré lilas), rond.
+   - La cloche affiche le nombre de notifications, pas un point. */
 .mg-greet{
-  background:#f0eef6;
-  border-radius:22px;
-  padding:14px 14px 14px 17px;
+  background:none !important;
+  border-radius:0 !important;
+  padding:0 !important;
   margin-bottom:20px !important;
 }
-.mg-avatar{ border-radius:50% !important; }
+
+/* Le hero va d'un bord à l'autre de l'écran */
+@media(max-width:840px){
+  /* La page a 18px de retrait lateral : on les annule puis on les
+     redonne a l'interieur, pour que le hero touche les bords. */
+  #dash-mob-hero, #page-home .mg-hero{
+    margin-left:-18px;
+    margin-right:-18px;
+    padding-left:18px;
+    padding-right:18px;
+  }
+}
+
+/* Avatar : l'identité Guelane d'origine */
+.mg-avatar{
+  border-radius:50% !important;
+  background:linear-gradient(145deg,#2d2057 0%,#523ca6 55%,#1c034f 100%) !important;
+  border:2.5px solid rgba(141,108,250,.40) !important;
+  box-shadow:none !important;
+}
 .mg-ic-btn{
-  background:#e4e1ec !important;
+  background:rgba(46,39,71,.06) !important;
   border:none !important;
   box-shadow:none !important;
 }
+
+/* Compteur de notifications, comme sur la barre d'origine */
+.mg-ic-dot{
+  top:-4px !important; right:-4px !important;
+  min-width:17px; height:17px; width:auto !important;
+  padding:0 3px; border-radius:9px;
+  background:var(--re); border:2px solid #f7f6fb !important;
+  color:#fff; font-size:9px; font-weight:800;
+  align-items:center; justify-content:center; line-height:1;
+}
+.mg-ic-dot.on{ display:flex !important; }
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -11513,6 +11547,13 @@ function _nfRefreshBadge(){
   document.querySelectorAll('.dmh-welcome-badge').forEach(function(d){
     d.textContent = n;
     d.style.display = n > 0 ? '' : 'none';
+  });
+  /* Cloche du hero Magpie, dans les deux modes */
+  ['', '-pro'].forEach(function(sfx){
+    var dot = document.getElementById('mg-notif-dot' + sfx);
+    if(!dot) return;
+    dot.textContent = n > 0 ? (n > 99 ? '99+' : n) : '';
+    dot.classList.toggle('on', n > 0);
   });
 }
 window._nfRefreshBadge = _nfRefreshBadge;
@@ -21106,7 +21147,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.76";
+  var GUELANE_VERSION = "3.77";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -21475,11 +21516,23 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
 
     /* Pastille de notifications */
     try{
-      var b = document.getElementById('dmh-welcome-badge') || document.getElementById('ph-bell-dot');
-      var actif = !!(b && (b.textContent || '').trim() !== '' && (b.textContent || '').trim() !== '0');
+      /* Nombre de propositions en attente : meme source que la cloche d'origine */
+      var n = '';
+      try{
+        if(typeof _aiLoadOps === 'function'){
+          n = String(_aiLoadOps().filter(function(o){ return o.st === 'pending'; }).length);
+        }
+      }catch(e){}
+      if(n === ''){
+        var b = document.getElementById('dmh-notif-badge');
+        n = b ? (b.textContent || '').trim() : '';
+      }
+      var actif = n !== '' && n !== '0';
       ['', '-pro'].forEach(function(sfx){
         var dot = document.getElementById('mg-notif-dot' + sfx);
-        if(dot) dot.classList.toggle('on', actif);
+        if(!dot) return;
+        dot.textContent = actif ? (parseInt(n,10) > 99 ? '99+' : n) : '';
+        dot.classList.toggle('on', actif);
       });
     }catch(e){}
 

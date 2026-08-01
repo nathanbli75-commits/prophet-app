@@ -5832,6 +5832,209 @@ body.theme-dark .sp-action-row.sp-danger .sp-toggle-text{color:#f4667d;}
 .aab-no,.aab-yes{border:none;border-radius:10px;padding:8px 13px;font-size:12.5px;font-weight:700;cursor:pointer;flex-shrink:0;}
 .aab-no{background:#f2eff8;color:#6b6685;}
 .aab-yes{background:linear-gradient(135deg,#e8a93e,#8d6cfa);color:#04001c;}
+
+/* ══════════════════════════════════════════════════════════════
+   REFONTE MAGPIE — ÉTAPE 1 : FONDATION
+   Langage visuel repris de la maquette Magpie, appliqué aux
+   couleurs de Guelane (violet + or conservés).
+   Principes : fond très clair, blanc généreux, coins largement
+   arrondis, ombres à peine perceptibles, un seul violet d'action.
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  /* Rayons — nettement plus ronds que l'actuel (10/16/24) */
+  --mg-r-sm:14px;      /* pastilles, petits éléments   */
+  --mg-r:20px;         /* cartes, champs               */
+  --mg-r-lg:26px;      /* grandes cartes, panneaux     */
+  --mg-r-pill:999px;   /* boutons pilule               */
+
+  /* Ombres — présence discrète, jamais de contour marqué */
+  --mg-sh-sm:0 2px 8px rgba(45,32,87,.05);
+  --mg-sh:0 4px 18px rgba(45,32,87,.07);
+  --mg-sh-lg:0 10px 34px rgba(45,32,87,.11);
+
+  /* Action principale : le violet de Guelane */
+  --mg-act:#523ca6;
+  --mg-act-2:#7e57c2;
+  --mg-dark:#2d2057;   /* pilules sombres (« Add Card » chez Magpie) */
+
+  --mg-gap:14px;
+}
+
+/* ── Fond général : plus clair et plus neutre, comme Magpie ── */
+body{ background:#f7f6fb !important; }
+
+/* ── Cartes : arrondi large, ombre douce, pas de bordure dure ── */
+.pnl,.mc,.scc,.opp-card,.dd-doc-card,.sv-stat,.kpi,.co-card,
+.gs-card,.gs-balance,.chh-item,.nf-stat-card{
+  border-radius:var(--mg-r) !important;
+  box-shadow:var(--mg-sh) !important;
+  border:1px solid rgba(46,39,71,.05) !important;
+}
+
+/* ── Boutons : pilule, sans ombre criarde ── */
+.btn,.gs-btn,.gs-submit,.ch-btn,.invf-select,.gsel-close{
+  border-radius:var(--mg-r-pill) !important;
+}
+.btn-gold,.gs-btn-go{
+  box-shadow:0 4px 14px rgba(82,60,166,.20) !important;
+}
+
+/* ── Pilule sombre : action secondaire mise en avant ── */
+.mg-pill-dark{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:10px 16px;border:none;border-radius:var(--mg-r-pill);
+  background:var(--mg-dark);color:#fff;
+  font-size:12.5px;font-weight:700;cursor:pointer;
+  box-shadow:0 4px 14px rgba(45,32,87,.24);
+}
+.mg-pill-dark svg{width:14px;height:14px;}
+.mg-pill-dark:active{transform:scale(.96);}
+
+/* ── Champs de saisie : mêmes arrondis que les cartes ── */
+.gs-inp,.invf-input,.tf input,.tf select,.tf textarea,.sv-inp{
+  border-radius:var(--mg-r) !important;
+}
+
+/* ── En-tête de section : titre + lien « Voir tout » ── */
+.mg-sec{
+  display:flex;align-items:baseline;justify-content:space-between;
+  padding:0 2px 10px;
+}
+.mg-sec-t{font-size:15.5px;font-weight:800;color:var(--t);letter-spacing:-.02em;}
+.mg-sec-a{font-size:12.5px;font-weight:700;color:var(--mg-act);cursor:pointer;}
+
+/* ── Ligne de liste : pastille ronde + libellé + montant à droite ── */
+.mg-row{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 14px;margin-bottom:9px;
+  background:#fff;border-radius:var(--mg-r);
+  box-shadow:var(--mg-sh-sm);
+}
+.mg-row-ic{
+  width:38px;height:38px;flex-shrink:0;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:#f3edfb;font-size:16px;
+}
+.mg-row-bd{flex:1;min-width:0;}
+.mg-row-t{font-size:13.5px;font-weight:700;color:var(--t);}
+.mg-row-s{font-size:11.5px;color:var(--t3);margin-top:1px;}
+.mg-row-v{font-size:14px;font-weight:800;color:var(--t);flex-shrink:0;font-family:var(--mono);}
+
+/* ══════════════════════════════════════════════════════════════
+   REFONTE MAGPIE — ÉTAPE 2 : CARTE DU HAUT + ACTIONS RONDES
+   Carte empilée façon Magpie : la carte active au premier plan,
+   les suivantes qui dépassent derrière. Affiche le solde du
+   portefeuille. Identique en Particulier et en Entrepreneur.
+   ══════════════════════════════════════════════════════════════ */
+.mg-hero{padding:2px 0 4px;}
+
+/* La pile : les cartes de fond sont de simples bandeaux décalés */
+.mg-stack{position:relative;margin-bottom:16px;}
+.mg-stack-bg{
+  position:absolute;left:8px;right:8px;height:34px;
+  border-radius:var(--mg-r-lg);
+}
+.mg-stack-bg.b1{ top:-9px;  background:linear-gradient(135deg,#e8a93e,#c4882a); opacity:.85; }
+.mg-stack-bg.b2{ top:-17px; left:17px;right:17px; background:linear-gradient(135deg,#22a55e,#15803d); opacity:.55; }
+
+/* Carte principale : dégradé violet Guelane */
+.mg-card{
+  position:relative;
+  background:linear-gradient(135deg,#523ca6 0%,#2d2057 100%);
+  border-radius:var(--mg-r-lg);
+  padding:17px 18px 15px;
+  box-shadow:0 12px 34px rgba(45,32,87,.28);
+  overflow:hidden;
+}
+/* Reflet diagonal discret */
+.mg-card::after{
+  content:'';position:absolute;top:-40%;right:-18%;
+  width:210px;height:210px;border-radius:50%;
+  background:radial-gradient(circle,rgba(232,169,62,.20),transparent 68%);
+  pointer-events:none;
+}
+.mg-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.mg-card-brand{font-size:14px;font-weight:800;color:#fff;letter-spacing:.04em;}
+.mg-card-tag{
+  font-size:9.5px;font-weight:800;letter-spacing:.06em;
+  padding:4px 9px;border-radius:var(--mg-r-pill);
+  background:rgba(232,169,62,.22);color:#f5c977;
+}
+.mg-card-lbl{font-size:11px;color:rgba(255,255,255,.62);font-weight:600;}
+.mg-card-amt{
+  font-size:29px;font-weight:800;color:#fff;
+  letter-spacing:-.025em;margin:2px 0 3px;font-family:var(--mono);
+}
+.mg-card-sub{font-size:11px;color:rgba(255,255,255,.55);}
+.mg-card-btm{display:flex;align-items:flex-end;justify-content:space-between;margin-top:15px;}
+.mg-card-hold{font-size:11px;color:rgba(255,255,255,.72);font-weight:600;}
+
+/* Bouton pilule sombre posé sur la carte */
+.mg-card-add{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 13px;border:none;border-radius:var(--mg-r-pill);
+  background:rgba(10,4,32,.55);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  color:#fff;font-size:11.5px;font-weight:700;cursor:pointer;
+  border:1px solid rgba(255,255,255,.14);
+}
+.mg-card-add svg{width:13px;height:13px;}
+.mg-card-add:active{transform:scale(.95);}
+
+/* ── Rangée d'actions rondes ── */
+.mg-acts{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:6px;margin-bottom:18px;
+}
+.mg-act{
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  background:none;border:none;cursor:pointer;padding:2px 0;
+}
+.mg-act-ic{
+  width:50px;height:50px;border-radius:50%;
+  background:#fff;box-shadow:var(--mg-sh-sm);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--mg-act);
+}
+.mg-act-ic svg{width:20px;height:20px;}
+.mg-act:active .mg-act-ic{transform:scale(.93);background:#f3edfb;}
+.mg-act-lb{font-size:11px;font-weight:700;color:var(--t2);}
+
+@media(max-width:380px){
+  .mg-card-amt{font-size:25px;}
+  .mg-act-ic{width:45px;height:45px;}
+  .mg-act-lb{font-size:10px;}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   REFONTE MAGPIE — ÉTAPE 3 : BARRE DE NAVIGATION
+   La structure était déjà celle de Magpie (pilule blanche
+   flottante, actif en pilule sombre). On aligne la matière sur
+   la nouvelle fondation : blanc franc, ombre plus diffuse,
+   et l'espace réservé pour ne rien recouvrir.
+   ══════════════════════════════════════════════════════════════ */
+#mob-nav{
+  background:#ffffff !important;
+  -webkit-backdrop-filter:blur(16px) !important;
+  backdrop-filter:blur(16px) !important;
+  border:1px solid rgba(46,39,71,.045) !important;
+  box-shadow:0 10px 34px rgba(45,32,87,.13), 0 2px 6px rgba(45,32,87,.05) !important;
+  padding:7px 9px !important;
+  padding-bottom:max(7px, env(safe-area-inset-bottom,7px)) !important;
+}
+/* Élément actif : violet Guelane plutôt que le presque-noir */
+.mn-item.on{
+  background:linear-gradient(135deg,#523ca6,#2d2057) !important;
+  box-shadow:0 5px 16px rgba(82,60,166,.34) !important;
+}
+.mn-item{ color:rgba(46,39,71,.42) !important; }
+.mn-item:active{ transform:scale(.92) !important; }
+
+/* Le contenu s'arrête au-dessus du dock, jamais dessous */
+@media(max-width:840px){
+  .page{ padding-bottom:104px !important; }
+  #dash-mob-hero{ padding-bottom:6px; }
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -8069,6 +8272,50 @@ function _pnLater(){ _pnDismiss(); }
 
   <!-- ═══ MOBILE HERO (visible uniquement sur mobile ≤840px) ═══ -->
   <div id="dash-mob-hero">
+
+    <!-- ═══ CARTE DU HAUT (Magpie) — solde du portefeuille ═══ -->
+    <div class="mg-hero">
+      <div class="mg-stack">
+        <div class="mg-stack-bg b2"></div>
+        <div class="mg-stack-bg b1"></div>
+        <div class="mg-card">
+          <div class="mg-card-top">
+            <span class="mg-card-brand">GUELANE</span>
+            <span class="mg-card-tag" id="mg-card-tag">PARTICULIER</span>
+          </div>
+          <div class="mg-card-lbl">Solde du portefeuille</div>
+          <div class="mg-card-amt" id="mg-card-amt">0 FCFA</div>
+          <div class="mg-card-sub" id="mg-card-sub">Disponible</div>
+          <div class="mg-card-btm">
+            <span class="mg-card-hold" id="mg-card-hold">•••• &nbsp;Guelane</span>
+            <button class="mg-card-add" onclick="navTo('wallet')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Recharger
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quatre actions rondes -->
+      <div class="mg-acts">
+        <button class="mg-act" onclick="navTo('trade')">
+          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="21 12 21 7 16 7"/></svg></span>
+          <span class="mg-act-lb">Trading</span>
+        </button>
+        <button class="mg-act" onclick="navTo('invest')">
+          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg></span>
+          <span class="mg-act-lb">Marketplace</span>
+        </button>
+        <button class="mg-act" onclick="navTo('store')">
+          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1V9z"/><path d="M9 13h6"/></svg></span>
+          <span class="mg-act-lb">Store</span>
+        </button>
+        <button class="mg-act" onclick="navTo('chat')">
+          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6 4.6 1.9-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"/></svg></span>
+          <span class="mg-act-lb">Guelane AI</span>
+        </button>
+      </div>
+    </div>
 
     <!-- Barre de recherche / action IA -->
     <div class="dmh-search" onclick="navTo('chat')">
@@ -20527,7 +20774,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.66";
+  var GUELANE_VERSION = "3.68";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -20834,6 +21081,80 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
         return r;
       };
       window._gselNavHooked = true;
+    }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer);
+  else demarrer();
+})();
+</script>
+<script>
+/* ═══ CARTE DU HAUT (Magpie) — alimentation ═══
+   Bloc autonome : doit fonctionner meme si un autre script echoue.
+   Affiche le solde du portefeuille, identique dans les deux modes. */
+(function(){
+  function fmt(n){
+    return Math.round(n || 0).toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' FCFA';
+  }
+
+  function solde(){
+    try{
+      var ws = window.walletState;
+      if(!ws) return 0;
+      /* Solde du portefeuille = liquidites disponibles */
+      return (ws.walletCash || 0) + (ws.tradingBalance || 0);
+    }catch(e){ return 0; }
+  }
+
+  function pro(){
+    try{ return document.body.classList.contains('profile-pro'); }catch(e){ return false; }
+  }
+
+  function rendre(){
+    var amt = document.getElementById('mg-card-amt');
+    if(!amt) return;
+    amt.textContent = fmt(solde());
+
+    var tag = document.getElementById('mg-card-tag');
+    if(tag) tag.textContent = pro() ? 'ENTREPRENEUR' : 'PARTICULIER';
+
+    /* Nom du titulaire, repris du profil */
+    var hold = document.getElementById('mg-card-hold');
+    if(hold){
+      var n = '';
+      try{
+        n = (window.PROPHET_USER && (window.PROPHET_USER.nom || window.PROPHET_USER.username)) || '';
+        if(!n){
+          var el = document.getElementById('dmh-greet-name');
+          if(el) n = el.textContent.trim();
+        }
+      }catch(e){}
+      hold.innerHTML = '\u2022\u2022\u2022\u2022 &nbsp;' + (n ? String(n).slice(0,18) : 'Guelane');
+    }
+
+    /* Gains du jour, si disponibles */
+    var sub = document.getElementById('mg-card-sub');
+    if(sub){
+      try{
+        var p = (window.walletState && window.walletState.tradingPnl) || 0;
+        sub.textContent = p ? ('Disponible \u00b7 ' + (p > 0 ? '+' : '') + fmt(p) + ' de gains')
+                            : 'Disponible';
+      }catch(e){}
+    }
+  }
+  window._mgCardRender = rendre;
+
+  function demarrer(){
+    rendre();
+    /* Rafraichir a chaque arrivee sur un ecran (aucune surveillance de fond) */
+    if(typeof window.navTo === 'function' && !window._mgNavHooked){
+      var origine = window.navTo;
+      window.navTo = function(){
+        var r = origine.apply(this, arguments);
+        try{ rendre(); }catch(e){}
+        return r;
+      };
+      window._mgNavHooked = true;
     }
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer);

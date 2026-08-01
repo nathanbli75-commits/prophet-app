@@ -6270,6 +6270,9 @@ body{ background:#f7f6fb !important; }
 .mg-card-hold{ max-width:62%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 @media(max-width:380px){ .mg-card-amt{ font-size:25px !important; } }
+
+/* Les trois points du bouton « Plus » sont pleins, pas en contour */
+.mg-act svg circle{ fill:currentColor; stroke:none; }
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -7952,9 +7955,9 @@ function _pnLater(){ _pnDismiss(); }
           <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1V9z"/><path d="M9 13h6"/></svg></span>
           <span class="mg-act-lb">Store</span>
         </button>
-        <button class="mg-act" onclick="navTo('chat')">
-          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l1.6 4.1 4.1 1.6-4.1 1.6L12 14.4l-1.6-4.1L6.3 8.7l4.1-1.6z"/><path d="M18.5 14.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg></span>
-          <span class="mg-act-lb">Guelane AI</span>
+        <button class="mg-act" onclick="toggleLeftSidebar()">
+          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></span>
+          <span class="mg-act-lb">Plus</span>
         </button>
       </div>
     </div>
@@ -8622,9 +8625,9 @@ function _pnLater(){ _pnDismiss(); }
           <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1V9z"/><path d="M9 13h6"/></svg></span>
           <span class="mg-act-lb">Store</span>
         </button>
-        <button class="mg-act" onclick="navTo('chat')">
-          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l1.6 4.1 4.1 1.6-4.1 1.6L12 14.4l-1.6-4.1L6.3 8.7l4.1-1.6z"/><path d="M18.5 14.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg></span>
-          <span class="mg-act-lb">Guelane AI</span>
+        <button class="mg-act" onclick="toggleLeftSidebar()">
+          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></span>
+          <span class="mg-act-lb">Plus</span>
         </button>
       </div>
     </div>
@@ -21086,7 +21089,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.74";
+  var GUELANE_VERSION = "3.75";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

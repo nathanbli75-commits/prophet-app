@@ -6273,6 +6273,23 @@ body{ background:#f7f6fb !important; }
 
 /* Les trois points du bouton « Plus » sont pleins, pas en contour */
 .mg-act svg circle{ fill:currentColor; stroke:none; }
+
+/* ── Bandeau de salutation, d'après l'agrandissement ──
+   Deux corrections : l'avatar est rond (et non carré arrondi),
+   et l'ensemble repose sur une surface claire arrondie plutôt
+   que directement sur le fond de l'écran. */
+.mg-greet{
+  background:#f0eef6;
+  border-radius:22px;
+  padding:14px 14px 14px 17px;
+  margin-bottom:20px !important;
+}
+.mg-avatar{ border-radius:50% !important; }
+.mg-ic-btn{
+  background:#e4e1ec !important;
+  border:none !important;
+  box-shadow:none !important;
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -21089,7 +21106,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.75";
+  var GUELANE_VERSION = "3.76";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

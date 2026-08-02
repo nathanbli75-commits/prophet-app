@@ -6393,6 +6393,12 @@ body{ background:#f7f6fb !important; }
 @media(max-width:840px){
   .page > *:last-child{ margin-bottom:6px; }
 }
+
+/* ── Espace entre la salutation et la carte ──
+   La carte or remonte de 17px au-dessus de la carte violette.
+   Cette remontee se soustrayait a la marge de la salutation :
+   20px annonces, 3px reellement visibles. On compense. */
+.mg-greet{ margin-bottom:38px !important; }
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -21216,7 +21222,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.81";
+  var GUELANE_VERSION = "3.82";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

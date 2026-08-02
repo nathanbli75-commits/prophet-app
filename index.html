@@ -21216,7 +21216,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.80";
+  var GUELANE_VERSION = "3.81";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -21310,15 +21310,74 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
   };
 
   /* ────────── DÉTECTION HORS LIGNE ────────── */
-  function updateOnlineStatus(){
-    var screen = document.getElementById('offline-screen');
-    if(!screen) return;
-    if(navigator.onLine){
-      screen.classList.remove('on');
-    } else {
-      screen.classList.add('on');
-    }
+  /* L'indicateur du navigateur est peu fiable en mobile : il bascule
+     lors des changements de reseau (wifi vers donnees, changement
+     d'antenne) alors que la connexion revient aussitot. On ne montre
+     donc l'ecran qu'apres verification reelle, et jamais sur un
+     simple soubresaut. */
+  var _offVerif = null;
+  var _offEssais = 0;
+
+  function _offTester(){
+    /* Une vraie requete legere vers le serveur, avec delai court */
+    return new Promise(function(resolve){
+      var fini = false;
+      var t = setTimeout(function(){ if(!fini){ fini = true; resolve(false); } }, 4000);
+      try{
+        fetch(window.PROPHET_BACKEND + '/health', {
+          method: 'GET', cache: 'no-store', mode: 'cors'
+        }).then(function(){
+          if(fini) return; fini = true; clearTimeout(t); resolve(true);
+        }).catch(function(){
+          if(fini) return; fini = true; clearTimeout(t); resolve(false);
+        });
+      }catch(e){
+        if(!fini){ fini = true; clearTimeout(t); resolve(false); }
+      }
+    });
   }
+
+  function _offAfficher(v){
+    var screen = document.getElementById('offline-screen');
+    if(screen) screen.classList.toggle('on', !!v);
+  }
+
+  function updateOnlineStatus(){
+    /* Le navigateur se dit en ligne : on masque immediatement,
+       sans rien verifier — c'est le cas courant. */
+    if(navigator.onLine){
+      _offEssais = 0;
+      if(_offVerif){ clearTimeout(_offVerif); _offVerif = null; }
+      _offAfficher(false);
+      return;
+    }
+
+    /* Le navigateur se dit hors ligne : on ne le croit pas sur parole.
+       On laisse passer un court delai, puis on verifie reellement.
+       Trois essais espaces avant d'afficher l'ecran. */
+    if(_offVerif) return;
+    _offEssais = 0;
+
+    (function verifier(){
+      _offVerif = setTimeout(function(){
+        _offVerif = null;
+        if(navigator.onLine){ _offAfficher(false); return; }
+        _offTester().then(function(joignable){
+          if(joignable){ _offEssais = 0; _offAfficher(false); return; }
+          _offEssais++;
+          if(_offEssais >= 3){ _offAfficher(true); }
+          else verifier();
+        });
+      }, _offEssais === 0 ? 2500 : 3000);
+    })();
+  }
+
+  /* Le retour de la connexion referme l'ecran sans attendre */
+  window.addEventListener('online', function(){
+    _offEssais = 0;
+    if(_offVerif){ clearTimeout(_offVerif); _offVerif = null; }
+    _offAfficher(false);
+  });
 
   // Mise à jour visuelle : vide le cache et recharge pour récupérer le nouveau logo/icône
   window._guelaneVisualUpdate = function(){

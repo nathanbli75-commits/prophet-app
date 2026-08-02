@@ -35,7 +35,7 @@ if ('serviceWorker' in navigator) {
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Roboto+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <script>
 (function(){
   function _setFavicon(){
@@ -116,7 +116,7 @@ if ('serviceWorker' in navigator) {
   --ci:#d97706;--ao:#22a55e;--af:#16054e;--wl:#e8a93e;
   --navy:#2d2057;--navy2:#523ca6;--navy3:#7e57c2;
 
-  --font:'Manrope',sans-serif;
+  --font:'Plus Jakarta Sans','Manrope',sans-serif;
   --mono:'Roboto Mono',monospace;
   --r:10px;--rl:16px;--rxl:24px;
 
@@ -6614,6 +6614,78 @@ body{ background:#f7f6fb !important; }
   .mg-avail{ background:#f4f2f8 !important; }
   .mg-act-ic{ background:#f4f2f8 !important; }
   .mg-switch{ background:#f1eff6 !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SYSTÈME TYPOGRAPHIQUE
+   Manrope manquait de caractère. Plus Jakarta Sans apporte des
+   formes plus affirmées et une meilleure amplitude de graisses.
+   Le vrai gain ne vient pas de la police seule mais du CONTRASTE :
+   des titres nettement plus gras et resserrés, un texte courant
+   plus aéré, et des chiffres alignés en colonnes.
+   ══════════════════════════════════════════════════════════════ */
+body, input, select, textarea, button{
+  font-family:var(--font);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+
+/* ── Titres : gras marqué, crénage resserré ── */
+h1,h2,h3,
+.pnl > .ph, .mg-panel-t, .mg-sec-t, .gs-title, .ch-title,
+.dmh-welcome-name, .co-card-nm, .wn-box h2, .prm-title{
+  font-weight:800 !important;
+  letter-spacing:-.028em !important;
+  line-height:1.18 !important;
+}
+
+/* Plus le texte est grand, plus il se resserre */
+.mg-bal-int{ letter-spacing:-.045em !important; }
+.mg-bal-dec{ letter-spacing:-.03em !important; }
+
+/* ── Texte courant : plus aéré, donc plus lisible ── */
+p, .gs-card-ds, .gs-info, .ch-bbl, .co-card-ds,
+.mg-avail, .dmh-search-ph, .gs-sub, .ch-desc{
+  line-height:1.62 !important;
+  letter-spacing:-.005em;
+}
+
+/* ── Libellés et sur-titres : petites capitales espacées ── */
+.mg-card-lbl, .kpi-l, .gs-bal-lbl, .gs-field-lbl,
+.ph-qa-lbl, .mg-act-lb, .mn-item span{
+  font-weight:700 !important;
+  letter-spacing:.005em;
+}
+
+/* ── Chiffres : alignés en colonnes, largeur constante ──
+   Sans cela, les montants « sautent » quand ils s'actualisent. */
+.mg-bal-int, .mg-bal-dec, .mg-avail-v, .kpi-v,
+.co-score-v, .gs-bal-amt, .gs-hist-amt, .mg-row-v,
+.mc-val, .wt-val, .sv-stat-v{
+  font-variant-numeric:tabular-nums;
+  font-feature-settings:'tnum' 1, 'lnum' 1;
+}
+
+/* ── Boutons : plus affirmés ── */
+.btn, .gs-btn, .gs-submit, .mg-switch, .ch-fab-btn,
+.invf-select, .mg-add, .prm-go{
+  font-weight:700 !important;
+  letter-spacing:-.01em;
+}
+
+/* ── Hiérarchie de l'accueil ── */
+.mg-panel-t{ font-size:16.5px !important; }
+.mg-bal-int{ font-size:40px !important; font-weight:800 !important; }
+.mg-bal-dec{ font-size:25px !important; font-weight:700 !important; }
+.mg-avail{ font-size:13.5px !important; }
+.mg-avail-v{ font-weight:800 !important; }
+.mg-act-lb{ font-size:11px !important; font-weight:700 !important; }
+.mg-search span{ font-weight:600 !important; }
+
+@media(max-width:380px){
+  .mg-bal-int{ font-size:34px !important; }
+  .mg-bal-dec{ font-size:21px !important; }
 }
 </style>
 <div id="ai-ask-bar">
@@ -21412,7 +21484,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.86";
+  var GUELANE_VERSION = "3.87";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

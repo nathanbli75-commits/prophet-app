@@ -6399,6 +6399,36 @@ body{ background:#f7f6fb !important; }
    Cette remontee se soustrayait a la marge de la salutation :
    20px annonces, 3px reellement visibles. On compense. */
 .mg-greet{ margin-bottom:38px !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   CARTE UNIQUE, EN OR
+   Plus d'empilement : une seule carte. Le fond passe a l'or de
+   Guelane ; le texte devient violet fonce, car du blanc sur or
+   serait illisible (contraste trop faible).
+   ══════════════════════════════════════════════════════════════ */
+.mg-card{
+  background:linear-gradient(125deg,#f2be5c 0%,#e8a93e 45%,#c08326 100%) !important;
+  box-shadow:0 12px 32px rgba(196,136,42,.34) !important;
+}
+/* Reflet : violet discret plutot que dore sur dore */
+.mg-card::after{
+  background:radial-gradient(circle,rgba(82,60,166,.20),transparent 68%) !important;
+}
+/* Textes : violet fonce, lisible sur l'or */
+.mg-card-brand{ color:#2d2057 !important; }
+.mg-card-num{ color:rgba(45,32,87,.62) !important; }
+.mg-card-lbl{ color:rgba(45,32,87,.60) !important; }
+.mg-card-amt{ color:#231a45 !important; }
+.mg-card-expv{ color:#2d2057 !important; }
+.mg-card-hold{ color:rgba(45,32,87,.80) !important; }
+.mg-card-type{
+  background:rgba(45,32,87,.16) !important;
+  color:#2d2057 !important;
+}
+
+/* La salutation retrouve un ecart franc : plus de carte qui remonte */
+.mg-greet{ margin-bottom:30px !important; }
+.mg-stack{ margin-bottom:26px !important; }
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -8039,8 +8069,6 @@ function _pnLater(){ _pnDismiss(); }
       </div>
 
       <div class="mg-stack">
-        <div class="mg-stack-bg b1"><span class="mg-bg-num">•••• •••• 2585</span></div>
-
         <div class="mg-card">
           <div class="mg-card-top">
             <span class="mg-card-brand">GUELANE</span>
@@ -8709,8 +8737,6 @@ function _pnLater(){ _pnDismiss(); }
       </div>
 
       <div class="mg-stack">
-        <div class="mg-stack-bg b1"><span class="mg-bg-num">•••• •••• 2585</span></div>
-
         <div class="mg-card">
           <div class="mg-card-top">
             <span class="mg-card-brand">GUELANE</span>
@@ -21222,7 +21248,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.82";
+  var GUELANE_VERSION = "3.83";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

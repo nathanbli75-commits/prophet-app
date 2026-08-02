@@ -7,7 +7,7 @@
 <link id="prophet-favicon" rel="icon" type="image/jpeg" href="">
 <!-- PWA : application installable -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#e8a93e">
+<meta name="theme-color" content="#b8791b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Guelane">
@@ -6819,6 +6819,22 @@ p, .gs-card-ds, .gs-info, .ch-bbl, .co-card-ds,
     width:auto !important;
     margin:0 0 18px !important;
   }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   JONCTION AVEC LA BARRE SYSTÈME
+   Dans une application installee, la barre du haut (heure,
+   batterie) ne peut recevoir qu'une couleur unie : aucun degrade
+   n'y est possible. On rend donc le haut du bandeau uniforme et
+   on donne exactement cette teinte a la barre systeme, pour que
+   la jonction devienne invisible.
+   ══════════════════════════════════════════════════════════════ */
+body .mg-top{
+  background:
+    radial-gradient(120% 80% at 84% 26%, rgba(255,240,200,.80) 0%, rgba(255,240,200,0) 60%),
+    radial-gradient(95% 75% at 6% 98%, rgba(140,84,12,.44) 0%, rgba(140,84,12,0) 64%),
+    linear-gradient(172deg, #b8791b 0%, #c9871f 16%, #e2ad48 56%, #d0902a 100%)
+    !important;
 }
 </style>
 <div id="ai-ask-bar">
@@ -21619,7 +21635,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.90";
+  var GUELANE_VERSION = "3.91";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

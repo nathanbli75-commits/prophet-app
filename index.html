@@ -6534,6 +6534,44 @@ body{ background:#f7f6fb !important; }
   .mg-bal-dec{font-size:22px;}
   .mg-panel-t{font-size:15px;}
 }
+
+/* ══════════════════════════════════════════════════════════════
+   BANDEAU DORÉ : PLEINE LARGEUR ET COLLÉ EN HAUT
+   Les retraits des conteneurs parents empêchaient le bandeau
+   d'atteindre les bords. On le calcule désormais sur la largeur
+   de l'écran, ce qui rend le résultat indépendant de ces retraits.
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:840px){
+  /* L'en-tête blanc fixe n'a plus lieu d'être : le bandeau doré
+     porte la recherche, la cloche et l'avatar. */
+  #page-dash #mob-header, #page-home #mob-header{ display:none !important; }
+  #page-dash, #page-home{ padding-top:0 !important; }
+
+  .mg-top{
+    width:100vw !important;
+    margin-left:calc(50% - 50vw) !important;
+    margin-right:calc(50% - 50vw) !important;
+    margin-top:0 !important;
+    border-radius:0 !important;
+    padding:calc(12px + env(safe-area-inset-top,0px)) 14px 22px !important;
+  }
+  .mg-panel{
+    width:100vw !important;
+    margin-left:calc(50% - 50vw) !important;
+    margin-right:calc(50% - 50vw) !important;
+    margin-top:-18px !important;
+    padding:20px 16px 16px !important;
+  }
+  .mg-acts{
+    width:100vw !important;
+    margin-left:calc(50% - 50vw) !important;
+    margin-right:calc(50% - 50vw) !important;
+    padding:2px 10px 18px !important;
+  }
+}
+
+/* Un espace franc entre le montant et la devise */
+.mg-bal-dec{ margin-left:7px; }
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -21331,7 +21369,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.84";
+  var GUELANE_VERSION = "3.85";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

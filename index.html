@@ -6749,6 +6749,77 @@ p, .gs-card-ds, .gs-info, .ch-bbl, .co-card-ds,
   .mg-bal-dec{ font-size:28px !important; }
   .mg-search span{ font-size:14px !important; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   BANDEAU PLEINE LARGEUR — méthode corrigée
+   La page porte « overflow-x:hidden » : tout element depassant sa
+   largeur etait rogne, ce qui annulait les marges negatives.
+   On retire donc le retrait lateral de la page elle-meme, et on
+   le redonne au contenu qui en a besoin. Le hero devient alors
+   naturellement pleine largeur, sans depassement a rogner.
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:840px){
+  #page-dash, #page-home{
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+
+  /* Le hero occupe toute la largeur disponible, sans debordement */
+  .mg-top, .mg-panel, .mg-acts{
+    width:auto !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+  }
+  .mg-panel{ margin-top:-18px !important; }
+
+  /* Le contenu qui suit retrouve son retrait */
+  #page-dash .pnl, #page-home .pnl,
+  #page-dash .mc,  #page-home .mc,
+  #page-dash .scc, #page-home .scc,
+  #page-dash .kpi, #page-home .kpi,
+  #page-dash .opp-card, #page-home .opp-card,
+  #page-dash .sv-stat, #page-home .sv-stat,
+  #page-dash .g2, #page-home .g2,
+  #page-dash .g3, #page-home .g3,
+  #page-dash .ph-qa-grid, #page-home .ph-qa-grid,
+  #page-dash .mg-sec, #page-home .mg-sec{
+    padding-left:12px !important;
+    padding-right:12px !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   EN-TÊTE DORÉ : JUSQU'AU HAUT DE L'ÉCRAN
+   Une regle existante, « body.on-dash #page-dash », est plus
+   specifique que « #page-dash » : elle imposait 14px de retrait
+   en haut et empechait le bandeau de toucher la barre systeme.
+   On egale sa specificite pour la neutraliser.
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:840px){
+  body.on-dash #page-dash,
+  body #page-dash,
+  body #page-home{
+    padding-top:0 !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+
+  /* Le bandeau absorbe lui-meme la barre systeme */
+  body .mg-top{
+    width:auto !important;
+    margin:0 !important;
+    border-radius:0 !important;
+    padding:calc(14px + env(safe-area-inset-top,0px)) 14px 24px !important;
+  }
+  body .mg-panel{
+    width:auto !important;
+    margin:-18px 0 0 !important;
+  }
+  body .mg-acts{
+    width:auto !important;
+    margin:0 0 18px !important;
+  }
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -21548,7 +21619,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.88";
+  var GUELANE_VERSION = "3.90";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

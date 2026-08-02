@@ -6429,6 +6429,111 @@ body{ background:#f7f6fb !important; }
 /* La salutation retrouve un ecart franc : plus de carte qui remonte */
 .mg-greet{ margin-bottom:30px !important; }
 .mg-stack{ margin-bottom:26px !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   HERO — BANDEAU DORÉ + PANNEAU BLANC
+   Recherche et avatar sur un dégradé doré qui se fond avec le
+   haut de l'écran ; en dessous, un panneau blanc à coins
+   supérieurs très arrondis qui glisse par-dessus. Le solde y est
+   affiché en très grand, la devise en gris pour que l'œil aille
+   d'abord au montant.
+   ══════════════════════════════════════════════════════════════ */
+.mg-hero{ padding:0 !important; margin-bottom:0 !important; }
+
+/* Le bandeau doré remonte jusqu'au bord de l'écran */
+.mg-top{
+  display:flex;align-items:center;gap:9px;
+  margin:-12px -10px 0;
+  padding:12px 14px 22px;
+  background:linear-gradient(160deg,#f2c469 0%,#e8a93e 45%,#d08f2d 100%);
+}
+.mg-search{
+  flex:1;min-width:0;display:flex;align-items:center;gap:9px;
+  padding:9px 13px;border-radius:var(--mg-r-pill);
+  background:rgba(255,255,255,.28);cursor:pointer;
+}
+.mg-search svg{width:17px;height:17px;stroke-width:2;color:rgba(45,32,87,.72);flex-shrink:0;}
+.mg-search span{
+  font-size:13.5px;font-weight:600;color:rgba(45,32,87,.66);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.mg-top .mg-ic-btn{
+  position:relative;width:38px;height:38px;flex-shrink:0;border-radius:50%;
+  background:rgba(255,255,255,.30) !important;border:none !important;
+  box-shadow:none !important;color:#2d2057;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.mg-top .mg-ic-btn svg{width:17px;height:17px;stroke-width:1.9;}
+.mg-top .mg-avatar{
+  width:38px;height:38px;flex-shrink:0;border-radius:50% !important;
+  background:rgba(255,255,255,.30) !important;border:none !important;
+  box-shadow:none !important;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;
+}
+.mg-top .mg-avatar svg{width:21px;height:21px;color:#2d2057;}
+
+/* Panneau blanc qui glisse par-dessus le doré */
+.mg-panel{
+  position:relative;
+  margin:-16px -10px 0;
+  padding:20px 18px 18px;
+  background:#fff;
+  border-radius:26px 26px 0 0;
+}
+.mg-panel-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin-bottom:10px;
+}
+.mg-panel-t{
+  font-size:16px;font-weight:800;color:var(--t);letter-spacing:-.02em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.mg-switch{
+  display:inline-flex;align-items:center;gap:6px;flex-shrink:0;
+  padding:8px 14px;border:none;border-radius:var(--mg-r-pill);
+  background:#f1eff6;color:var(--t);
+  font-size:12.5px;font-weight:700;font-family:var(--font);cursor:pointer;
+}
+.mg-switch svg{width:14px;height:14px;stroke-width:2;}
+.mg-switch:active{background:#e6e2f0;}
+
+/* Solde : montant en foncé, devise en gris */
+.mg-bal{ display:flex;align-items:baseline;margin-bottom:16px; }
+.mg-bal-int{
+  font-size:38px;font-weight:800;color:#141024;
+  letter-spacing:-.035em;line-height:1.05;
+}
+.mg-bal-dec{
+  font-size:26px;font-weight:700;color:#a9a4b8;
+  letter-spacing:-.02em;
+}
+
+/* Ligne « disponible », comme le bandeau gris de la référence */
+.mg-avail{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:13px 15px;border-radius:14px;background:#f4f2f8;
+  font-size:13px;color:var(--t2);font-weight:600;
+}
+.mg-avail-v{font-weight:800;color:var(--t);}
+
+/* Les actions reprennent sur le fond blanc du panneau */
+.mg-acts{
+  margin:0 -10px 18px !important;
+  padding:4px 8px 18px !important;
+  background:#fff !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  border:none !important;
+}
+
+/* L'ancienne barre de recherche fait doublon avec celle du bandeau */
+@media(max-width:840px){ .dmh-search{ display:none !important; } }
+
+@media(max-width:380px){
+  .mg-bal-int{font-size:33px;}
+  .mg-bal-dec{font-size:22px;}
+  .mg-panel-t{font-size:15px;}
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -8052,48 +8157,37 @@ function _pnLater(){ _pnDismiss(); }
     <!-- ═══════════ HERO MAGPIE ═══════════ -->
     <div class="mg-hero">
 
-      <div class="mg-greet">
-        <div class="mg-greet-tx">
-          <div class="mg-greet-nm" id="mg-greet-nm-pro">Bonjour</div>
-          <div class="mg-greet-sub">Faisons fructifier votre argent.</div>
+      <!-- Bandeau doré : recherche + cloche + avatar -->
+      <div class="mg-top">
+        <div class="mg-search" onclick="navTo('chat')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+          <span>Rechercher ou demander…</span>
         </div>
-        <div class="mg-greet-ic">
-          <button class="mg-ic-btn" onclick="navTo('notif')" aria-label="Notifications">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
-            <span class="mg-ic-dot" id="mg-notif-dot-pro"></span>
-          </button>
-          <button class="mg-avatar" onclick="openProfilePanel()" aria-label="Mon profil">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
-          </button>
-        </div>
+        <button class="mg-ic-btn" onclick="navTo('notif')" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+          <span class="mg-ic-dot" id="mg-notif-dot-pro"></span>
+        </button>
+        <button class="mg-avatar" onclick="openProfilePanel()" aria-label="Mon profil">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+        </button>
       </div>
 
-      <div class="mg-stack">
-        <div class="mg-card">
-          <div class="mg-card-top">
-            <span class="mg-card-brand">GUELANE</span>
-            <span class="mg-card-num">•••• •••• 7845</span>
-          </div>
-
-          <div class="mg-card-mid">
-            <div>
-              <div class="mg-card-lbl">Solde</div>
-              <div class="mg-card-amt" id="mg-card-amt-pro">0 FCFA</div>
-            </div>
-            <div class="mg-card-exp">
-              <div class="mg-card-lbl">Compte</div>
-              <div class="mg-card-expv" id="mg-card-type-pro">PART.</div>
-            </div>
-          </div>
-
-          <div class="mg-card-lbl mg-card-nml">Titulaire</div>
-          <div class="mg-card-hold" id="mg-card-hold-pro">guelane</div>
+      <!-- Panneau blanc : intitulé du compte + solde -->
+      <div class="mg-panel">
+        <div class="mg-panel-hd">
+          <div class="mg-panel-t" id="mg-card-type-pro">Compte (Particulier)</div>
+          <button class="mg-switch" onclick="toggleMode()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 6h18"/><path d="M7 22l-4-4 4-4"/><path d="M21 18H3"/></svg>
+            Changer
+          </button>
         </div>
-
-        <button class="mg-add" onclick="navTo('wallet')">
-          <span class="mg-add-p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-          Recharger
-        </button>
+        <div class="mg-bal">
+          <span class="mg-bal-int" id="mg-card-amt-pro">0</span><span class="mg-bal-dec" id="mg-card-cur-pro"> FCFA</span>
+        </div>
+        <div class="mg-avail">
+          <span>Disponible pour investir</span>
+          <span class="mg-avail-v" id="mg-card-hold-pro">0 FCFA</span>
+        </div>
       </div>
 
       <div class="mg-acts">
@@ -8720,48 +8814,37 @@ function _pnLater(){ _pnDismiss(); }
     <!-- ═══════════ HERO MAGPIE ═══════════ -->
     <div class="mg-hero">
 
-      <div class="mg-greet">
-        <div class="mg-greet-tx">
-          <div class="mg-greet-nm" id="mg-greet-nm">Bonjour</div>
-          <div class="mg-greet-sub">Faisons fructifier votre argent.</div>
+      <!-- Bandeau doré : recherche + cloche + avatar -->
+      <div class="mg-top">
+        <div class="mg-search" onclick="navTo('chat')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+          <span>Rechercher ou demander…</span>
         </div>
-        <div class="mg-greet-ic">
-          <button class="mg-ic-btn" onclick="navTo('notif')" aria-label="Notifications">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
-            <span class="mg-ic-dot" id="mg-notif-dot"></span>
-          </button>
-          <button class="mg-avatar" onclick="openProfilePanel()" aria-label="Mon profil">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
-          </button>
-        </div>
+        <button class="mg-ic-btn" onclick="navTo('notif')" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+          <span class="mg-ic-dot" id="mg-notif-dot"></span>
+        </button>
+        <button class="mg-avatar" onclick="openProfilePanel()" aria-label="Mon profil">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+        </button>
       </div>
 
-      <div class="mg-stack">
-        <div class="mg-card">
-          <div class="mg-card-top">
-            <span class="mg-card-brand">GUELANE</span>
-            <span class="mg-card-num">•••• •••• 7845</span>
-          </div>
-
-          <div class="mg-card-mid">
-            <div>
-              <div class="mg-card-lbl">Solde</div>
-              <div class="mg-card-amt" id="mg-card-amt">0 FCFA</div>
-            </div>
-            <div class="mg-card-exp">
-              <div class="mg-card-lbl">Compte</div>
-              <div class="mg-card-expv" id="mg-card-type">PART.</div>
-            </div>
-          </div>
-
-          <div class="mg-card-lbl mg-card-nml">Titulaire</div>
-          <div class="mg-card-hold" id="mg-card-hold">guelane</div>
+      <!-- Panneau blanc : intitulé du compte + solde -->
+      <div class="mg-panel">
+        <div class="mg-panel-hd">
+          <div class="mg-panel-t" id="mg-card-type">Compte (Particulier)</div>
+          <button class="mg-switch" onclick="toggleMode()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 6h18"/><path d="M7 22l-4-4 4-4"/><path d="M21 18H3"/></svg>
+            Changer
+          </button>
         </div>
-
-        <button class="mg-add" onclick="navTo('wallet')">
-          <span class="mg-add-p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-          Recharger
-        </button>
+        <div class="mg-bal">
+          <span class="mg-bal-int" id="mg-card-amt">0</span><span class="mg-bal-dec" id="mg-card-cur"> FCFA</span>
+        </div>
+        <div class="mg-avail">
+          <span>Disponible pour investir</span>
+          <span class="mg-avail-v" id="mg-card-hold">0 FCFA</span>
+        </div>
       </div>
 
       <div class="mg-acts">
@@ -21248,7 +21331,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.83";
+  var GUELANE_VERSION = "3.84";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -21655,9 +21738,12 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
   function rendre(){
     if(!document.getElementById('mg-card-amt') &&
        !document.getElementById('mg-card-amt-pro')) return;
-    poser('mg-card-amt', fmt(solde()));
+    /* Montant en deux parties : le nombre ressort, la devise s'efface */
+    var v = solde();
+    poser('mg-card-amt', Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '));
+    poser('mg-card-cur', ' FCFA');
 
-    poser('mg-card-type', pro() ? 'PRO' : 'PART.');
+    poser('mg-card-type', pro() ? 'Compte (Entrepreneur)' : 'Compte (Particulier)');
 
     /* Nom du titulaire, repris du profil */
     /* Nom repris du profil, pour la salutation et la carte */
@@ -21671,8 +21757,9 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
     }catch(e){}
     n = String(n || 'Guelane').slice(0, 20);
 
-    poser('mg-greet-nm', 'Bonjour ' + n);
-    poser('mg-card-hold', n.toLowerCase());
+    var dispo = 0;
+    try{ dispo = (window.walletState && window.walletState.tradingBalance) || 0; }catch(e){}
+    poser('mg-card-hold', fmt(dispo));
 
     /* Pastille de notifications */
     try{

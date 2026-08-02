@@ -9,7 +9,7 @@
 // s'afficher alors que la connexion était bonne — la requête n'avait
 // simplement pas encore répondu.
 
-const CACHE_VERSION = 'guelane-v3.83';   // ← CHANGE ce numéro à chaque déploiement
+const CACHE_VERSION = 'guelane-v3.84';   // ← CHANGE ce numéro à chaque déploiement
 const CACHE_NAME = CACHE_VERSION;
 
 // Au-delà de ce délai, on sert la version en cache plutôt que d'attendre.

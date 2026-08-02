@@ -6362,6 +6362,37 @@ body{ background:#f7f6fb !important; }
   /* Marketplace et fiches : même alignement */
   .invf,.company-grid{ padding-left:0 !important; padding-right:0 !important; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   RESPIRATION VERTICALE ENTRE LES CARTES
+   Les cartes se touchaient presque : elles n'avaient aucune marge
+   propre et dépendaient de l'espacement du conteneur, absent par
+   endroits. On pose un écart unique, valable sur tous les écrans.
+   ══════════════════════════════════════════════════════════════ */
+.pnl,.scc,.opp-card,.dd-doc-card,.sv-stat,
+.co-card,.gs-card,.chh-item,.nf-stat-card,.mg-row{
+  margin-bottom:14px;
+}
+/* Dans une grille, c'est l'espacement de la grille qui gouverne :
+   sinon les colonnes se décalent verticalement. */
+.g2 > *,.g3 > *,.company-grid > *,.gs-partners > *{ margin-bottom:0; }
+.g2,.g3{ gap:14px !important; margin-bottom:14px !important; }
+.company-grid,.gs-partners{
+  display:flex; flex-direction:column; gap:14px;
+}
+
+/* Écart entre les grands blocs de l'accueil */
+.mg-acts{ margin-bottom:20px !important; }
+.dmh-search{ margin-bottom:20px !important; }
+.mg-hero{ margin-bottom:6px; }
+
+/* En-têtes de section : détachés de la carte qui les précède */
+.mg-sec,.ph-sec-hd{ margin-top:6px; }
+
+/* La dernière carte ne colle pas à la barre de navigation */
+@media(max-width:840px){
+  .page > *:last-child{ margin-bottom:6px; }
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -21185,7 +21216,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.79";
+  var GUELANE_VERSION = "3.80";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

@@ -6687,6 +6687,68 @@ p, .gs-card-ds, .gs-info, .ch-bbl, .co-card-ds,
   .mg-bal-int{ font-size:34px !important; }
   .mg-bal-dec{ font-size:21px !important; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   ALIGNEMENT SUR LA RÉFÉRENCE
+   1. Recherche sans pilule : loupe et texte posés sur le doré.
+   2. Doré nacré, du sombre vers le clair, non un aplat.
+   3. Le solde domine l'écran.
+   4. La cloche a rejoint le panneau de profil.
+   ══════════════════════════════════════════════════════════════ */
+.mg-search{
+  background:none !important;
+  padding:6px 2px !important;
+  border-radius:0 !important;
+}
+.mg-search svg{ color:rgba(58,38,8,.62) !important; width:19px !important; height:19px !important; }
+.mg-search span{
+  color:rgba(58,38,8,.60) !important;
+  font-size:15px !important;
+  font-weight:500 !important;
+}
+
+.mg-top{
+  background:
+    radial-gradient(120% 90% at 82% 12%, rgba(255,240,200,.85) 0%, rgba(255,240,200,0) 58%),
+    radial-gradient(95% 80% at 8% 96%, rgba(150,92,16,.42) 0%, rgba(150,92,16,0) 62%),
+    linear-gradient(148deg, #b8791b 0%, #d99a2b 26%, #edb955 58%, #d59429 100%)
+    !important;
+}
+.mg-top .mg-avatar{
+  background:rgba(255,255,255,.34) !important;
+  border:1px solid rgba(255,255,255,.30) !important;
+}
+.mg-top .mg-avatar svg{ color:#3d2a08 !important; }
+
+.mg-bal{ margin:4px 0 20px !important; }
+.mg-bal-int{
+  font-size:54px !important;
+  font-weight:800 !important;
+  letter-spacing:-.05em !important;
+  color:#0f0b1c !important;
+  line-height:1 !important;
+}
+.mg-bal-dec{
+  font-size:34px !important;
+  font-weight:700 !important;
+  color:#b9b4c6 !important;
+  letter-spacing:-.035em !important;
+  margin-left:5px !important;
+}
+
+.pp-notif-count{
+  min-width:22px;height:22px;padding:0 7px;
+  border-radius:11px;background:var(--re);
+  color:#fff;font-size:11px;font-weight:800;
+  display:none;align-items:center;justify-content:center;
+}
+.pp-notif-count.on{ display:flex; }
+
+@media(max-width:380px){
+  .mg-bal-int{ font-size:44px !important; }
+  .mg-bal-dec{ font-size:28px !important; }
+  .mg-search span{ font-size:14px !important; }
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -8316,10 +8378,6 @@ function _pnLater(){ _pnDismiss(); }
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
           <span>Rechercher ou demander…</span>
         </div>
-        <button class="mg-ic-btn" onclick="navTo('notif')" aria-label="Notifications">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
-          <span class="mg-ic-dot" id="mg-notif-dot-pro"></span>
-        </button>
         <button class="mg-avatar" onclick="openProfilePanel()" aria-label="Mon profil">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
         </button>
@@ -8973,10 +9031,6 @@ function _pnLater(){ _pnDismiss(); }
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
           <span>Rechercher ou demander…</span>
         </div>
-        <button class="mg-ic-btn" onclick="navTo('notif')" aria-label="Notifications">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
-          <span class="mg-ic-dot" id="mg-notif-dot"></span>
-        </button>
         <button class="mg-avatar" onclick="openProfilePanel()" aria-label="Mon profil">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
         </button>
@@ -11885,13 +11939,12 @@ function _nfRefreshBadge(){
     d.textContent = n;
     d.style.display = n > 0 ? '' : 'none';
   });
-  /* Cloche du hero Magpie, dans les deux modes */
-  ['', '-pro'].forEach(function(sfx){
-    var dot = document.getElementById('mg-notif-dot' + sfx);
-    if(!dot) return;
-    dot.textContent = n > 0 ? (n > 99 ? '99+' : n) : '';
-    dot.classList.toggle('on', n > 0);
-  });
+  /* Compteur dans le panneau de profil (la cloche y a ete deplacee) */
+  var pc = document.getElementById('pp-notif-count');
+  if(pc){
+    pc.textContent = n > 0 ? (n > 99 ? '99+' : n) : '';
+    pc.classList.toggle('on', n > 0);
+  }
 }
 window._nfRefreshBadge = _nfRefreshBadge;
 
@@ -17648,6 +17701,17 @@ function closeProfilePanel(){
     <!-- Liste des éléments -->
     <div class="pp-list">
 
+      <!-- Notifications (déplacées depuis le bandeau d'accueil) -->
+      <button class="pp-item" onclick="closeProfilePanel();navTo('notif')">
+        <div class="pp-item-left">
+          <div class="pp-item-ic" style="background:rgba(232,169,62,.16);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c4882a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+          </div>
+          <span>Notifications</span>
+        </div>
+        <span class="pp-notif-count" id="pp-notif-count"></span>
+      </button>
+
       <!-- 1. Mon profil -->
       <button class="pp-item" onclick="openEditProfile()">
         <div class="pp-item-left">
@@ -21484,7 +21548,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.87";
+  var GUELANE_VERSION = "3.88";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

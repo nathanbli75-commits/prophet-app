@@ -6572,6 +6572,49 @@ body{ background:#f7f6fb !important; }
 
 /* Un espace franc entre le montant et la devise */
 .mg-bal-dec{ margin-left:7px; }
+
+/* ══════════════════════════════════════════════════════════════
+   SURFACE BLANCHE CONTINUE
+   Sous le bandeau doré, toute la page est d'un seul blanc.
+   Les cartes ne se distinguent plus par un fond ni une ombre :
+   elles se fondent dans cette surface. Seuls les éléments
+   internes (pilules, lignes de valeur) prennent un gris très
+   clair, comme sur la référence.
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:840px){
+  body,
+  #page-dash, #page-home,
+  #page-dash .view, #page-home .view,
+  .mg-panel, .mg-acts{
+    background:#ffffff !important;
+  }
+
+  /* Les cartes se fondent : même blanc, ni ombre ni contour */
+  #page-dash .pnl, #page-home .pnl,
+  #page-dash .mc,  #page-home .mc,
+  #page-dash .scc, #page-home .scc,
+  #page-dash .kpi, #page-home .kpi,
+  #page-dash .opp-card, #page-home .opp-card,
+  #page-dash .sv-stat, #page-home .sv-stat{
+    background:#ffffff !important;
+    box-shadow:none !important;
+    border:none !important;
+    border-radius:0 !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+
+  /* Un trait fin sépare les sections, plutôt qu'une carte */
+  #page-dash .pnl + .pnl, #page-home .pnl + .pnl{
+    border-top:1px solid rgba(46,39,71,.07) !important;
+    padding-top:18px !important;
+  }
+
+  /* Les éléments internes gardent un gris très clair */
+  .mg-avail{ background:#f4f2f8 !important; }
+  .mg-act-ic{ background:#f4f2f8 !important; }
+  .mg-switch{ background:#f1eff6 !important; }
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -21369,7 +21412,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.85";
+  var GUELANE_VERSION = "3.86";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

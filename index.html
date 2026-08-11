@@ -7091,6 +7091,12 @@ body .mg-top{
   body.profile-part #mob-nav #mn-invest-mode{ order:4; }
   body.profile-part #mob-nav #mn-wallet{ order:5; }
 }
+
+/* Le halo doré posé sur la carte donnait un voile orangé.
+   On le remplace par un reflet blanc, neutre. */
+.gx-card::after{
+  background:radial-gradient(circle, rgba(255,255,255,.15), transparent 66%) !important;
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -21928,7 +21934,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.95";
+  var GUELANE_VERSION = "3.96";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

@@ -7248,6 +7248,33 @@ body .mg-top{
   body.gx-scrolled .gx-cur{ padding:4px 9px !important;font-size:11px !important; }
   body.gx-scrolled .gx-card::before{ opacity:.5; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   CORRECTIF DU HERO FIXE
+   « .view » declare son propre defilement. Le hero se calait donc
+   sur lui, et comme cette vue ne defile jamais reellement, la
+   fixation restait sans effet. On laisse un seul conteneur de
+   defilement : la page.
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:840px){
+  #page-dash .view, #page-home .view{
+    overflow:visible !important;
+    height:auto !important;
+  }
+  #page-dash, #page-home{
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+  }
+  /* La fixation doit dominer les regles de position existantes */
+  body #dash-mob-hero,
+  body #page-home .mg-hero{
+    position:-webkit-sticky !important;
+    position:sticky !important;
+    top:0 !important;
+    z-index:60 !important;
+    background:#fff !important;
+  }
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -22127,7 +22154,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "4.01";
+  var GUELANE_VERSION = "4.02";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -22834,12 +22861,25 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
   }
 
   function brancher(){
+    var cibles = [];
     ['page-dash', 'page-home'].forEach(function(id){
       var p = document.getElementById(id);
-      if(!p || p._gxHooked) return;
-      p.addEventListener('scroll', surDefilement, { passive:true });
-      p._gxHooked = true;
+      if(!p) return;
+      cibles.push(p);
+      /* La vue interne peut porter le defilement selon l'ecran */
+      var v = p.querySelector('.view');
+      if(v) cibles.push(v);
     });
+    cibles.forEach(function(el){
+      if(el._gxHooked) return;
+      el.addEventListener('scroll', surDefilement, { passive:true });
+      el._gxHooked = true;
+    });
+    /* Repli aussi si c'est la fenetre qui defile */
+    if(!window._gxWinHooked){
+      window.addEventListener('scroll', surDefilement, { passive:true });
+      window._gxWinHooked = true;
+    }
   }
 
   function demarrer(){

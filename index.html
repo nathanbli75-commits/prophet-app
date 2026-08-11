@@ -7204,6 +7204,50 @@ body .mg-top{
   padding:26px 16px;text-align:center;
   color:#9aa0ae;font-size:13px;line-height:1.55;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   HERO TOUJOURS VISIBLE
+   Le bloc salutation + carte reste en haut pendant le défilement.
+   Pour ne pas occuper un tiers de l'écran en permanence, il se
+   replie dès que l'on défile : la carte se resserre, le montant
+   reste lisible, et le contenu regagne de la place.
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:840px){
+  #dash-mob-hero, #page-home .mg-hero{
+    position:sticky;
+    top:0;
+    z-index:60;
+    background:#fff;
+    padding-top:calc(6px + env(safe-area-inset-top,0px));
+    margin-bottom:14px;
+    transition:box-shadow .2s ease;
+  }
+  /* Un liseré apparaît quand du contenu passe dessous */
+  body.gx-scrolled #dash-mob-hero,
+  body.gx-scrolled #page-home .mg-hero{
+    box-shadow:0 6px 18px rgba(13,18,32,.09);
+  }
+
+  /* ── Repli au défilement ── */
+  .gx-head, .gx-card{ transition:all .22s cubic-bezier(.4,0,.2,1); }
+
+  body.gx-scrolled .gx-head{
+    height:0;opacity:0;margin:0;overflow:hidden;pointer-events:none;
+  }
+  body.gx-scrolled .gx-card{
+    padding:11px 15px 12px !important;
+    border-radius:16px !important;
+    margin-bottom:8px !important;
+  }
+  body.gx-scrolled .gx-card-top{ margin-bottom:4px !important; }
+  body.gx-scrolled .gx-card-lbl{ font-size:11px !important; }
+  body.gx-scrolled .gx-amt{ margin-bottom:0 !important; }
+  body.gx-scrolled .gx-amt-int{ font-size:23px !important; }
+  body.gx-scrolled .gx-amt-dec{ font-size:14px !important; }
+  body.gx-scrolled .gx-wid{ display:none !important; }
+  body.gx-scrolled .gx-cur{ padding:4px 9px !important;font-size:11px !important; }
+  body.gx-scrolled .gx-card::before{ opacity:.5; }
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -22083,7 +22127,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "4.00";
+  var GUELANE_VERSION = "4.01";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -22759,6 +22803,57 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
         return r;
       };
       window._gxRecHooked = true;
+    }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer);
+  else demarrer();
+})();
+</script>
+<script>
+/* Repli du hero au defilement.
+   L'ecouteur est attache a la page qui defile, pas a la fenetre :
+   dans cette application, ce sont les elements .page qui portent
+   le defilement. Aucune surveillance de fond. */
+(function(){
+  var SEUIL = 44;
+  var enCours = false;
+
+  function appliquer(y){
+    var replie = y > SEUIL;
+    try{ document.body.classList.toggle('gx-scrolled', replie); }catch(e){}
+  }
+
+  function surDefilement(e){
+    if(enCours) return;
+    enCours = true;
+    requestAnimationFrame(function(){
+      enCours = false;
+      var el = e && e.target && e.target.scrollTop !== undefined ? e.target : null;
+      appliquer(el ? el.scrollTop : (window.pageYOffset || 0));
+    });
+  }
+
+  function brancher(){
+    ['page-dash', 'page-home'].forEach(function(id){
+      var p = document.getElementById(id);
+      if(!p || p._gxHooked) return;
+      p.addEventListener('scroll', surDefilement, { passive:true });
+      p._gxHooked = true;
+    });
+  }
+
+  function demarrer(){
+    brancher();
+    /* Les ecrans changent : on rebranche a chaque navigation,
+       et on repart du haut. */
+    if(typeof window.navTo === 'function' && !window._gxScrollHooked){
+      var origine = window.navTo;
+      window.navTo = function(){
+        var r = origine.apply(this, arguments);
+        try{ brancher(); appliquer(0); }catch(e){}
+        return r;
+      };
+      window._gxScrollHooked = true;
     }
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer);

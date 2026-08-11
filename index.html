@@ -7,7 +7,7 @@
 <link id="prophet-favicon" rel="icon" type="image/jpeg" href="">
 <!-- PWA : application installable -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#b8791b">
+<meta name="theme-color" content="#f6f8fc">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Guelane">
@@ -6836,6 +6836,128 @@ body .mg-top{
     linear-gradient(172deg, #b8791b 0%, #c9871f 16%, #e2ad48 56%, #d0902a 100%)
     !important;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   ACCUEIL — MODÈLE RETENU
+   En-tête clair, carte de solde bleue, quatre actions en cartes
+   blanches distinctes, puis la liste. Fond très clair, cartes
+   blanches nettement détachées par une ombre douce.
+   ══════════════════════════════════════════════════════════════ */
+:root{ --gx-blue:#2563eb; --gx-blue2:#3b82f6; --gx-bg:#f6f8fc; }
+
+@media(max-width:840px){
+  body, #page-dash, #page-home,
+  #page-dash .view, #page-home .view{ background:var(--gx-bg) !important; }
+  body.on-dash #page-dash, body #page-dash, body #page-home{
+    padding:calc(10px + env(safe-area-inset-top,0px)) 14px 110px !important;
+  }
+}
+
+/* ── En-tête ── */
+.gx-head{ display:flex; align-items:center; gap:11px; margin-bottom:18px; }
+.gx-av{
+  width:44px;height:44px;flex-shrink:0;border-radius:50%;border:none;cursor:pointer;
+  background:linear-gradient(145deg,var(--gx-blue2),var(--gx-blue));
+  color:#fff;font-size:14px;font-weight:800;font-family:var(--font);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(37,99,235,.30);
+}
+.gx-hello{ flex:1; min-width:0; }
+.gx-hi{
+  font-size:17.5px;font-weight:800;color:#0f172a;letter-spacing:-.03em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.gx-sub{ font-size:12.5px;color:#7b8598;font-weight:500;margin-top:1px; }
+.gx-bell{
+  position:relative;width:40px;height:40px;flex-shrink:0;border-radius:50%;
+  background:#fff;border:1px solid rgba(15,23,42,.06);cursor:pointer;
+  color:#0f172a;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(15,23,42,.05);
+}
+.gx-bell svg{ width:18px;height:18px; }
+.gx-bell-dot{
+  position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:50%;
+  background:#ef4444;border:2px solid #fff;display:none;
+}
+.gx-bell-dot.on{ display:block; }
+
+/* ── Carte de solde ── */
+.gx-card{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#2f6ff0 0%,#2563eb 46%,#1d4ed8 100%);
+  border-radius:22px;padding:17px 19px 16px;margin-bottom:20px;
+  box-shadow:0 14px 32px rgba(37,99,235,.32);
+}
+.gx-card::after{
+  content:'';position:absolute;top:-30%;right:-14%;
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 66%);
+  pointer-events:none;
+}
+.gx-card-top{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin-bottom:12px;position:relative;z-index:1;
+}
+.gx-card-lbl{
+  display:flex;align-items:center;gap:7px;
+  font-size:12.5px;font-weight:600;color:rgba(255,255,255,.80);
+}
+.gx-eye{
+  width:20px;height:20px;padding:0;border:none;background:none;cursor:pointer;
+  color:rgba(255,255,255,.80);display:flex;align-items:center;justify-content:center;
+}
+.gx-eye svg{ width:16px;height:16px; }
+.gx-cur{
+  display:inline-flex;align-items:center;gap:5px;flex-shrink:0;
+  padding:6px 12px;border:none;border-radius:999px;
+  background:rgba(255,255,255,.20);color:#fff;
+  font-size:12px;font-weight:700;font-family:var(--font);cursor:pointer;
+}
+.gx-cur svg{ width:12px;height:12px; }
+.gx-amt{ display:flex;align-items:baseline;position:relative;z-index:1;margin-bottom:14px; }
+.gx-amt-int{
+  font-size:34px;font-weight:800;color:#fff;
+  letter-spacing:-.04em;line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.gx-amt-dec{
+  font-size:19px;font-weight:700;color:rgba(255,255,255,.62);
+  letter-spacing:-.02em;margin-left:6px;
+}
+.gx-wid{ display:flex;align-items:center;gap:8px;position:relative;z-index:1; }
+.gx-wid-l{ font-size:9.5px;font-weight:800;letter-spacing:.11em;color:rgba(255,255,255,.52); }
+.gx-wid-v{ font-size:12px;font-weight:600;color:rgba(255,255,255,.88);font-variant-numeric:tabular-nums; }
+.gx-copy{
+  width:22px;height:22px;padding:0;border:none;background:none;cursor:pointer;
+  color:rgba(255,255,255,.62);display:flex;align-items:center;justify-content:center;
+}
+.gx-copy svg{ width:14px;height:14px; }
+
+/* ── Quatre actions, en cartes blanches distinctes ── */
+.gx-acts{ display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px; }
+.gx-act{
+  display:flex;flex-direction:column;align-items:center;gap:9px;
+  padding:14px 4px 12px;border-radius:17px;
+  background:#fff;border:1px solid rgba(15,23,42,.05);cursor:pointer;
+  box-shadow:0 2px 10px rgba(15,23,42,.05);
+  font-family:var(--font);
+}
+.gx-act:active{ transform:scale(.96); }
+.gx-act-ic{
+  width:38px;height:38px;border-radius:12px;
+  background:linear-gradient(145deg,var(--gx-blue2),var(--gx-blue));
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 3px 9px rgba(37,99,235,.28);
+}
+.gx-act-ic svg{ width:18px;height:18px; }
+.gx-act-lb{ font-size:11px;font-weight:700;color:#0f172a; }
+
+@media(max-width:380px){
+  .gx-amt-int{ font-size:29px; }
+  .gx-amt-dec{ font-size:16px; }
+  .gx-act-lb{ font-size:10px; }
+  .gx-acts{ gap:7px; }
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -8459,53 +8581,69 @@ function _pnLater(){ _pnDismiss(); }
     <!-- ═══════════ HERO MAGPIE ═══════════ -->
     <div class="mg-hero">
 
-      <!-- Bandeau doré : recherche + cloche + avatar -->
-      <div class="mg-top">
-        <div class="mg-search" onclick="navTo('chat')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
-          <span>Rechercher ou demander…</span>
+      <!-- ═══ EN-TÊTE : avatar, salutation, cloche ═══ -->
+      <div class="gx-head">
+        <button class="gx-av" onclick="openProfilePanel()" aria-label="Mon profil">
+          <span id="gx-initials-pro">GU</span>
+        </button>
+        <div class="gx-hello">
+          <div class="gx-hi" id="gx-name-pro">Bonjour</div>
+          <div class="gx-sub" id="gx-greet-pro">Bonne journée <span>\u1F44B</span></div>
         </div>
-        <button class="mg-avatar" onclick="openProfilePanel()" aria-label="Mon profil">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+        <button class="gx-bell" onclick="navTo('notif')" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+          <span class="gx-bell-dot" id="gx-bell-dot-pro"></span>
         </button>
       </div>
 
-      <!-- Panneau blanc : intitulé du compte + solde -->
-      <div class="mg-panel">
-        <div class="mg-panel-hd">
-          <div class="mg-panel-t" id="mg-card-type-pro">Compte (Particulier)</div>
-          <button class="mg-switch" onclick="toggleMode()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 6h18"/><path d="M7 22l-4-4 4-4"/><path d="M21 18H3"/></svg>
-            Changer
+      <!-- ═══ CARTE DE SOLDE ═══ -->
+      <div class="gx-card">
+        <div class="gx-card-top">
+          <div class="gx-card-lbl">
+            Solde disponible
+            <button class="gx-eye" onclick="_gxToggleSolde()" aria-label="Afficher ou masquer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1.5 12S5 5.5 12 5.5 22.5 12 22.5 12 19 18.5 12 18.5 1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <button class="gx-cur" onclick="navTo('wallet')">
+            FCFA
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
         </div>
-        <div class="mg-bal">
-          <span class="mg-bal-int" id="mg-card-amt-pro">0</span><span class="mg-bal-dec" id="mg-card-cur-pro"> FCFA</span>
+
+        <div class="gx-amt">
+          <span class="gx-amt-int" id="gx-amt-pro">0</span><span class="gx-amt-dec" id="gx-cur-pro">FCFA</span>
         </div>
-        <div class="mg-avail">
-          <span>Disponible pour investir</span>
-          <span class="mg-avail-v" id="mg-card-hold-pro">0 FCFA</span>
+
+        <div class="gx-wid">
+          <span class="gx-wid-l">COMPTE</span>
+          <span class="gx-wid-v" id="gx-wallet-pro">023784902</span>
+          <button class="gx-copy" onclick="_gxCopyId()" aria-label="Copier">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>
+          </button>
         </div>
       </div>
 
-      <div class="mg-acts">
-        <button class="mg-act" onclick="navTo('trade')">
-          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="21 12 21 7 16 7"/></svg></span>
-          <span class="mg-act-lb">Trading</span>
+      <!-- ═══ QUATRE ACTIONS ═══ -->
+      <div class="gx-acts">
+        <button class="gx-act" onclick="navTo('wallet')">
+          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><polyline points="7 11 12 16 17 11"/><path d="M4 20h16"/></svg></span>
+          <span class="gx-act-lb">Recharger</span>
         </button>
-        <button class="mg-act" onclick="navTo('invest')">
-          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg></span>
-          <span class="mg-act-lb">Marketplace</span>
+        <button class="gx-act" onclick="navTo('trade')">
+          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5"/><path d="M21 3l-6.5 18-4-8-8-4z"/></svg></span>
+          <span class="gx-act-lb">Trading</span>
         </button>
-        <button class="mg-act" onclick="navTo('store')">
-          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1V9z"/><path d="M9 13h6"/></svg></span>
-          <span class="mg-act-lb">Store</span>
+        <button class="gx-act" onclick="navTo('store')">
+          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1V9z"/><path d="M9 13h6"/></svg></span>
+          <span class="gx-act-lb">Store</span>
         </button>
-        <button class="mg-act" onclick="toggleLeftSidebar()">
-          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></span>
-          <span class="mg-act-lb">Plus</span>
+        <button class="gx-act" onclick="toggleLeftSidebar()">
+          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="9" r="2"/><circle cx="15" cy="9" r="2"/><circle cx="7" cy="16" r="2"/><circle cx="15" cy="16" r="2"/></svg></span>
+          <span class="gx-act-lb">Plus</span>
         </button>
       </div>
+
     </div>
 
     <div class="ai-coach">
@@ -9112,53 +9250,69 @@ function _pnLater(){ _pnDismiss(); }
     <!-- ═══════════ HERO MAGPIE ═══════════ -->
     <div class="mg-hero">
 
-      <!-- Bandeau doré : recherche + cloche + avatar -->
-      <div class="mg-top">
-        <div class="mg-search" onclick="navTo('chat')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
-          <span>Rechercher ou demander…</span>
+      <!-- ═══ EN-TÊTE : avatar, salutation, cloche ═══ -->
+      <div class="gx-head">
+        <button class="gx-av" onclick="openProfilePanel()" aria-label="Mon profil">
+          <span id="gx-initials">GU</span>
+        </button>
+        <div class="gx-hello">
+          <div class="gx-hi" id="gx-name">Bonjour</div>
+          <div class="gx-sub" id="gx-greet">Bonne journée <span>\u1F44B</span></div>
         </div>
-        <button class="mg-avatar" onclick="openProfilePanel()" aria-label="Mon profil">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+        <button class="gx-bell" onclick="navTo('notif')" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+          <span class="gx-bell-dot" id="gx-bell-dot"></span>
         </button>
       </div>
 
-      <!-- Panneau blanc : intitulé du compte + solde -->
-      <div class="mg-panel">
-        <div class="mg-panel-hd">
-          <div class="mg-panel-t" id="mg-card-type">Compte (Particulier)</div>
-          <button class="mg-switch" onclick="toggleMode()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 6h18"/><path d="M7 22l-4-4 4-4"/><path d="M21 18H3"/></svg>
-            Changer
+      <!-- ═══ CARTE DE SOLDE ═══ -->
+      <div class="gx-card">
+        <div class="gx-card-top">
+          <div class="gx-card-lbl">
+            Solde disponible
+            <button class="gx-eye" onclick="_gxToggleSolde()" aria-label="Afficher ou masquer">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1.5 12S5 5.5 12 5.5 22.5 12 22.5 12 19 18.5 12 18.5 1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <button class="gx-cur" onclick="navTo('wallet')">
+            FCFA
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
         </div>
-        <div class="mg-bal">
-          <span class="mg-bal-int" id="mg-card-amt">0</span><span class="mg-bal-dec" id="mg-card-cur"> FCFA</span>
+
+        <div class="gx-amt">
+          <span class="gx-amt-int" id="gx-amt">0</span><span class="gx-amt-dec" id="gx-cur">FCFA</span>
         </div>
-        <div class="mg-avail">
-          <span>Disponible pour investir</span>
-          <span class="mg-avail-v" id="mg-card-hold">0 FCFA</span>
+
+        <div class="gx-wid">
+          <span class="gx-wid-l">COMPTE</span>
+          <span class="gx-wid-v" id="gx-wallet">023784902</span>
+          <button class="gx-copy" onclick="_gxCopyId()" aria-label="Copier">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>
+          </button>
         </div>
       </div>
 
-      <div class="mg-acts">
-        <button class="mg-act" onclick="navTo('trade')">
-          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="21 12 21 7 16 7"/></svg></span>
-          <span class="mg-act-lb">Trading</span>
+      <!-- ═══ QUATRE ACTIONS ═══ -->
+      <div class="gx-acts">
+        <button class="gx-act" onclick="navTo('wallet')">
+          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><polyline points="7 11 12 16 17 11"/><path d="M4 20h16"/></svg></span>
+          <span class="gx-act-lb">Recharger</span>
         </button>
-        <button class="mg-act" onclick="navTo('invest')">
-          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg></span>
-          <span class="mg-act-lb">Marketplace</span>
+        <button class="gx-act" onclick="navTo('trade')">
+          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5"/><path d="M21 3l-6.5 18-4-8-8-4z"/></svg></span>
+          <span class="gx-act-lb">Trading</span>
         </button>
-        <button class="mg-act" onclick="navTo('store')">
-          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1V9z"/><path d="M9 13h6"/></svg></span>
-          <span class="mg-act-lb">Store</span>
+        <button class="gx-act" onclick="navTo('store')">
+          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1V9z"/><path d="M9 13h6"/></svg></span>
+          <span class="gx-act-lb">Store</span>
         </button>
-        <button class="mg-act" onclick="toggleLeftSidebar()">
-          <span class="mg-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></span>
-          <span class="mg-act-lb">Plus</span>
+        <button class="gx-act" onclick="toggleLeftSidebar()">
+          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="9" r="2"/><circle cx="15" cy="9" r="2"/><circle cx="7" cy="16" r="2"/><circle cx="15" cy="16" r="2"/></svg></span>
+          <span class="gx-act-lb">Plus</span>
         </button>
       </div>
+
     </div>
 
     <!-- Barre de recherche / action IA -->
@@ -12032,6 +12186,10 @@ function _nfRefreshBadge(){
     pc.textContent = n > 0 ? (n > 99 ? '99+' : n) : '';
     pc.classList.toggle('on', n > 0);
   }
+  ['', '-pro'].forEach(function(sfx){
+    var dot = document.getElementById('gx-bell-dot' + sfx);
+    if(dot) dot.classList.toggle('on', n > 0);
+  });
 }
 window._nfRefreshBadge = _nfRefreshBadge;
 
@@ -21635,7 +21793,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.91";
+  var GUELANE_VERSION = "3.92";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -22040,14 +22198,15 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
   }
 
   function rendre(){
-    if(!document.getElementById('mg-card-amt') &&
-       !document.getElementById('mg-card-amt-pro')) return;
+    if(!document.getElementById('gx-amt') &&
+       !document.getElementById('gx-amt-pro')) return;
     /* Montant en deux parties : le nombre ressort, la devise s'efface */
     var v = solde();
-    poser('mg-card-amt', Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '));
-    poser('mg-card-cur', ' FCFA');
+    var txt = Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    poser('gx-amt', window._gxMasque ? '\u2022\u2022\u2022 \u2022\u2022\u2022' : txt);
+    poser('gx-cur', 'FCFA');
 
-    poser('mg-card-type', pro() ? 'Compte (Entrepreneur)' : 'Compte (Particulier)');
+    poser('gx-greet', (pro() ? 'Compte Entrepreneur' : 'Compte Particulier') + ' \uD83D\uDC4B');
 
     /* Nom du titulaire, repris du profil */
     /* Nom repris du profil, pour la salutation et la carte */
@@ -22061,9 +22220,21 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
     }catch(e){}
     n = String(n || 'Guelane').slice(0, 20);
 
-    var dispo = 0;
-    try{ dispo = (window.walletState && window.walletState.tradingBalance) || 0; }catch(e){}
-    poser('mg-card-hold', fmt(dispo));
+    /* Salutation et initiales */
+    poser('gx-name', 'Bonjour, ' + n.split(' ')[0]);
+    var ini = n.trim().split(/\s+/).map(function(x){ return x.charAt(0); })
+                .join('').slice(0,2).toUpperCase() || 'GU';
+    poser('gx-initials', ini);
+    /* Identifiant de compte, stable pour un meme utilisateur */
+    var id = '';
+    try{
+      id = localStorage.getItem('guelane_wallet_id') || '';
+      if(!id){
+        id = String(Math.floor(100000000 + Math.random() * 899999999));
+        localStorage.setItem('guelane_wallet_id', id);
+      }
+    }catch(e){ id = '023784902'; }
+    poser('gx-wallet', id);
 
     /* Pastille de notifications */
     try{
@@ -22105,6 +22276,40 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer);
   else demarrer();
+})();
+</script>
+<script>
+/* Accueil : masquer le solde et copier l'identifiant de compte */
+(function(){
+  try{ window._gxMasque = localStorage.getItem('guelane_solde_masque') === '1'; }
+  catch(e){ window._gxMasque = false; }
+
+  window._gxToggleSolde = function(){
+    window._gxMasque = !window._gxMasque;
+    try{ localStorage.setItem('guelane_solde_masque', window._gxMasque ? '1' : '0'); }catch(e){}
+    if(typeof window._mgCardRender === 'function') window._mgCardRender();
+  };
+
+  window._gxCopyId = function(){
+    var el = document.getElementById('gx-wallet') || document.getElementById('gx-wallet-pro');
+    var v = el ? el.textContent.trim() : '';
+    if(!v) return;
+    var fini = function(){ if(typeof toast === 'function') toast('Identifiant copie'); };
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(v).then(fini).catch(fini);
+        return;
+      }
+    }catch(e){}
+    /* Repli pour les navigateurs sans presse-papiers moderne */
+    try{
+      var t = document.createElement('textarea');
+      t.value = v; t.style.position = 'fixed'; t.style.opacity = '0';
+      document.body.appendChild(t); t.select();
+      document.execCommand('copy'); document.body.removeChild(t);
+    }catch(e){}
+    fini();
+  };
 })();
 </script>
 </body>

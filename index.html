@@ -7484,6 +7484,41 @@ body .mg-top{
   bottom:calc(150px + env(safe-area-inset-bottom,0px)) !important;
   z-index:495 !important;   /* la barre est a 490 */
 }
+
+/* ══════════════════════════════════════════════════════════════
+   BOUTON FLOTTANT : FIXE, LES ACTIONS S'OUVRENT AU-DESSUS
+   Le bouton ne doit jamais se deplacer. Les actions sont donc
+   sorties du flux : elles se deploient vers le haut sans pousser
+   le bouton, qui reste ancre au meme endroit.
+   ══════════════════════════════════════════════════════════════ */
+.pf2-fab-wrap{
+  position:fixed !important;
+  right:16px !important;
+  bottom:calc(178px + env(safe-area-inset-bottom,0px)) !important;
+  left:auto !important; top:auto !important;
+  width:52px !important; height:52px !important;
+  z-index:495 !important;
+  display:block !important;
+  pointer-events:none;
+}
+.pf2-fab-wrap > *{ pointer-events:auto; }
+
+/* Le bouton occupe exactement son conteneur : position invariable */
+.pf2-fab{
+  position:absolute !important;
+  right:0 !important; bottom:0 !important;
+  margin:0 !important;
+}
+
+/* Les actions se deploient au-dessus, hors du flux */
+.pf2-fab-actions{
+  position:absolute !important;
+  right:0 !important;
+  bottom:64px !important;
+  margin:0 !important;
+  align-items:flex-end !important;
+  gap:10px !important;
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -22568,7 +22603,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "4.14";
+  var GUELANE_VERSION = "4.15";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

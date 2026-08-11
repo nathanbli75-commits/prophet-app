@@ -7475,6 +7475,15 @@ body .mg-top{
   font-size:12.5px;font-weight:700;color:var(--t);
 }
 .pf2-fab{ flex-shrink:0; }
+
+/* Le bouton flottant doit passer AU-DESSUS de la barre du bas.
+   Hauteur reelle a franchir : barre (~64px) + son decalage bas
+   (~8px + zone systeme) + le bouton central qui la depasse de
+   24px. On prend 150px, plus la zone systeme. */
+.pf2-fab-wrap{
+  bottom:calc(150px + env(safe-area-inset-bottom,0px)) !important;
+  z-index:495 !important;   /* la barre est a 490 */
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -22559,7 +22568,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "4.13";
+  var GUELANE_VERSION = "4.14";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

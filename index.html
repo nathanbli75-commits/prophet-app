@@ -21928,7 +21928,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.94";
+  var GUELANE_VERSION = "3.95";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -22445,6 +22445,43 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
     }catch(e){}
     fini();
   };
+})();
+</script>
+<script>
+/* Libellés de la barre du bas dès le premier affichage.
+   Ils restaient sur leurs valeurs par défaut du HTML tant qu'aucun
+   changement de mode n'avait eu lieu : « Dashboard » au lieu de
+   « Store », « Wallet » au lieu du libellé du mode courant. */
+(function(){
+  function poser(id, txt){
+    var el = document.getElementById(id);
+    if(el) el.textContent = txt;
+  }
+  function sync(){
+    var pro = false;
+    try{ pro = document.body.classList.contains('profile-pro'); }catch(e){}
+    poser('mn-accueil-lbl', pro ? 'Home'   : 'Accueil');
+    poser('mn-dash-lbl',    pro ? 'Explore': 'Store');
+    poser('mn-chat-lbl',    pro ? 'Invest' : 'Assistant IA');
+    poser('mn-wallet-lbl',  pro ? 'Store'  : 'Wallet');
+  }
+  window._navLblSync = sync;
+
+  function demarrer(){
+    sync();
+    /* Repasser à chaque changement d'écran, sans surveillance de fond */
+    if(typeof window.navTo === 'function' && !window._navLblHooked){
+      var origine = window.navTo;
+      window.navTo = function(){
+        var r = origine.apply(this, arguments);
+        try{ sync(); }catch(e){}
+        return r;
+      };
+      window._navLblHooked = true;
+    }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer);
+  else demarrer();
 })();
 </script>
 </body>

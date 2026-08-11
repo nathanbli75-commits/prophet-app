@@ -7074,6 +7074,23 @@ body .mg-top{
      pour ne pas décaler le bouton central. */
   #mob-nav #mn-invest-mode{ order:6; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   BARRE DU BAS : CINQ ENTRÉES DANS LES DEUX MODES
+   L'Entrepreneur en avait cinq (le Portefeuille lui étant
+   réservé), le Particulier seulement quatre. On lui ajoute
+   Marketplace, et on place le bouton central au milieu.
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:840px){
+  body.profile-part #mn-invest-mode{ display:flex !important; }
+
+  /* Deux entrées de chaque côté du bouton central */
+  body.profile-part #mob-nav #mn-accueil{ order:1; }
+  body.profile-part #mob-nav #mn-dash{ order:2; }
+  body.profile-part #mob-nav #mn-chat{ order:3; }
+  body.profile-part #mob-nav #mn-invest-mode{ order:4; }
+  body.profile-part #mob-nav #mn-wallet{ order:5; }
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -8304,7 +8321,7 @@ function _pnLater(){ _pnDismiss(); }
       <path d="M9 21v-4h6v4"/>
       <line x1="9" y1="8" x2="9" y2="8.01"/><line x1="12" y1="8" x2="12" y2="8.01"/><line x1="15" y1="8" x2="15" y2="8.01"/>
     </svg>
-    <span>Marché</span>
+    <span>Marketplace</span>
   </button>
 
   <!-- Portfolio (Entrepreneur uniquement) -->
@@ -17081,6 +17098,8 @@ function _updateMobNav(name){
   } else {
     if(name === 'dash')   mnId = 'mn-accueil';   /* Particulier : l'accueil = bouton 1 */
     if(name === 'store')  mnId = 'mn-dash';      /* Particulier : bouton 2 = Store */
+    /* Particulier : Marketplace a sa propre entree */
+    if(name === 'invest' || name === 'investhub') mnId = 'mn-invest-mode';
   }
   if(mnId){
     var el = document.getElementById(mnId);
@@ -21909,7 +21928,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.93";
+  var GUELANE_VERSION = "3.94";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

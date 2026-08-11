@@ -7438,6 +7438,43 @@ body .mg-top{
   font-size:10.5px;font-weight:700;color:var(--t);
   text-align:center;line-height:1.32;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   BOUTON FLOTTANT DU PORTFOLIO
+   Son conteneur ne faisait que la largeur du bouton (52px) :
+   les libellés « Déposer » et « Investir », alignés à sa droite,
+   débordaient hors de l'écran. On élargit le conteneur en le
+   gardant ancré à droite.
+   ══════════════════════════════════════════════════════════════ */
+.pf2-fab-wrap{
+  width:auto !important;
+  left:auto !important;
+  right:16px !important;
+  bottom:104px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-end !important;
+  pointer-events:none;      /* seuls les boutons captent le toucher */
+}
+.pf2-fab-wrap > *{ pointer-events:auto; }
+
+.pf2-fab-actions{
+  position:static !important;
+  align-items:flex-end !important;
+  margin-bottom:12px;
+  gap:10px !important;
+}
+.pf2-fab-action{
+  flex-direction:row !important;
+  justify-content:flex-end !important;
+  white-space:nowrap;
+}
+.pf2-fab-action-lbl{
+  padding:7px 13px;border-radius:999px;
+  background:#fff;box-shadow:0 3px 12px rgba(13,18,32,.14);
+  font-size:12.5px;font-weight:700;color:var(--t);
+}
+.pf2-fab{ flex-shrink:0; }
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -22522,7 +22559,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "4.12";
+  var GUELANE_VERSION = "4.13";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

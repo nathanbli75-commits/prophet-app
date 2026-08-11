@@ -7153,6 +7153,57 @@ body .mg-top{
   .gx-bell{ width:38px !important;height:38px !important; }
   .gx-av{ width:40px !important;height:40px !important; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION « RÉCENT »
+   Lignes en cartes blanches : pastille colorée à initiales,
+   libellé et sous-titre, montant à droite en vert ou rouge.
+   ══════════════════════════════════════════════════════════════ */
+.gx-rec{ margin-bottom:22px; }
+.gx-rec-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:12px;
+}
+.gx-rec-t{
+  font-size:17px;font-weight:800;color:#0d1220;letter-spacing:-.03em;
+}
+.gx-rec-a{
+  border:none;background:none;cursor:pointer;font-family:var(--font);
+  font-size:13px;font-weight:700;color:var(--gx-blue);
+}
+.gx-rec-list{ display:flex;flex-direction:column;gap:9px; }
+
+.gx-row{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 14px;border-radius:16px;
+  background:#fff;border:1px solid rgba(13,18,32,.05);
+  box-shadow:0 2px 9px rgba(13,18,32,.045);
+}
+.gx-row-ic{
+  width:40px;height:40px;flex-shrink:0;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;color:#fff;letter-spacing:-.02em;
+}
+.gx-row-bd{ flex:1;min-width:0; }
+.gx-row-t{
+  font-size:14px;font-weight:800;color:#0d1220;letter-spacing:-.02em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.gx-row-s{
+  font-size:11.5px;color:#9aa0ae;margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.gx-row-v{
+  font-size:14px;font-weight:800;flex-shrink:0;
+  font-variant-numeric:tabular-nums;letter-spacing:-.02em;
+}
+.gx-row-v.pos{ color:#16a34a; }
+.gx-row-v.neg{ color:#dc2626; }
+
+.gx-rec-empty{
+  padding:26px 16px;text-align:center;
+  color:#9aa0ae;font-size:13px;line-height:1.55;
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -8840,6 +8891,15 @@ function _pnLater(){ _pnDismiss(); }
       </div>
 
     </div>
+      <!-- ═══ RÉCENT ═══ -->
+      <div class="gx-rec">
+        <div class="gx-rec-hd">
+          <span class="gx-rec-t">Récent</span>
+          <button class="gx-rec-a" onclick="navTo('wallet')">Voir tout</button>
+        </div>
+        <div class="gx-rec-list" id="gx-rec-list-pro"></div>
+      </div>
+
 
     <div class="ai-coach">
       <div class="ai-coach-hd">✨ Guelane AI vous suggère</div>
@@ -9509,6 +9569,15 @@ function _pnLater(){ _pnDismiss(); }
       </div>
 
     </div>
+      <!-- ═══ RÉCENT ═══ -->
+      <div class="gx-rec">
+        <div class="gx-rec-hd">
+          <span class="gx-rec-t">Récent</span>
+          <button class="gx-rec-a" onclick="navTo('wallet')">Voir tout</button>
+        </div>
+        <div class="gx-rec-list" id="gx-rec-list"></div>
+      </div>
+
 
     <!-- Barre de recherche / action IA -->
     <div class="dmh-search" onclick="navTo('chat')">
@@ -21990,7 +22059,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.97";
+  var GUELANE_VERSION = "3.98";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -22540,6 +22609,132 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
         return r;
       };
       window._navLblHooked = true;
+    }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer);
+  else demarrer();
+})();
+</script>
+<script>
+/* ═══ SECTION « RÉCENT » ═══
+   Rassemble l'activité réelle du compte : ordres de trading,
+   capitaux reçus via la Marketplace, dépenses au Guelane Store.
+   Aucune donnée inventée : la section reste vide tant qu'il n'y
+   a pas eu d'activité. */
+(function(){
+  var COULEURS = ['#523ca6','#7e57c2','#e8a93e','#22a55e','#0891b2','#d97706','#e11d48'];
+
+  function couleur(txt){
+    var s = 0;
+    for(var i=0;i<txt.length;i++) s += txt.charCodeAt(i);
+    return COULEURS[s % COULEURS.length];
+  }
+  function initiales(txt){
+    return String(txt || '?').trim().split(/\s+/)
+      .map(function(m){ return m.charAt(0); }).join('').slice(0,2).toUpperCase();
+  }
+  function fmt(n){
+    return Math.round(Math.abs(n || 0)).toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' FCFA';
+  }
+  function quand(ts){
+    if(!ts) return '';
+    var d = new Date(ts), maintenant = Date.now();
+    var h = Math.floor((maintenant - ts) / 3600000);
+    if(h < 1) return "À l'instant";
+    if(h < 24) return 'Il y a ' + h + ' h';
+    if(h < 48) return 'Hier';
+    return d.toLocaleDateString('fr-FR', { day:'2-digit', month:'short' });
+  }
+
+  function collecter(){
+    var l = [];
+    var ws = window.walletState;
+    if(!ws) return l;
+
+    /* Ordres de trading */
+    (ws.tradingOrders || []).forEach(function(o){
+      var achat = o.type === 'buy';
+      l.push({
+        nom: o.sym || 'Ordre',
+        sous: (achat ? 'Achat' : 'Vente') + ' \u00b7 ' + (o.qty || 0) + ' titre' + ((o.qty||0) > 1 ? 's' : ''),
+        montant: (achat ? -1 : 1) * ((o.qty || 0) * (o.price || 0)),
+        ts: o.ts
+      });
+    });
+
+    /* Capitaux reçus via la Marketplace */
+    (ws.marketplaceReceipts || []).forEach(function(r){
+      l.push({
+        nom: r.companyName || r.investor || 'Levée de fonds',
+        sous: 'Capital reçu',
+        montant: r.amount || 0,
+        ts: r.ts
+      });
+    });
+
+    /* Dépenses au Guelane Store */
+    try{
+      JSON.parse(localStorage.getItem('guelane_store_hist') || '[]').forEach(function(h){
+        l.push({
+          nom: h.libelle || 'Guelane Store',
+          sous: h.type === 'depense' ? 'Achat partenaire' : 'Crédit',
+          montant: (h.type === 'depense' ? -1 : 1) * (h.montant || 0),
+          ts: h.ts
+        });
+      });
+    }catch(e){}
+
+    /* Activité générale du portefeuille */
+    (ws.activity || []).forEach(function(a){
+      if(!a || !a.t) return;
+      l.push({ nom: a.t, sous: a.d || 'Portefeuille', montant: a.m || 0, ts: a.ts });
+    });
+
+    l.sort(function(a,b){ return (b.ts || 0) - (a.ts || 0); });
+    return l.slice(0, 4);
+  }
+
+  function rendre(){
+    var lignes = collecter();
+    ['', '-pro'].forEach(function(sfx){
+      var host = document.getElementById('gx-rec-list' + sfx);
+      if(!host) return;
+      if(!lignes.length){
+        host.innerHTML = '<div class="gx-rec-empty">Aucune opération pour le moment.<br>'
+          + 'Vos ordres et mouvements apparaîtront ici.</div>';
+        return;
+      }
+      host.innerHTML = lignes.map(function(x){
+        var pos = (x.montant || 0) >= 0;
+        var nom = String(x.nom).replace(/</g,'&lt;');
+        var sous = String(x.sous).replace(/</g,'&lt;');
+        var t = quand(x.ts);
+        return '<div class="gx-row">'
+          + '<div class="gx-row-ic" style="background:' + couleur(nom) + '">' + initiales(nom) + '</div>'
+          + '<div class="gx-row-bd">'
+          +   '<div class="gx-row-t">' + nom + '</div>'
+          +   '<div class="gx-row-s">' + sous + (t ? ' \u00b7 ' + t : '') + '</div>'
+          + '</div>'
+          + '<div class="gx-row-v ' + (pos ? 'pos' : 'neg') + '">'
+          +   (pos ? '+' : '\u2212') + fmt(x.montant) + '</div>'
+          + '</div>';
+      }).join('');
+    });
+  }
+  window._gxRecRender = rendre;
+
+  function demarrer(){
+    rendre();
+    /* Rafraîchi à chaque arrivée sur un écran, sans surveillance de fond */
+    if(typeof window.navTo === 'function' && !window._gxRecHooked){
+      var origine = window.navTo;
+      window.navTo = function(){
+        var r = origine.apply(this, arguments);
+        try{ rendre(); }catch(e){}
+        return r;
+      };
+      window._gxRecHooked = true;
     }
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer);

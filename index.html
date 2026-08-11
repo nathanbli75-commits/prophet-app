@@ -7289,6 +7289,124 @@ body .mg-top{
   }
   body.gx-scrolled .gx-mini-av{ display:flex; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   SYSTÈME D'ANIMATION
+   Toutes les animations n'utilisent que la position et l'opacité,
+   les deux seules propriétés que le téléphone sait animer sans
+   recalculer la mise en page — c'est ce qui garantit la fluidité.
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --e-out:cubic-bezier(.22,1,.36,1);      /* sortie douce, naturelle */
+  --e-in-out:cubic-bezier(.65,0,.35,1);   /* aller-retour équilibré  */
+  --e-spring:cubic-bezier(.34,1.56,.64,1);/* léger rebond            */
+  --d-fast:.16s; --d:.26s; --d-slow:.42s;
+}
+
+/* ── Réponse au toucher : un retour immédiat rend l'interface vivante ── */
+.gx-act, .ph-qa-item, .gx-row, .co-card, .gs-card, .mg-row,
+.btn, .gs-btn, .mn-item, .gx-cur, .mg-switch, .gx-bell,
+.gx-av, .gx-mini-av, .ch-fab-btn, .gsel-opt, .chh-item{
+  transition:transform var(--d-fast) var(--e-out),
+             box-shadow var(--d) var(--e-out),
+             background-color var(--d-fast) linear;
+  -webkit-tap-highlight-color:transparent;
+}
+.gx-act:active, .ph-qa-item:active, .gx-row:active,
+.co-card:active, .gs-card:active, .mg-row:active{
+  transform:scale(.965);
+}
+.btn:active, .gs-btn:active, .gx-cur:active, .mg-switch:active,
+.gx-bell:active, .gx-av:active{ transform:scale(.93); }
+
+/* Les cartes se soulèvent légèrement au survol (ordinateur) */
+@media(hover:hover) and (pointer:fine){
+  .gx-act:hover, .ph-qa-item:hover, .gx-row:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 22px rgba(13,18,32,.10);
+  }
+}
+
+/* ── Apparition des sections ── */
+.gx-anim{
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity var(--d-slow) var(--e-out),
+             transform var(--d-slow) var(--e-out);
+  will-change:opacity, transform;
+}
+.gx-anim.gx-in{
+  opacity:1;
+  transform:none;
+  will-change:auto;   /* libéré une fois l'animation finie */
+}
+
+/* ── Apparition en cascade des icônes d'Actions Rapides ── */
+.ph-qa-grid.gx-in .ph-qa-item{
+  animation:gxPop var(--d) var(--e-spring) backwards;
+}
+.ph-qa-grid.gx-in .ph-qa-item:nth-child(1){ animation-delay:.02s; }
+.ph-qa-grid.gx-in .ph-qa-item:nth-child(2){ animation-delay:.05s; }
+.ph-qa-grid.gx-in .ph-qa-item:nth-child(3){ animation-delay:.08s; }
+.ph-qa-grid.gx-in .ph-qa-item:nth-child(4){ animation-delay:.11s; }
+.ph-qa-grid.gx-in .ph-qa-item:nth-child(5){ animation-delay:.14s; }
+.ph-qa-grid.gx-in .ph-qa-item:nth-child(6){ animation-delay:.17s; }
+.ph-qa-grid.gx-in .ph-qa-item:nth-child(7){ animation-delay:.20s; }
+.ph-qa-grid.gx-in .ph-qa-item:nth-child(8){ animation-delay:.23s; }
+@keyframes gxPop{
+  from{ opacity:0; transform:scale(.86) translateY(8px); }
+  to  { opacity:1; transform:none; }
+}
+
+/* ── Lignes de Récent : arrivée décalée ── */
+.gx-rec-list .gx-row{ animation:gxSlide var(--d) var(--e-out) backwards; }
+.gx-rec-list .gx-row:nth-child(1){ animation-delay:.03s; }
+.gx-rec-list .gx-row:nth-child(2){ animation-delay:.08s; }
+.gx-rec-list .gx-row:nth-child(3){ animation-delay:.13s; }
+.gx-rec-list .gx-row:nth-child(4){ animation-delay:.18s; }
+@keyframes gxSlide{
+  from{ opacity:0; transform:translateX(-10px); }
+  to  { opacity:1; transform:none; }
+}
+
+/* ── Transitions de page plus douces ── */
+@media(max-width:840px){
+  .page.active{ animation:gxPage var(--d) var(--e-out); }
+}
+@keyframes gxPage{
+  from{ opacity:0; transform:translateY(8px); }
+  to  { opacity:1; transform:none; }
+}
+
+/* ── Le repli du hero suit la même courbe ── */
+.gx-head, .gx-card, .gx-amt-int, .gx-amt-dec{
+  transition:all var(--d) var(--e-in-out) !important;
+}
+
+/* ── Panneaux : montée fluide ── */
+.gsel-panel, .chh-sheet{
+  animation:gxUp var(--d) var(--e-out) !important;
+}
+@keyframes gxUp{
+  from{ transform:translateY(24px); opacity:0; }
+  to  { transform:none; opacity:1; }
+}
+
+/* ── Barre du bas : le bouton central respire au toucher ── */
+#mob-nav .mn-item{ transition:color var(--d-fast) linear, transform var(--d-fast) var(--e-out); }
+#mob-nav #mn-chat{ transition:transform var(--d) var(--e-spring), box-shadow var(--d) var(--e-out) !important; }
+
+/* ── Respect du réglage système « animations réduites » ──
+   Certaines personnes les désactivent pour raison de confort ou
+   de santé : on ne leur impose rien. */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+  .gx-anim{ opacity:1 !important; transform:none !important; }
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -12846,7 +12964,27 @@ function setProfile(nextMode, withToast, skipSave){
   if(withToast) toast(mode==='pro'?'Profil Entrepreneur activé':'Profil Particulier activé');
 }
 
-function toggleMode(){ setProfile(mode==='pro'?'part':'pro', true); }
+function toggleMode(){
+  var suivant = (mode === 'pro') ? 'part' : 'pro';
+  setProfile(suivant, true);
+  /* Basculer de mode doit conduire a l'accueil du mode choisi :
+     sans cela on restait sur le meme ecran, avec seulement des
+     cartes differentes. */
+  try{
+    if(typeof navTo === 'function') navTo(suivant === 'pro' ? 'home' : 'dash');
+  }catch(e){}
+  /* Rafraichir apres coup : la navigation et la mise a jour des
+     classes doivent etre terminees avant de relire le mode. */
+  setTimeout(function(){
+    try{
+      if(typeof window._mgCardRender === 'function') window._mgCardRender();
+      if(typeof window._navLblSync   === 'function') window._navLblSync();
+      if(typeof window._gxRecRender  === 'function') window._gxRecRender();
+      if(typeof window._gxReserver   === 'function') window._gxReserver();
+      if(typeof window._gxReveal     === 'function') window._gxReveal();
+    }catch(e){}
+  }, 90);
+}
 
 function chooseProfile(type){
   try{ localStorage.setItem('guelane_profile', type); }catch(e){}
@@ -22178,7 +22316,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "4.07";
+  var GUELANE_VERSION = "4.09";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -22969,5 +23107,69 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
 })();
 </script>
 
+<script>
+/* ═══ APPARITION DES SECTIONS ═══
+   Chaque section se révèle quand elle entre dans l'écran.
+   L'observation s'arrête dès qu'une section est révélée : aucun
+   travail ne subsiste en arrière-plan une fois la page parcourue. */
+(function(){
+  var reduit = false;
+  try{
+    reduit = window.matchMedia
+          && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }catch(e){}
+
+  function marquer(){
+    if(reduit) return;
+    var p = document.querySelector('.page.active');
+    if(!p) return;
+
+    var cibles = p.querySelectorAll(
+      '.gx-rec, .pnl, .ph-section-hd, .ph-qa-grid, .ph-watchlist-cta, .gx-acts');
+
+    if(!('IntersectionObserver' in window)){
+      /* Navigateur ancien : tout est affiché sans animation */
+      for(var i=0;i<cibles.length;i++) cibles[i].classList.add('gx-in');
+      return;
+    }
+
+    var obs = new IntersectionObserver(function(entrees){
+      entrees.forEach(function(e){
+        if(!e.isIntersecting) return;
+        e.target.classList.add('gx-in');
+        obs.unobserve(e.target);        /* révélé une fois, plus observé */
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.04 });
+
+    for(var j=0;j<cibles.length;j++){
+      var el = cibles[j];
+      if(el._gxSeen) continue;
+      el._gxSeen = true;
+      el.classList.add('gx-anim');
+      obs.observe(el);
+    }
+    /* Filet : si rien ne s'est déclenché, tout s'affiche */
+    setTimeout(function(){
+      for(var k=0;k<cibles.length;k++) cibles[k].classList.add('gx-in');
+    }, 1400);
+  }
+  window._gxReveal = marquer;
+
+  function demarrer(){
+    marquer();
+    if(typeof window.navTo === 'function' && !window._gxRevealHooked){
+      var origine = window.navTo;
+      window.navTo = function(){
+        var r = origine.apply(this, arguments);
+        try{ setTimeout(marquer, 40); }catch(e){}
+        return r;
+      };
+      window._gxRevealHooked = true;
+    }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer);
+  else demarrer();
+})();
+</script>
 </body>
 </html>

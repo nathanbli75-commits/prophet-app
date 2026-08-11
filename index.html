@@ -8900,6 +8900,44 @@ function _pnLater(){ _pnDismiss(); }
         <div class="gx-rec-list" id="gx-rec-list-pro"></div>
       </div>
 
+      <!-- Marchés en direct -->
+<div class="dmh-trips-card">
+      <div class="dmh-trips-header">
+        <span class="dmh-trips-title">Marchés en direct</span>
+        <button class="dmh-trips-expand" onclick="navTo('dash');setTimeout(()=>{document.querySelector('#dash-v .mkt-row')&&(document.querySelector('#dash-v .mkt-row').style.display='grid')},100)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          Voir tout
+        </button>
+      </div>
+      <div class="dmh-trips-status">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        BRVM 243.2 pts &nbsp;·&nbsp; +0.8% séance &nbsp;·&nbsp; En direct
+      </div>
+      <div class="dmh-mkts-prog">
+        <div class="dmh-mkt-row">
+          <span class="dmh-mkt-lbl">🇨🇮 CI</span>
+          <div class="dmh-prog-bar"><div class="dmh-prog-fill" style="width:84%;background:linear-gradient(90deg,#8d6cfa,#6d4fd1);"></div></div>
+          <span class="dmh-mkt-val" style="color:#6d4fd1">+8.4%</span>
+        </div>
+        <div class="dmh-mkt-row">
+          <span class="dmh-mkt-lbl">🌍 AO</span>
+          <div class="dmh-prog-bar"><div class="dmh-prog-fill" style="width:76%;background:linear-gradient(90deg,#22a55e,#1f7a3d);"></div></div>
+          <span class="dmh-mkt-val" style="color:#22a55e">+11.2%</span>
+        </div>
+        <div class="dmh-mkt-row">
+          <span class="dmh-mkt-lbl">🌐 AF</span>
+          <div class="dmh-prog-bar"><div class="dmh-prog-fill" style="width:53%;background:linear-gradient(90deg,#2d2057,#2c7af0);"></div></div>
+          <span class="dmh-mkt-val" style="color:#2d2057">+5.3%</span>
+        </div>
+        <div class="dmh-mkt-row">
+          <span class="dmh-mkt-lbl">🗺️ Monde</span>
+          <div class="dmh-prog-bar"><div class="dmh-prog-fill" style="width:21%;background:linear-gradient(90deg,#8d6cfa,#f4c56a);"></div></div>
+          <span class="dmh-mkt-val" style="color:var(--t2)">+2.1%</span>
+        </div>
+      </div>
+    </div>
+
+
 
     <div class="ai-coach">
       <div class="ai-coach-hd">✨ Guelane AI vous suggère</div>
@@ -9657,6 +9695,25 @@ function _pnLater(){ _pnDismiss(); }
         </div>
       </div>
     </div>
+
+    <div class="ph-section-hd"><span class="ph-section-title">Actions Rapides</span><span class="ph-section-link" onclick="toggleLeftSidebar()">Voir tout</span></div>
+    <div class="ph-qa-grid">
+      <div class="ph-qa-item" onclick="navTo('trade')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="21 12 21 7 16 7"/></svg></div><div class="ph-qa-lbl">Trading</div></div>
+      <div class="ph-qa-item" onclick="navTo('invest')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg></div><div class="ph-qa-lbl">Marketplace</div></div>
+      <div class="ph-qa-item" onclick="navTo('store')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1V9z"/><path d="M9 13h6"/></svg></div><div class="ph-qa-lbl">Store</div></div>
+      <div class="ph-qa-item" onclick="navTo('chat')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 4.1 4.1 1.6-4.1 1.6L12 14.4l-1.6-4.1L6.3 8.7l4.1-1.6z"/><path d="M18.5 14.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/></svg></div><div class="ph-qa-lbl">Guelane AI</div></div>
+      <div class="ph-qa-item" onclick="navTo('pred')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></div><div class="ph-qa-lbl">IA Prédictive</div></div>
+      <div class="ph-qa-item" onclick="navTo('wallet')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2.5"/><path d="M2 10h20"/><circle cx="17.5" cy="14.5" r="1.2"/></svg></div><div class="ph-qa-lbl">Wallet</div></div>
+      <div class="ph-qa-item" onclick="navTo('notif')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg></div><div class="ph-qa-lbl">Notifications</div></div>
+      <div class="ph-qa-item" onclick="toggleLeftSidebar()"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></div><div class="ph-qa-lbl">Plus</div></div>
+    </div>
+
+<div class="ph-section-hd"><span class="ph-section-title">Watchlist</span></div>
+    <div class="ph-watchlist-cta" onclick="navTo('inv-stocks')">
+      <div class="ph-watchlist-plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
+      <div class="ph-watchlist-txt">Créer une Watchlist</div>
+    </div>
+
 
   </div><!-- /dash-mob-hero -->
 
@@ -22059,7 +22116,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.98";
+  var GUELANE_VERSION = "3.99";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

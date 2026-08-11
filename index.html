@@ -7205,75 +7205,50 @@ body .mg-top{
   color:#9aa0ae;font-size:13px;line-height:1.55;
 }
 
+
+
+
+
 /* ══════════════════════════════════════════════════════════════
-   HERO TOUJOURS VISIBLE
-   Le bloc salutation + carte reste en haut pendant le défilement.
-   Pour ne pas occuper un tiers de l'écran en permanence, il se
-   replie dès que l'on défile : la carte se resserre, le montant
-   reste lisible, et le contenu regagne de la place.
+   HERO TOUJOURS VISIBLE — méthode par ancrage fixe
+   La fixation automatique échouait : les pages sont en
+   positionnement absolu avec hauteur imposée et double conteneur
+   de défilement. On ancre donc le hero à la fenêtre, et on
+   réserve dessous une hauteur mesurée en direct.
    ══════════════════════════════════════════════════════════════ */
 @media(max-width:840px){
-  #dash-mob-hero, #page-home .mg-hero{
-    position:sticky;
-    top:0;
-    z-index:60;
-    background:#fff;
-    padding-top:calc(6px + env(safe-area-inset-top,0px));
-    margin-bottom:14px;
+  body #dash-mob-hero,
+  body #page-home .mg-hero{
+    position:fixed !important;
+    top:0 !important; left:0 !important; right:0 !important;
+    z-index:60 !important;
+    background:#fff !important;
+    padding:calc(8px + env(safe-area-inset-top,0px)) 10px 10px !important;
+    margin:0 !important;
     transition:box-shadow .2s ease;
   }
-  /* Un liseré apparaît quand du contenu passe dessous */
   body.gx-scrolled #dash-mob-hero,
   body.gx-scrolled #page-home .mg-hero{
-    box-shadow:0 6px 18px rgba(13,18,32,.09);
+    box-shadow:0 6px 18px rgba(13,18,32,.10);
   }
 
-  /* ── Repli au défilement ── */
+  /* Repli au défilement : la carte se resserre */
   .gx-head, .gx-card{ transition:all .22s cubic-bezier(.4,0,.2,1); }
-
   body.gx-scrolled .gx-head{
     height:0;opacity:0;margin:0;overflow:hidden;pointer-events:none;
   }
   body.gx-scrolled .gx-card{
-    padding:11px 15px 12px !important;
-    border-radius:16px !important;
-    margin-bottom:8px !important;
+    padding:10px 14px 11px !important;
+    border-radius:15px !important;
+    margin-bottom:0 !important;
   }
-  body.gx-scrolled .gx-card-top{ margin-bottom:4px !important; }
+  body.gx-scrolled .gx-card-top{ margin-bottom:3px !important; }
   body.gx-scrolled .gx-card-lbl{ font-size:11px !important; }
   body.gx-scrolled .gx-amt{ margin-bottom:0 !important; }
-  body.gx-scrolled .gx-amt-int{ font-size:23px !important; }
+  body.gx-scrolled .gx-amt-int{ font-size:22px !important; }
   body.gx-scrolled .gx-amt-dec{ font-size:14px !important; }
   body.gx-scrolled .gx-wid{ display:none !important; }
   body.gx-scrolled .gx-cur{ padding:4px 9px !important;font-size:11px !important; }
-  body.gx-scrolled .gx-card::before{ opacity:.5; }
-}
-
-/* ══════════════════════════════════════════════════════════════
-   CORRECTIF DU HERO FIXE
-   « .view » declare son propre defilement. Le hero se calait donc
-   sur lui, et comme cette vue ne defile jamais reellement, la
-   fixation restait sans effet. On laisse un seul conteneur de
-   defilement : la page.
-   ══════════════════════════════════════════════════════════════ */
-@media(max-width:840px){
-  #page-dash .view, #page-home .view{
-    overflow:visible !important;
-    height:auto !important;
-  }
-  #page-dash, #page-home{
-    overflow-y:auto !important;
-    overflow-x:hidden !important;
-  }
-  /* La fixation doit dominer les regles de position existantes */
-  body #dash-mob-hero,
-  body #page-home .mg-hero{
-    position:-webkit-sticky !important;
-    position:sticky !important;
-    top:0 !important;
-    z-index:60 !important;
-    background:#fff !important;
-  }
 }
 </style>
 <div id="ai-ask-bar">
@@ -22154,7 +22129,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "4.02";
+  var GUELANE_VERSION = "4.03";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -22837,17 +22812,45 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
 })();
 </script>
 <script>
-/* Repli du hero au defilement.
-   L'ecouteur est attache a la page qui defile, pas a la fenetre :
-   dans cette application, ce sont les elements .page qui portent
-   le defilement. Aucune surveillance de fond. */
+/* ═══ HERO ANCRÉ EN HAUT ═══
+   Le hero est fixé à la fenêtre. On réserve sous lui une hauteur
+   égale à la sienne, mesurée en direct : elle change quand le
+   hero se replie, quand l'écran tourne, ou selon le mode actif. */
 (function(){
-  var SEUIL = 44;
+  var SEUIL = 40;
   var enCours = false;
+
+  function hero(){
+    var p = document.querySelector('.page.active') || document;
+    return p.querySelector('#dash-mob-hero') || p.querySelector('.mg-hero')
+        || document.querySelector('#dash-mob-hero') || document.querySelector('.mg-hero');
+  }
+
+  /* Réserve sous le hero la place qu'il occupe */
+  function reserver(){
+    if(window.innerWidth > 840) return;
+    var h = hero();
+    if(!h) return;
+    var haut = Math.round(h.getBoundingClientRect().height);
+    if(!haut) return;
+    ['page-dash', 'page-home'].forEach(function(id){
+      var p = document.getElementById(id);
+      if(!p) return;
+      var cible = p.querySelector('.view') || p.querySelector('.ph-wrap') || p;
+      cible.style.paddingTop = (haut + 8) + 'px';
+    });
+  }
+  window._gxReserver = reserver;
 
   function appliquer(y){
     var replie = y > SEUIL;
-    try{ document.body.classList.toggle('gx-scrolled', replie); }catch(e){}
+    var avant = document.body.classList.contains('gx-scrolled');
+    if(replie !== avant){
+      document.body.classList.toggle('gx-scrolled', replie);
+      /* La hauteur du hero change en se repliant : on re-mesure
+         une fois l'animation terminée. */
+      setTimeout(reserver, 240);
+    }
   }
 
   function surDefilement(e){
@@ -22855,8 +22858,10 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
     enCours = true;
     requestAnimationFrame(function(){
       enCours = false;
-      var el = e && e.target && e.target.scrollTop !== undefined ? e.target : null;
-      appliquer(el ? el.scrollTop : (window.pageYOffset || 0));
+      var t = e && e.target;
+      var y = (t && t.scrollTop !== undefined && t.scrollTop !== null)
+              ? t.scrollTop : (window.pageYOffset || 0);
+      appliquer(y);
     });
   }
 
@@ -22866,31 +22871,39 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
       var p = document.getElementById(id);
       if(!p) return;
       cibles.push(p);
-      /* La vue interne peut porter le defilement selon l'ecran */
       var v = p.querySelector('.view');
       if(v) cibles.push(v);
+      var w = p.querySelector('.ph-wrap');
+      if(w) cibles.push(w);
     });
     cibles.forEach(function(el){
       if(el._gxHooked) return;
       el.addEventListener('scroll', surDefilement, { passive:true });
       el._gxHooked = true;
     });
-    /* Repli aussi si c'est la fenetre qui defile */
     if(!window._gxWinHooked){
       window.addEventListener('scroll', surDefilement, { passive:true });
+      window.addEventListener('resize', function(){ setTimeout(reserver, 60); }, { passive:true });
       window._gxWinHooked = true;
     }
   }
 
   function demarrer(){
     brancher();
-    /* Les ecrans changent : on rebranche a chaque navigation,
-       et on repart du haut. */
+    reserver();
+    /* Les tailles définitives arrivent après le chargement des polices */
+    setTimeout(reserver, 400);
+    setTimeout(reserver, 1200);
+
     if(typeof window.navTo === 'function' && !window._gxScrollHooked){
       var origine = window.navTo;
       window.navTo = function(){
         var r = origine.apply(this, arguments);
-        try{ brancher(); appliquer(0); }catch(e){}
+        try{
+          brancher();
+          document.body.classList.remove('gx-scrolled');
+          setTimeout(reserver, 60);
+        }catch(e){}
         return r;
       };
       window._gxScrollHooked = true;
@@ -22900,5 +22913,6 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
   else demarrer();
 })();
 </script>
+
 </body>
 </html>

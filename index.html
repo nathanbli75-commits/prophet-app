@@ -9187,6 +9187,146 @@ function _pnLater(){ _pnDismiss(); }
       <div class="ph-watchlist-txt">Créer une Watchlist</div>
     </div>
 
+      <!-- ═══ ANALYSES (reprises du dashboard) ═══ -->
+<div class="pnl">
+    <div class="ph">Allocation recommandée <span class="ph-s" id="alloc-lbl">Profil Pro</span></div>
+    <div class="pro-chart">
+      <div class="cw" style="height:140px;"><canvas id="allocC"></canvas></div>
+      <div id="alloc-leg" style="display:flex;flex-wrap:wrap;gap:5px 12px;margin-top:8px;"></div>
+    </div>
+    <div class="part-card">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:10px;line-height:1.6;">Comment Guelane recommande de répartir votre argent :</div>
+      <div class="part-card-row">
+        <div class="part-kpi-box">
+          <div class="pk-icon">📱</div>
+          <div class="pk-pct" style="color:#1ec8b0">40%</div>
+          <div class="pk-lbl">Fintech mobile</div>
+          <div class="pk-bar"><div class="pk-fill" style="width:40%;background:#1ec8b0;"></div></div>
+          <div class="pk-desc">Applications de paiement et de transfert d'argent. Secteur très porteur en Afrique.</div>
+        </div>
+        <div class="part-kpi-box">
+          <div class="pk-icon">🏠</div>
+          <div class="pk-pct" style="color:#f5923c">25%</div>
+          <div class="pk-lbl">Immo fractionné</div>
+          <div class="pk-bar"><div class="pk-fill" style="width:25%;background:#f5923c;"></div></div>
+          <div class="pk-desc">Investir dans l'immobilier à petits montants, avec d'autres investisseurs.</div>
+        </div>
+        <div class="part-kpi-box">
+          <div class="pk-icon">📈</div>
+          <div class="pk-pct" style="color:#3d8ef8">20%</div>
+          <div class="pk-lbl">BRVM actions</div>
+          <div class="pk-bar"><div class="pk-fill" style="width:20%;background:#3d8ef8;"></div></div>
+          <div class="pk-desc">Actions d'entreprises africaines cotées en bourse (comme acheter une petite part d'une entreprise).</div>
+        </div>
+        <div class="part-kpi-box">
+          <div class="pk-icon">🏦</div>
+          <div class="pk-pct" style="color:#8b6cf7">15%</div>
+          <div class="pk-lbl">Trésorerie</div>
+          <div class="pk-bar"><div class="pk-fill" style="width:15%;background:#8b6cf7;"></div></div>
+          <div class="pk-desc">Argent disponible rapidement, en cas de besoin urgent ou d'opportunité.</div>
+        </div>
+      </div>
+      <div class="part-explain-box">💡 <strong>Pourquoi répartir ?</strong> Mettre tout son argent au même endroit est risqué. Si un secteur baisse, les autres compensent. C'est ce qu'on appelle la diversification.
+      </div>
+    </div>
+  </div>
+<div class="pnl">
+    <div class="ph">Opportunités actives <span class="ph-s">6 détectées</span></div>
+    <table><thead><tr><th>Secteur</th><th>Marché</th><th>ROI att.</th><th>Signal</th></tr></thead>
+      <tbody>
+        <tr><td>Fintech B2B</td><td><span class="bdg b-gd">CI</span></td><td class="up" style="font-family:var(--mono)">3–8x</td><td><span class="bdg b-up">FORT</span></td></tr>
+        <tr><td>Immo abordable</td><td><span class="bdg b-up">AO</span></td><td class="up" style="font-family:var(--mono)">15–22%</td><td><span class="bdg b-up">FORT</span></td></tr>
+        <tr><td>SaaS PME</td><td><span class="bdg b-gd">CI</span></td><td class="up" style="font-family:var(--mono)">2–5x</td><td><span class="bdg b-up">FORT</span></td></tr>
+        <tr><td>Énergie solaire</td><td><span class="bdg b-bl">AF</span></td><td style="font-family:var(--mono)">18–25%</td><td><span class="bdg b-or">MOD.</span></td></tr>
+        <tr><td>E-commerce</td><td><span class="bdg b-up">AO</span></td><td style="font-family:var(--mono)">2–4x</td><td><span class="bdg b-or">MOD.</span></td></tr>
+        <tr><td>BRVM obligataire</td><td><span class="bdg b-up">AO</span></td><td style="font-family:var(--mono)">6–10%</td><td><span class="bdg b-n">STABLE</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+<div class="pnl">
+      <div class="ph">Comparaison croissance 4 marchés <div class="cc"><button class="ccb on" onclick="setPeriod('1Y',this)">1A</button><button class="ccb" onclick="setPeriod('3Y',this)">3A</button><button class="ccb" onclick="setPeriod('5Y',this)">5A</button></div></div>
+      <div class="pro-chart">
+        <div class="cw" style="height:200px;"><canvas id="compareC"></canvas></div>
+      </div>
+      <div class="part-card">
+        <div style="font-size:11px;color:var(--t2);margin-bottom:6px;line-height:1.6;">Performance de chaque marché cette année (plus le chiffre est haut, mieux c'est) :</div>
+        <div class="part-market-row">
+          <div class="part-market-flag">🇨🇮</div>
+          <div class="part-market-info">
+            <div class="part-market-name">Marché Ivoirien (BRVM-CI)</div>
+            <div class="part-market-desc">Le plus dynamique d'Afrique de l'Ouest</div>
+          </div>
+          <div class="part-prog-wrap"><div class="part-prog-bg"><div class="part-prog-fg" style="width:84%;background:linear-gradient(90deg,#8d6cfa,#6d4fd1);"></div></div></div>
+          <div class="part-market-pct" style="color:#6d4fd1">+8.4%</div>
+        </div>
+        <div class="part-market-row">
+          <div class="part-market-flag">🌍</div>
+          <div class="part-market-info">
+            <div class="part-market-name">Afrique de l'Ouest</div>
+            <div class="part-market-desc">15 pays, économie en forte croissance</div>
+          </div>
+          <div class="part-prog-wrap"><div class="part-prog-bg"><div class="part-prog-fg" style="width:100%;background:linear-gradient(90deg,#22a55e,#1f7a3d);"></div></div></div>
+          <div class="part-market-pct" style="color:#22a55e">+11.2%</div>
+        </div>
+        <div class="part-market-row">
+          <div class="part-market-flag">🌐</div>
+          <div class="part-market-info">
+            <div class="part-market-name">Marché Africain (Composite)</div>
+            <div class="part-market-desc">54 pays, croissance solide malgré les défis</div>
+          </div>
+          <div class="part-prog-wrap"><div class="part-prog-bg"><div class="part-prog-fg" style="width:53%;background:linear-gradient(90deg,#3d8ef8,#2d2057);"></div></div></div>
+          <div class="part-market-pct" style="color:#3d8ef8">+5.3%</div>
+        </div>
+        <div class="part-market-row">
+          <div class="part-market-flag">🗺️</div>
+          <div class="part-market-info">
+            <div class="part-market-name">Marché Mondial (S&amp;P 500)</div>
+            <div class="part-market-desc">Les plus grandes entreprises du monde</div>
+          </div>
+          <div class="part-prog-wrap"><div class="part-prog-bg"><div class="part-prog-fg" style="width:21%;background:linear-gradient(90deg,#8b6cf7,#c4b5fd);"></div></div></div>
+          <div class="part-market-pct" style="color:var(--t2)">+2.1%</div>
+        </div>
+        <div class="part-explain-box">💡 <strong>Bonne nouvelle :</strong> L'Afrique de l'Ouest croît plus vite que le reste du monde. Investir ici maintenant peut être une excellente décision à long terme.</div>
+      </div>
+    </div>
+<div class="pnl">
+      <div class="ph">Signaux sectoriels — Radar 4 marchés</div>
+      <div class="pro-chart">
+        <div class="cw" style="height:200px;"><canvas id="radarC"></canvas></div>
+      </div>
+      <div class="part-card">
+        <div style="font-size:11px;color:var(--t2);margin-bottom:10px;line-height:1.6;">Quels secteurs sont les plus porteurs en ce moment ? L'IA analyse les signaux du marché :</div>
+        <div class="part-sector-row">
+          <span class="part-sector-chip" style="background:rgba(85,205,108,.12);color:#22a55e;border:1px solid rgba(85,205,108,.25);">🟢 Fintech B2B — Signal <strong>FORT</strong></span>
+          <span class="part-sector-chip" style="background:rgba(85,205,108,.12);color:#22a55e;border:1px solid rgba(85,205,108,.25);">🟢 Immobilier — Signal <strong>FORT</strong></span>
+          <span class="part-sector-chip" style="background:rgba(85,205,108,.12);color:#22a55e;border:1px solid rgba(85,205,108,.25);">🟢 SaaS PME — Signal <strong>FORT</strong></span>
+          <span class="part-sector-chip" style="background:rgba(234,179,8,.12);color:#ca8a04;border:1px solid rgba(234,179,8,.25);">🟡 Énergie solaire — <strong>Modéré</strong></span>
+          <span class="part-sector-chip" style="background:rgba(234,179,8,.12);color:#ca8a04;border:1px solid rgba(234,179,8,.25);">🟡 E-commerce — <strong>Modéré</strong></span>
+          <span class="part-sector-chip" style="background:rgba(100,116,139,.12);color:var(--t2);border:1px solid rgba(100,116,139,.2);">⚪ BRVM obligataire — <strong>Stable</strong></span>
+        </div>
+        <div class="part-explain-box">💡 <strong>Comment lire ça ?</strong> Un signal <span style="color:#22a55e;font-weight:600;">FORT</span> signifie que l'IA détecte beaucoup d'activité positive dans ce secteur. <span style="color:#ca8a04;font-weight:600;">Modéré</span> = à surveiller. <span style="color:var(--t2);font-weight:600;">Stable</span> = peu de risque mais peu de gains rapides.</div>
+      </div>
+    </div>
+<div class="pnl">
+    <div class="ph">Alertes agents IA <span class="ph-s">Temps réel</span></div>
+    <div id="live-alerts"></div>
+  </div>
+<div class="pnl" style="margin-bottom:10px;">
+    <div class="ph">Tableau macro comparatif — 4 marchés</div>
+    <table>
+      <thead><tr><th>Indicateur</th><th>🇨🇮 Côte d'Ivoire</th><th>🌍 Afrique Ouest</th><th>🌐 Afrique</th><th>🗺️ Monde</th></tr></thead>
+      <tbody>
+        <tr><td>Croissance PIB</td><td class="up" style="font-family:var(--mono)">+6.8%</td><td class="up" style="font-family:var(--mono)">+6.1%</td><td class="up" style="font-family:var(--mono)">+4.1%</td><td style="font-family:var(--mono);color:var(--wl)">+3.2%</td></tr>
+        <tr><td>Inflation</td><td style="font-family:var(--mono)">3.1%</td><td style="font-family:var(--mono)">3.8%</td><td style="font-family:var(--mono)">6.2%</td><td style="font-family:var(--mono)">3.5%</td></tr>
+        <tr><td>Taux directeur</td><td style="font-family:var(--mono)">3.50% BCEAO</td><td style="font-family:var(--mono)">3.50% BCEAO</td><td style="font-family:var(--mono)">Var. 4–22%</td><td style="font-family:var(--mono)">5.25% Fed</td></tr>
+        <tr><td>FDI entrants</td><td class="up" style="font-family:var(--mono)">+22%</td><td class="up" style="font-family:var(--mono)">+18%</td><td class="up" style="font-family:var(--mono)">+11%</td><td class="up" style="font-family:var(--mono)">+4%</td></tr>
+        <tr><td>Risque global</td><td><span class="bdg b-or">Modéré</span></td><td><span class="bdg b-or">Modéré</span></td><td><span class="bdg b-dn">Élevé</span></td><td><span class="bdg b-n">Faible</span></td></tr>
+        <tr><td>Potentiel 5 ans</td><td><span class="bdg b-up">Très fort</span></td><td><span class="bdg b-up">Fort</span></td><td><span class="bdg b-gd">Fort</span></td><td><span class="bdg b-n">Stable</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+
     <div class="ph-section-hd" style="margin-top:22px;"><span class="ph-section-title">Collections</span><span class="ph-section-link" onclick="navTo('inv-collections')">Voir tout</span></div>
     <div class="ph-scroll-row" id="ph-collections-row"></div>
 
@@ -9894,15 +10034,12 @@ function _pnLater(){ _pnDismiss(); }
       <div class="ph-watchlist-txt">Créer une Watchlist</div>
     </div>
 
-
-  </div><!-- /dash-mob-hero -->
-
-  <!-- ═══ ALLOCATION RECOMMANDÉE ═══ -->
-  <div class="pnl">
-    <div class="ph">Allocation recommandée <span class="ph-s" id="alloc-lbl">Profil Pro</span></div>
+      <!-- ═══ ANALYSES (version Particulier) ═══ -->
+<div class="pnl">
+    <div class="ph">Allocation recommandée <span class="ph-s" id="alloc-lbl-part">Profil Pro</span></div>
     <div class="pro-chart">
-      <div class="cw" style="height:140px;"><canvas id="allocC"></canvas></div>
-      <div id="alloc-leg" style="display:flex;flex-wrap:wrap;gap:5px 12px;margin-top:8px;"></div>
+      <div class="cw" style="height:140px;"><canvas id="allocC-part"></canvas></div>
+      <div id="alloc-leg-part" style="display:flex;flex-wrap:wrap;gap:5px 12px;margin-top:8px;"></div>
     </div>
     <div class="part-card">
       <div style="font-size:11px;color:var(--t2);margin-bottom:10px;line-height:1.6;">Comment Guelane recommande de répartir votre argent :</div>
@@ -9940,9 +10077,7 @@ function _pnLater(){ _pnDismiss(); }
       </div>
     </div>
   </div>
-
-  <!-- ═══ OPPORTUNITÉS ACTIVES ═══ -->
-  <div class="pnl">
+<div class="pnl">
     <div class="ph">Opportunités actives <span class="ph-s">6 détectées</span></div>
     <table><thead><tr><th>Secteur</th><th>Marché</th><th>ROI att.</th><th>Signal</th></tr></thead>
       <tbody>
@@ -9955,6 +10090,98 @@ function _pnLater(){ _pnDismiss(); }
       </tbody>
     </table>
   </div>
+<div class="pnl">
+      <div class="ph">Comparaison croissance 4 marchés <div class="cc"><button class="ccb on" onclick="setPeriod('1Y',this)">1A</button><button class="ccb" onclick="setPeriod('3Y',this)">3A</button><button class="ccb" onclick="setPeriod('5Y',this)">5A</button></div></div>
+      <div class="pro-chart">
+        <div class="cw" style="height:200px;"><canvas id="compareC-part"></canvas></div>
+      </div>
+      <div class="part-card">
+        <div style="font-size:11px;color:var(--t2);margin-bottom:6px;line-height:1.6;">Performance de chaque marché cette année (plus le chiffre est haut, mieux c'est) :</div>
+        <div class="part-market-row">
+          <div class="part-market-flag">🇨🇮</div>
+          <div class="part-market-info">
+            <div class="part-market-name">Marché Ivoirien (BRVM-CI)</div>
+            <div class="part-market-desc">Le plus dynamique d'Afrique de l'Ouest</div>
+          </div>
+          <div class="part-prog-wrap"><div class="part-prog-bg"><div class="part-prog-fg" style="width:84%;background:linear-gradient(90deg,#8d6cfa,#6d4fd1);"></div></div></div>
+          <div class="part-market-pct" style="color:#6d4fd1">+8.4%</div>
+        </div>
+        <div class="part-market-row">
+          <div class="part-market-flag">🌍</div>
+          <div class="part-market-info">
+            <div class="part-market-name">Afrique de l'Ouest</div>
+            <div class="part-market-desc">15 pays, économie en forte croissance</div>
+          </div>
+          <div class="part-prog-wrap"><div class="part-prog-bg"><div class="part-prog-fg" style="width:100%;background:linear-gradient(90deg,#22a55e,#1f7a3d);"></div></div></div>
+          <div class="part-market-pct" style="color:#22a55e">+11.2%</div>
+        </div>
+        <div class="part-market-row">
+          <div class="part-market-flag">🌐</div>
+          <div class="part-market-info">
+            <div class="part-market-name">Marché Africain (Composite)</div>
+            <div class="part-market-desc">54 pays, croissance solide malgré les défis</div>
+          </div>
+          <div class="part-prog-wrap"><div class="part-prog-bg"><div class="part-prog-fg" style="width:53%;background:linear-gradient(90deg,#3d8ef8,#2d2057);"></div></div></div>
+          <div class="part-market-pct" style="color:#3d8ef8">+5.3%</div>
+        </div>
+        <div class="part-market-row">
+          <div class="part-market-flag">🗺️</div>
+          <div class="part-market-info">
+            <div class="part-market-name">Marché Mondial (S&amp;P 500)</div>
+            <div class="part-market-desc">Les plus grandes entreprises du monde</div>
+          </div>
+          <div class="part-prog-wrap"><div class="part-prog-bg"><div class="part-prog-fg" style="width:21%;background:linear-gradient(90deg,#8b6cf7,#c4b5fd);"></div></div></div>
+          <div class="part-market-pct" style="color:var(--t2)">+2.1%</div>
+        </div>
+        <div class="part-explain-box">💡 <strong>Bonne nouvelle :</strong> L'Afrique de l'Ouest croît plus vite que le reste du monde. Investir ici maintenant peut être une excellente décision à long terme.</div>
+      </div>
+    </div>
+<div class="pnl">
+      <div class="ph">Signaux sectoriels — Radar 4 marchés</div>
+      <div class="pro-chart">
+        <div class="cw" style="height:200px;"><canvas id="radarC-part"></canvas></div>
+      </div>
+      <div class="part-card">
+        <div style="font-size:11px;color:var(--t2);margin-bottom:10px;line-height:1.6;">Quels secteurs sont les plus porteurs en ce moment ? L'IA analyse les signaux du marché :</div>
+        <div class="part-sector-row">
+          <span class="part-sector-chip" style="background:rgba(85,205,108,.12);color:#22a55e;border:1px solid rgba(85,205,108,.25);">🟢 Fintech B2B — Signal <strong>FORT</strong></span>
+          <span class="part-sector-chip" style="background:rgba(85,205,108,.12);color:#22a55e;border:1px solid rgba(85,205,108,.25);">🟢 Immobilier — Signal <strong>FORT</strong></span>
+          <span class="part-sector-chip" style="background:rgba(85,205,108,.12);color:#22a55e;border:1px solid rgba(85,205,108,.25);">🟢 SaaS PME — Signal <strong>FORT</strong></span>
+          <span class="part-sector-chip" style="background:rgba(234,179,8,.12);color:#ca8a04;border:1px solid rgba(234,179,8,.25);">🟡 Énergie solaire — <strong>Modéré</strong></span>
+          <span class="part-sector-chip" style="background:rgba(234,179,8,.12);color:#ca8a04;border:1px solid rgba(234,179,8,.25);">🟡 E-commerce — <strong>Modéré</strong></span>
+          <span class="part-sector-chip" style="background:rgba(100,116,139,.12);color:var(--t2);border:1px solid rgba(100,116,139,.2);">⚪ BRVM obligataire — <strong>Stable</strong></span>
+        </div>
+        <div class="part-explain-box">💡 <strong>Comment lire ça ?</strong> Un signal <span style="color:#22a55e;font-weight:600;">FORT</span> signifie que l'IA détecte beaucoup d'activité positive dans ce secteur. <span style="color:#ca8a04;font-weight:600;">Modéré</span> = à surveiller. <span style="color:var(--t2);font-weight:600;">Stable</span> = peu de risque mais peu de gains rapides.</div>
+      </div>
+    </div>
+<div class="pnl">
+    <div class="ph">Alertes agents IA <span class="ph-s">Temps réel</span></div>
+    <div id="live-alerts-part"></div>
+  </div>
+<div class="pnl" style="margin-bottom:10px;">
+    <div class="ph">Tableau macro comparatif — 4 marchés</div>
+    <table>
+      <thead><tr><th>Indicateur</th><th>🇨🇮 Côte d'Ivoire</th><th>🌍 Afrique Ouest</th><th>🌐 Afrique</th><th>🗺️ Monde</th></tr></thead>
+      <tbody>
+        <tr><td>Croissance PIB</td><td class="up" style="font-family:var(--mono)">+6.8%</td><td class="up" style="font-family:var(--mono)">+6.1%</td><td class="up" style="font-family:var(--mono)">+4.1%</td><td style="font-family:var(--mono);color:var(--wl)">+3.2%</td></tr>
+        <tr><td>Inflation</td><td style="font-family:var(--mono)">3.1%</td><td style="font-family:var(--mono)">3.8%</td><td style="font-family:var(--mono)">6.2%</td><td style="font-family:var(--mono)">3.5%</td></tr>
+        <tr><td>Taux directeur</td><td style="font-family:var(--mono)">3.50% BCEAO</td><td style="font-family:var(--mono)">3.50% BCEAO</td><td style="font-family:var(--mono)">Var. 4–22%</td><td style="font-family:var(--mono)">5.25% Fed</td></tr>
+        <tr><td>FDI entrants</td><td class="up" style="font-family:var(--mono)">+22%</td><td class="up" style="font-family:var(--mono)">+18%</td><td class="up" style="font-family:var(--mono)">+11%</td><td class="up" style="font-family:var(--mono)">+4%</td></tr>
+        <tr><td>Risque global</td><td><span class="bdg b-or">Modéré</span></td><td><span class="bdg b-or">Modéré</span></td><td><span class="bdg b-dn">Élevé</span></td><td><span class="bdg b-n">Faible</span></td></tr>
+        <tr><td>Potentiel 5 ans</td><td><span class="bdg b-up">Très fort</span></td><td><span class="bdg b-up">Fort</span></td><td><span class="bdg b-gd">Fort</span></td><td><span class="bdg b-n">Stable</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+
+
+  </div><!-- /dash-mob-hero -->
+
+  <!-- ═══ ALLOCATION RECOMMANDÉE ═══ -->
+  
+
+  <!-- ═══ OPPORTUNITÉS ACTIVES ═══ -->
+  
 
   <!-- ═══ ALERTES RÉCENTES mobile (style "Latest ride") ═══ -->
   <div id="dash-mob-alerts">
@@ -10100,89 +10327,11 @@ function _pnLater(){ _pnDismiss(); }
   </div>
 
   <div class="g2">
-    <div class="pnl">
-      <div class="ph">Comparaison croissance 4 marchés <div class="cc"><button class="ccb on" onclick="setPeriod('1Y',this)">1A</button><button class="ccb" onclick="setPeriod('3Y',this)">3A</button><button class="ccb" onclick="setPeriod('5Y',this)">5A</button></div></div>
-      <div class="pro-chart">
-        <div class="cw" style="height:200px;"><canvas id="compareC"></canvas></div>
-      </div>
-      <div class="part-card">
-        <div style="font-size:11px;color:var(--t2);margin-bottom:6px;line-height:1.6;">Performance de chaque marché cette année (plus le chiffre est haut, mieux c'est) :</div>
-        <div class="part-market-row">
-          <div class="part-market-flag">🇨🇮</div>
-          <div class="part-market-info">
-            <div class="part-market-name">Marché Ivoirien (BRVM-CI)</div>
-            <div class="part-market-desc">Le plus dynamique d'Afrique de l'Ouest</div>
-          </div>
-          <div class="part-prog-wrap"><div class="part-prog-bg"><div class="part-prog-fg" style="width:84%;background:linear-gradient(90deg,#8d6cfa,#6d4fd1);"></div></div></div>
-          <div class="part-market-pct" style="color:#6d4fd1">+8.4%</div>
-        </div>
-        <div class="part-market-row">
-          <div class="part-market-flag">🌍</div>
-          <div class="part-market-info">
-            <div class="part-market-name">Afrique de l'Ouest</div>
-            <div class="part-market-desc">15 pays, économie en forte croissance</div>
-          </div>
-          <div class="part-prog-wrap"><div class="part-prog-bg"><div class="part-prog-fg" style="width:100%;background:linear-gradient(90deg,#22a55e,#1f7a3d);"></div></div></div>
-          <div class="part-market-pct" style="color:#22a55e">+11.2%</div>
-        </div>
-        <div class="part-market-row">
-          <div class="part-market-flag">🌐</div>
-          <div class="part-market-info">
-            <div class="part-market-name">Marché Africain (Composite)</div>
-            <div class="part-market-desc">54 pays, croissance solide malgré les défis</div>
-          </div>
-          <div class="part-prog-wrap"><div class="part-prog-bg"><div class="part-prog-fg" style="width:53%;background:linear-gradient(90deg,#3d8ef8,#2d2057);"></div></div></div>
-          <div class="part-market-pct" style="color:#3d8ef8">+5.3%</div>
-        </div>
-        <div class="part-market-row">
-          <div class="part-market-flag">🗺️</div>
-          <div class="part-market-info">
-            <div class="part-market-name">Marché Mondial (S&amp;P 500)</div>
-            <div class="part-market-desc">Les plus grandes entreprises du monde</div>
-          </div>
-          <div class="part-prog-wrap"><div class="part-prog-bg"><div class="part-prog-fg" style="width:21%;background:linear-gradient(90deg,#8b6cf7,#c4b5fd);"></div></div></div>
-          <div class="part-market-pct" style="color:var(--t2)">+2.1%</div>
-        </div>
-        <div class="part-explain-box">💡 <strong>Bonne nouvelle :</strong> L'Afrique de l'Ouest croît plus vite que le reste du monde. Investir ici maintenant peut être une excellente décision à long terme.</div>
-      </div>
-    </div>
-    <div class="pnl">
-      <div class="ph">Signaux sectoriels — Radar 4 marchés</div>
-      <div class="pro-chart">
-        <div class="cw" style="height:200px;"><canvas id="radarC"></canvas></div>
-      </div>
-      <div class="part-card">
-        <div style="font-size:11px;color:var(--t2);margin-bottom:10px;line-height:1.6;">Quels secteurs sont les plus porteurs en ce moment ? L'IA analyse les signaux du marché :</div>
-        <div class="part-sector-row">
-          <span class="part-sector-chip" style="background:rgba(85,205,108,.12);color:#22a55e;border:1px solid rgba(85,205,108,.25);">🟢 Fintech B2B — Signal <strong>FORT</strong></span>
-          <span class="part-sector-chip" style="background:rgba(85,205,108,.12);color:#22a55e;border:1px solid rgba(85,205,108,.25);">🟢 Immobilier — Signal <strong>FORT</strong></span>
-          <span class="part-sector-chip" style="background:rgba(85,205,108,.12);color:#22a55e;border:1px solid rgba(85,205,108,.25);">🟢 SaaS PME — Signal <strong>FORT</strong></span>
-          <span class="part-sector-chip" style="background:rgba(234,179,8,.12);color:#ca8a04;border:1px solid rgba(234,179,8,.25);">🟡 Énergie solaire — <strong>Modéré</strong></span>
-          <span class="part-sector-chip" style="background:rgba(234,179,8,.12);color:#ca8a04;border:1px solid rgba(234,179,8,.25);">🟡 E-commerce — <strong>Modéré</strong></span>
-          <span class="part-sector-chip" style="background:rgba(100,116,139,.12);color:var(--t2);border:1px solid rgba(100,116,139,.2);">⚪ BRVM obligataire — <strong>Stable</strong></span>
-        </div>
-        <div class="part-explain-box">💡 <strong>Comment lire ça ?</strong> Un signal <span style="color:#22a55e;font-weight:600;">FORT</span> signifie que l'IA détecte beaucoup d'activité positive dans ce secteur. <span style="color:#ca8a04;font-weight:600;">Modéré</span> = à surveiller. <span style="color:var(--t2);font-weight:600;">Stable</span> = peu de risque mais peu de gains rapides.</div>
-      </div>
-    </div>
+    
+    
   </div>
-  <div class="pnl">
-    <div class="ph">Alertes agents IA <span class="ph-s">Temps réel</span></div>
-    <div id="live-alerts"></div>
-  </div>
-  <div class="pnl" style="margin-bottom:10px;">
-    <div class="ph">Tableau macro comparatif — 4 marchés</div>
-    <table>
-      <thead><tr><th>Indicateur</th><th>🇨🇮 Côte d'Ivoire</th><th>🌍 Afrique Ouest</th><th>🌐 Afrique</th><th>🗺️ Monde</th></tr></thead>
-      <tbody>
-        <tr><td>Croissance PIB</td><td class="up" style="font-family:var(--mono)">+6.8%</td><td class="up" style="font-family:var(--mono)">+6.1%</td><td class="up" style="font-family:var(--mono)">+4.1%</td><td style="font-family:var(--mono);color:var(--wl)">+3.2%</td></tr>
-        <tr><td>Inflation</td><td style="font-family:var(--mono)">3.1%</td><td style="font-family:var(--mono)">3.8%</td><td style="font-family:var(--mono)">6.2%</td><td style="font-family:var(--mono)">3.5%</td></tr>
-        <tr><td>Taux directeur</td><td style="font-family:var(--mono)">3.50% BCEAO</td><td style="font-family:var(--mono)">3.50% BCEAO</td><td style="font-family:var(--mono)">Var. 4–22%</td><td style="font-family:var(--mono)">5.25% Fed</td></tr>
-        <tr><td>FDI entrants</td><td class="up" style="font-family:var(--mono)">+22%</td><td class="up" style="font-family:var(--mono)">+18%</td><td class="up" style="font-family:var(--mono)">+11%</td><td class="up" style="font-family:var(--mono)">+4%</td></tr>
-        <tr><td>Risque global</td><td><span class="bdg b-or">Modéré</span></td><td><span class="bdg b-or">Modéré</span></td><td><span class="bdg b-dn">Élevé</span></td><td><span class="bdg b-n">Faible</span></td></tr>
-        <tr><td>Potentiel 5 ans</td><td><span class="bdg b-up">Très fort</span></td><td><span class="bdg b-up">Fort</span></td><td><span class="bdg b-gd">Fort</span></td><td><span class="bdg b-n">Stable</span></td></tr>
-      </tbody>
-    </table>
-  </div>
+  
+  
 </div>
 
 
@@ -22316,7 +22465,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "4.09";
+  var GUELANE_VERSION = "4.11";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -23165,6 +23314,56 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
         return r;
       };
       window._gxRevealHooked = true;
+    }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer);
+  else demarrer();
+})();
+</script>
+<script>
+/* ═══ PANNEAUX D'ANALYSE : LES DEUX MODES ═══
+   Les panneaux existent des deux cotes, avec des identifiants
+   distincts pour rester uniques. Les fonctions d'origine ne
+   dessinent que la version Entrepreneur : on recopie le resultat
+   dans la version Particulier, en gardant ses libelles plus
+   explicites. */
+(function(){
+  function jumeler(){
+    if(typeof Chart === 'undefined') return;
+    ['allocC', 'compareC', 'radarC'].forEach(function(id){
+      var src = document.getElementById(id);
+      var dst = document.getElementById(id + '-part');
+      if(!src || !dst || dst._gxFait) return;
+      try{
+        var g = Chart.getChart ? Chart.getChart(src) : null;
+        if(!g || !g.config) return;
+        dst._gxFait = true;
+        new Chart(dst, {
+          type: g.config.type,
+          data: JSON.parse(JSON.stringify(g.config.data)),
+          options: g.config.options
+        });
+      }catch(e){}
+    });
+    /* Legende et libelle de l'allocation */
+    ['alloc-leg', 'alloc-lbl'].forEach(function(id){
+      var s = document.getElementById(id), t = document.getElementById(id + '-part');
+      if(s && t) t.innerHTML = s.innerHTML;
+    });
+  }
+  window._gxJumeler = jumeler;
+
+  function demarrer(){
+    setTimeout(jumeler, 700);
+    setTimeout(jumeler, 1800);
+    if(typeof window.navTo === 'function' && !window._gxJumHooked){
+      var origine = window.navTo;
+      window.navTo = function(){
+        var r = origine.apply(this, arguments);
+        try{ setTimeout(jumeler, 200); }catch(e){}
+        return r;
+      };
+      window._gxJumHooked = true;
     }
   }
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer);

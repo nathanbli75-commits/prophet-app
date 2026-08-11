@@ -7260,6 +7260,35 @@ body .mg-top{
   fill:currentColor !important;
   stroke:none !important;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   AVATAR DANS LA CARTE REPLIÉE
+   Une fois la salutation escamotée, l'avatar disparaissait avec
+   elle. Un avatar compact prend le relais à côté du solde, et
+   donne toujours accès au profil.
+   ══════════════════════════════════════════════════════════════ */
+.gx-mini-av{
+  display:none;
+  width:34px;height:34px;flex-shrink:0;
+  margin-left:auto;
+  border-radius:50%;padding:0;cursor:pointer;
+  background:rgba(255,255,255,.22);
+  border:1.5px solid rgba(255,255,255,.34);
+  color:#fff;font-family:var(--font);
+  font-size:12px;font-weight:800;letter-spacing:-.02em;
+  align-items:center;justify-content:center;
+}
+.gx-mini-av:active{ transform:scale(.94); }
+
+@media(max-width:840px){
+  /* Le solde et l'avatar partagent la même ligne une fois replié */
+  body.gx-scrolled .gx-amt{
+    display:flex !important;
+    align-items:center !important;
+    width:100%;
+  }
+  body.gx-scrolled .gx-mini-av{ display:flex; }
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -8917,6 +8946,7 @@ function _pnLater(){ _pnDismiss(); }
         <div class="gx-amt">
           <span class="gx-amt-int" id="gx-amt-pro">0</span><span class="gx-amt-dec" id="gx-cur-pro">FCFA</span>
         </div>
+          <button class="gx-mini-av" onclick="openProfilePanel()" aria-label="Mon profil"><span id="gx-mini-ini-pro">GU</span></button>
 
         <div class="gx-wid">
           <span class="gx-wid-l">COMPTE</span>
@@ -9620,6 +9650,7 @@ function _pnLater(){ _pnDismiss(); }
         <div class="gx-amt">
           <span class="gx-amt-int" id="gx-amt">0</span><span class="gx-amt-dec" id="gx-cur">FCFA</span>
         </div>
+          <button class="gx-mini-av" onclick="openProfilePanel()" aria-label="Mon profil"><span id="gx-mini-ini">GU</span></button>
 
         <div class="gx-wid">
           <span class="gx-wid-l">COMPTE</span>
@@ -22145,7 +22176,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "4.05";
+  var GUELANE_VERSION = "4.06";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -22577,6 +22608,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
     var ini = n.trim().split(/\s+/).map(function(x){ return x.charAt(0); })
                 .join('').slice(0,2).toUpperCase() || 'GU';
     poser('gx-initials', ini);
+    poser('gx-mini-ini', ini);
     /* Identifiant de compte, stable pour un meme utilisateur */
     var id = '';
     try{

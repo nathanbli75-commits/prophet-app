@@ -8870,25 +8870,7 @@ function _pnLater(){ _pnDismiss(); }
         </div>
       </div>
 
-      <!-- ═══ QUATRE ACTIONS ═══ -->
-      <div class="gx-acts">
-        <button class="gx-act" onclick="navTo('wallet')">
-          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><polyline points="7 11 12 16 17 11"/><path d="M4 20h16"/></svg></span>
-          <span class="gx-act-lb">Recharger</span>
-        </button>
-        <button class="gx-act" onclick="navTo('trade')">
-          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5"/><path d="M21 3l-6.5 18-4-8-8-4z"/></svg></span>
-          <span class="gx-act-lb">Trading</span>
-        </button>
-        <button class="gx-act" onclick="navTo('store')">
-          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1V9z"/><path d="M9 13h6"/></svg></span>
-          <span class="gx-act-lb">Store</span>
-        </button>
-        <button class="gx-act" onclick="toggleLeftSidebar()">
-          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="9" r="2"/><circle cx="15" cy="9" r="2"/><circle cx="7" cy="16" r="2"/><circle cx="15" cy="16" r="2"/></svg></span>
-          <span class="gx-act-lb">Plus</span>
-        </button>
-      </div>
+
 
     </div>
       <!-- ═══ RÉCENT ═══ -->
@@ -8965,6 +8947,7 @@ function _pnLater(){ _pnDismiss(); }
 
     <div class="ph-section-hd"><span class="ph-section-title">Actions Rapides</span><span class="ph-section-link" onclick="navTo('dash')">Voir tout</span></div>
     <div class="ph-qa-grid">
+      <div class="ph-qa-item" onclick="navTo('wallet')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><polyline points="7 11 12 16 17 11"/><path d="M4 20h16"/></svg></div><div class="ph-qa-lbl">Recharger</div></div>
       <div class="ph-qa-item" onclick="navTo('stress')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg></div><div class="ph-qa-lbl">Simulateur</div></div>
       <div class="ph-qa-item" onclick="navTo('pred')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/></svg></div><div class="ph-qa-lbl">Guelane AI</div></div>
       <div class="ph-qa-item" onclick="navTo('trade')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div><div class="ph-qa-lbl">Trading</div></div>
@@ -8976,6 +8959,7 @@ function _pnLater(){ _pnDismiss(); }
       <div class="ph-qa-item" onclick="navTo('scanner')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3"/></svg></div><div class="ph-qa-lbl">Scanner</div></div>
       <div class="ph-qa-item" onclick="navTo('chat')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div><div class="ph-qa-lbl">Assistant IA</div></div>
       <div class="ph-qa-item" onclick="navTo('portfolio2')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div><div class="ph-qa-lbl">Wallet</div></div>
+      <div class="ph-qa-item" onclick="toggleLeftSidebar()"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></div><div class="ph-qa-lbl">Plus</div></div>
     </div>
 
     <div class="ph-promo-card" onclick="try{localStorage.removeItem('guelane_onboard_seen');}catch(e){} var ob=document.getElementById('onboard-screen'); if(ob){ob.style.display='flex';ob.classList.remove('ob-out');}">
@@ -9586,25 +9570,7 @@ function _pnLater(){ _pnDismiss(); }
         </div>
       </div>
 
-      <!-- ═══ QUATRE ACTIONS ═══ -->
-      <div class="gx-acts">
-        <button class="gx-act" onclick="navTo('wallet')">
-          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><polyline points="7 11 12 16 17 11"/><path d="M4 20h16"/></svg></span>
-          <span class="gx-act-lb">Recharger</span>
-        </button>
-        <button class="gx-act" onclick="navTo('trade')">
-          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10.5 13.5"/><path d="M21 3l-6.5 18-4-8-8-4z"/></svg></span>
-          <span class="gx-act-lb">Trading</span>
-        </button>
-        <button class="gx-act" onclick="navTo('store')">
-          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1V9z"/><path d="M9 13h6"/></svg></span>
-          <span class="gx-act-lb">Store</span>
-        </button>
-        <button class="gx-act" onclick="toggleLeftSidebar()">
-          <span class="gx-act-ic"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="9" r="2"/><circle cx="15" cy="9" r="2"/><circle cx="7" cy="16" r="2"/><circle cx="15" cy="16" r="2"/></svg></span>
-          <span class="gx-act-lb">Plus</span>
-        </button>
-      </div>
+
 
     </div>
       <!-- ═══ RÉCENT ═══ -->
@@ -9698,6 +9664,7 @@ function _pnLater(){ _pnDismiss(); }
 
     <div class="ph-section-hd"><span class="ph-section-title">Actions Rapides</span><span class="ph-section-link" onclick="toggleLeftSidebar()">Voir tout</span></div>
     <div class="ph-qa-grid">
+      <div class="ph-qa-item" onclick="navTo('wallet')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13"/><polyline points="7 11 12 16 17 11"/><path d="M4 20h16"/></svg></div><div class="ph-qa-lbl">Recharger</div></div>
       <div class="ph-qa-item" onclick="navTo('trade')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="21 12 21 7 16 7"/></svg></div><div class="ph-qa-lbl">Trading</div></div>
       <div class="ph-qa-item" onclick="navTo('invest')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg></div><div class="ph-qa-lbl">Marketplace</div></div>
       <div class="ph-qa-item" onclick="navTo('store')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1V9z"/><path d="M9 13h6"/></svg></div><div class="ph-qa-lbl">Store</div></div>
@@ -22116,7 +22083,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.99";
+  var GUELANE_VERSION = "4.00";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

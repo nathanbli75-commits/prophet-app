@@ -7407,6 +7407,37 @@ body .mg-top{
   }
   .gx-anim{ opacity:1 !important; transform:none !important; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   CHOIX DU PORTEFEUILLE — intégré à l'écran
+   Ces trois accès s'ouvraient auparavant dans un menu surgissant.
+   Ils sont désormais visibles directement dans le Portfolio.
+   ══════════════════════════════════════════════════════════════ */
+.pf2-choix{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:9px;
+  padding:0 12px;margin:14px 0 4px;
+}
+.pf2-choix-btn{
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  padding:14px 6px 12px;border-radius:16px;
+  background:#fff;border:1px solid rgba(13,18,32,.06);
+  box-shadow:0 2px 9px rgba(13,18,32,.05);
+  cursor:pointer;font-family:var(--font);
+  transition:transform var(--d-fast) var(--e-out), box-shadow var(--d) var(--e-out);
+}
+.pf2-choix-btn:active{ transform:scale(.95); }
+@media(hover:hover) and (pointer:fine){
+  .pf2-choix-btn:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(13,18,32,.10); }
+}
+.pf2-choix-ic{
+  width:40px;height:40px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(82,60,166,.09);font-size:18px;
+}
+.pf2-choix-lb{
+  font-size:10.5px;font-weight:700;color:var(--t);
+  text-align:center;line-height:1.32;
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -9794,6 +9825,22 @@ function _pnLater(){ _pnDismiss(); }
     <div style="padding:0 12px;"><button class="btn btn-gold" style="width:100%;margin:10px 0;" onclick="guelaneAnalyzeSection('portfolio2','')">✨ Diagnostic IA du portefeuille</button></div>
     <div class="pf2-balance-lbl">Solde du Portefeuille <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
     <div class="pf2-balance-amt">CFA –</div>
+    <!-- Choix du portefeuille (repris du menu qui s'ouvrait avant) -->
+    <div class="pf2-choix" id="pf2-choix">
+      <button class="pf2-choix-btn" onclick="_wltGoInvestisseur()">
+        <span class="pf2-choix-ic">💼</span>
+        <span class="pf2-choix-lb">Portefeuille<br>Investisseur</span>
+      </button>
+      <button class="pf2-choix-btn" onclick="_wltGoNormal()">
+        <span class="pf2-choix-ic">📊</span>
+        <span class="pf2-choix-lb">Portefeuille<br>Normal</span>
+      </button>
+      <button class="pf2-choix-btn" id="pf2-conn-btn" onclick="_wltConnectOrRecharge()">
+        <span class="pf2-choix-ic" id="pf2-conn-ic">🔗</span>
+        <span class="pf2-choix-lb" id="pf2-conn-lbl">Connecter<br>Portefeuille</span>
+      </button>
+    </div>
+
     <div class="pf2-tabs">
       <div class="pf2-tab on">Portefeuille</div>
       <div class="pf2-tab">Watchlist</div>
@@ -13082,7 +13129,7 @@ function setProfile(nextMode, withToast, skipSave){
   var chatLbl=document.getElementById('mn-chat-lbl');
   if(chatLbl) chatLbl.textContent=mode==='pro'?'Invest':'Assistant IA';
   var walletLbl=document.getElementById('mn-wallet-lbl');
-  if(walletLbl) walletLbl.textContent=mode==='pro'?'Store':'Wallet';
+  if(walletLbl) walletLbl.textContent=mode==='pro'?'Store':'Portfolio';
   if(sl) sl.textContent=mode==='pro'?'ENT':'PART';
   if(st) st.textContent=mode==='pro'?'Entrepreneur':'Particulier';
   if(role) role.textContent=PROFILE_CONTENT[mode].role;
@@ -17637,6 +17684,7 @@ function _updateMobNav(name){
     if(name === 'store')  mnId = 'mn-dash';      /* Particulier : bouton 2 = Store */
     /* Particulier : Marketplace a sa propre entree */
     if(name === 'invest' || name === 'investhub') mnId = 'mn-invest-mode';
+    if(name === 'portfolio2') mnId = 'mn-wallet';   /* Particulier : Portfolio */
   }
   if(mnId){
     var el = document.getElementById(mnId);
@@ -17694,7 +17742,11 @@ function mobNavWalletOrInbox(event, btn){
     /* Entrepreneur : ce bouton mène au Guelane Store (Inbox est dans les Actions Rapides) */
     navTo('store');
   } else {
-    _wltPopoverToggle(event);
+    /* Particulier : meme ecran Portfolio que l'Entrepreneur.
+       Les trois choix du popover sont desormais dans l'ecran. */
+    document.querySelectorAll('.mn-item').forEach(function(b){ b.classList.remove('on'); });
+    if(btn) btn.classList.add('on');
+    navTo('portfolio2');
   }
 }
 
@@ -17935,6 +17987,11 @@ function _wltPopoverRefresh(){
   var lbl = document.getElementById('wlt-pop-conn-lbl');
   if(ic) ic.textContent = connected ? '↑' : '🔗';
   if(lbl) lbl.innerHTML = connected ? 'Recharger<br>Portefeuille' : 'Connecter<br>Portefeuille';
+  /* Meme bouton, integre a l'ecran Portfolio */
+  var ic2 = document.getElementById('pf2-conn-ic');
+  var lb2 = document.getElementById('pf2-conn-lbl');
+  if(ic2) ic2.textContent = connected ? '↑' : '🔗';
+  if(lb2) lb2.innerHTML = connected ? 'Recharger<br>Portefeuille' : 'Connecter<br>Portefeuille';
 }
 
 function _wltGoInvestisseur(){
@@ -22465,7 +22522,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "4.11";
+  var GUELANE_VERSION = "4.12";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -23001,7 +23058,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
     poser('mn-accueil-lbl', pro ? 'Home'   : 'Accueil');
     poser('mn-dash-lbl',    pro ? 'Explore': 'Store');
     poser('mn-chat-lbl',    pro ? 'Invest' : 'Assistant IA');
-    poser('mn-wallet-lbl',  pro ? 'Store'  : 'Wallet');
+    poser('mn-wallet-lbl',  pro ? 'Store'  : 'Portfolio');
     /* Le bouton de bascule annonce le mode vers lequel il mene */
     ['qa-mode-lbl', 'qa-mode-lbl-2'].forEach(function(id){
       var e = document.getElementById(id);

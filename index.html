@@ -9048,6 +9048,7 @@ function _pnLater(){ _pnDismiss(); }
       <div class="ph-qa-item" onclick="navTo('scanner')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3"/></svg></div><div class="ph-qa-lbl">Scanner</div></div>
       <div class="ph-qa-item" onclick="navTo('chat')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div><div class="ph-qa-lbl">Assistant IA</div></div>
       <div class="ph-qa-item" onclick="navTo('portfolio2')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div><div class="ph-qa-lbl">Wallet</div></div>
+      <div class="ph-qa-item" onclick="toggleMode()"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 6h18"/><path d="M7 22l-4-4 4-4"/><path d="M21 18H3"/></svg></div><div class="ph-qa-lbl" id="qa-mode-lbl">Changer de mode</div></div>
       <div class="ph-qa-item" onclick="toggleLeftSidebar()"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></div><div class="ph-qa-lbl">Plus</div></div>
     </div>
 
@@ -9765,6 +9766,7 @@ function _pnLater(){ _pnDismiss(); }
       <div class="ph-qa-item" onclick="navTo('pred')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></div><div class="ph-qa-lbl">IA Prédictive</div></div>
       <div class="ph-qa-item" onclick="navTo('wallet')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2.5"/><path d="M2 10h20"/><circle cx="17.5" cy="14.5" r="1.2"/></svg></div><div class="ph-qa-lbl">Wallet</div></div>
       <div class="ph-qa-item" onclick="navTo('notif')"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg></div><div class="ph-qa-lbl">Notifications</div></div>
+      <div class="ph-qa-item" onclick="toggleMode()"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 6h18"/><path d="M7 22l-4-4 4-4"/><path d="M21 18H3"/></svg></div><div class="ph-qa-lbl" id="qa-mode-lbl-2">Changer de mode</div></div>
       <div class="ph-qa-item" onclick="toggleLeftSidebar()"><div class="ph-qa-ic"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></div><div class="ph-qa-lbl">Plus</div></div>
     </div>
 
@@ -22176,7 +22178,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "4.06";
+  var GUELANE_VERSION = "4.07";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
@@ -22713,6 +22715,11 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
     poser('mn-dash-lbl',    pro ? 'Explore': 'Store');
     poser('mn-chat-lbl',    pro ? 'Invest' : 'Assistant IA');
     poser('mn-wallet-lbl',  pro ? 'Store'  : 'Wallet');
+    /* Le bouton de bascule annonce le mode vers lequel il mene */
+    ['qa-mode-lbl', 'qa-mode-lbl-2'].forEach(function(id){
+      var e = document.getElementById(id);
+      if(e) e.textContent = pro ? 'Mode Particulier' : 'Mode Entrepreneur';
+    });
   }
   window._navLblSync = sync;
 

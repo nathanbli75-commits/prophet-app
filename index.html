@@ -7097,6 +7097,62 @@ body .mg-top{
 .gx-card::after{
   background:radial-gradient(circle, rgba(255,255,255,.15), transparent 66%) !important;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   EN-TÊTE — d'après l'agrandissement
+   La salutation occupe la gauche ; la cloche et l'avatar sont
+   réunis à droite. Le nom est nettement plus imposant et le
+   sous-titre plus discret, comme sur la référence.
+   ══════════════════════════════════════════════════════════════ */
+.gx-head{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:20px;
+}
+.gx-hello{ flex:1; min-width:0; }
+.gx-hi{
+  font-size:21px !important;
+  font-weight:800 !important;
+  letter-spacing:-.035em !important;
+  color:#0d1220 !important;
+  line-height:1.15;
+}
+.gx-sub{
+  font-size:13.5px !important;
+  font-weight:500 !important;
+  color:#9aa0ae !important;
+  margin-top:3px !important;
+}
+
+/* Cloche : cercle gris clair, sans ombre */
+.gx-bell{
+  width:42px !important;height:42px !important;
+  background:#eceef2 !important;
+  border:none !important;
+  box-shadow:none !important;
+  color:#0d1220 !important;
+  order:2;
+}
+.gx-bell svg{ width:19px !important;height:19px !important; }
+.gx-bell-dot{
+  top:10px !important;right:11px !important;
+  width:9px !important;height:9px !important;
+  border:2px solid #eceef2 !important;
+}
+
+/* Avatar : à l'extrême droite, rond, liseré clair */
+.gx-av{
+  width:44px !important;height:44px !important;
+  order:3;flex-shrink:0;
+  border:2.5px solid #fff !important;
+  box-shadow:0 2px 10px rgba(13,18,32,.14) !important;
+}
+
+@media(max-width:380px){
+  .gx-hi{ font-size:18.5px !important; }
+  .gx-sub{ font-size:12.5px !important; }
+  .gx-bell{ width:38px !important;height:38px !important; }
+  .gx-av{ width:40px !important;height:40px !important; }
+}
 </style>
 <div id="ai-ask-bar">
   <div class="aab-ic">✨</div>
@@ -8722,16 +8778,16 @@ function _pnLater(){ _pnDismiss(); }
 
       <!-- ═══ EN-TÊTE : avatar, salutation, cloche ═══ -->
       <div class="gx-head">
-        <button class="gx-av" onclick="openProfilePanel()" aria-label="Mon profil">
-          <span id="gx-initials-pro">GU</span>
-        </button>
         <div class="gx-hello">
           <div class="gx-hi" id="gx-name-pro">Bonjour</div>
-          <div class="gx-sub" id="gx-greet-pro">Bonne journée <span>\u1F44B</span></div>
+          <div class="gx-sub" id="gx-greet-pro">Bonne journée</div>
         </div>
         <button class="gx-bell" onclick="navTo('notif')" aria-label="Notifications">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
           <span class="gx-bell-dot" id="gx-bell-dot-pro"></span>
+        </button>
+        <button class="gx-av" onclick="openProfilePanel()" aria-label="Mon profil">
+          <span id="gx-initials-pro">GU</span>
         </button>
       </div>
 
@@ -9391,16 +9447,16 @@ function _pnLater(){ _pnDismiss(); }
 
       <!-- ═══ EN-TÊTE : avatar, salutation, cloche ═══ -->
       <div class="gx-head">
-        <button class="gx-av" onclick="openProfilePanel()" aria-label="Mon profil">
-          <span id="gx-initials">GU</span>
-        </button>
         <div class="gx-hello">
           <div class="gx-hi" id="gx-name">Bonjour</div>
-          <div class="gx-sub" id="gx-greet">Bonne journée <span>\u1F44B</span></div>
+          <div class="gx-sub" id="gx-greet">Bonne journée</div>
         </div>
         <button class="gx-bell" onclick="navTo('notif')" aria-label="Notifications">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
           <span class="gx-bell-dot" id="gx-bell-dot"></span>
+        </button>
+        <button class="gx-av" onclick="openProfilePanel()" aria-label="Mon profil">
+          <span id="gx-initials">GU</span>
         </button>
       </div>
 
@@ -21934,7 +21990,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.96";
+  var GUELANE_VERSION = "3.97";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },

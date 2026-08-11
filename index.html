@@ -7,7 +7,7 @@
 <link id="prophet-favicon" rel="icon" type="image/jpeg" href="">
 <!-- PWA : application installable -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#f6f8fc">
+<meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Guelane">
@@ -6957,6 +6957,122 @@ body .mg-top{
   .gx-amt-dec{ font-size:16px; }
   .gx-act-lb{ font-size:10px; }
   .gx-acts{ gap:7px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   COULEURS GUELANE + FOND BLANC
+   La carte reprend le violet et l'or de Guelane, les écrans
+   redeviennent blancs.
+   ══════════════════════════════════════════════════════════════ */
+:root{ --gx-blue:#523ca6; --gx-blue2:#7e57c2; --gx-bg:#ffffff; }
+
+@media(max-width:840px){
+  body, #page-dash, #page-home,
+  #page-dash .view, #page-home .view{ background:#ffffff !important; }
+}
+
+/* ── Carte : violet Guelane, reflet doré, stries diagonales ── */
+.gx-card{
+  background:linear-gradient(135deg,#6247c4 0%,#523ca6 46%,#2d2057 100%) !important;
+  box-shadow:0 14px 32px rgba(45,32,87,.30) !important;
+}
+.gx-card::after{
+  background:radial-gradient(circle,rgba(232,169,62,.22),transparent 66%) !important;
+}
+/* Stries obliques discrètes, comme sur la référence */
+.gx-card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(118deg, transparent 38%, rgba(255,255,255,.07) 44%, transparent 50%),
+    linear-gradient(118deg, transparent 62%, rgba(255,255,255,.05) 68%, transparent 74%);
+}
+.gx-card-top, .gx-amt, .gx-wid{ position:relative; z-index:2; }
+
+.gx-av{
+  background:linear-gradient(145deg,#7e57c2,#523ca6) !important;
+  box-shadow:0 4px 12px rgba(82,60,166,.32) !important;
+}
+.gx-act-ic{
+  background:linear-gradient(145deg,#7e57c2,#523ca6) !important;
+  box-shadow:0 3px 9px rgba(82,60,166,.28) !important;
+}
+.gx-cur{ background:rgba(255,255,255,.18) !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   BARRE DU BAS — BOUTON CENTRAL SURÉLEVÉ
+   Quatre entrées de part et d'autre, et Guelane AI au centre
+   dans un cercle sombre en relief.
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:840px){
+  #mob-nav{
+    background:#fff !important;
+    padding:8px 10px !important;
+    padding-bottom:max(8px, env(safe-area-inset-bottom,8px)) !important;
+    box-shadow:0 8px 30px rgba(15,23,42,.13), 0 2px 6px rgba(15,23,42,.05) !important;
+    overflow:visible !important;
+  }
+
+  /* Les quatre entrées latérales : icône seule, libellé dessous */
+  #mob-nav .mn-item{
+    flex-direction:column !important;
+    gap:4px !important;
+    padding:6px 4px !important;
+    background:none !important;
+    box-shadow:none !important;
+    color:#9aa1b1 !important;
+    flex:1 1 0 !important;
+  }
+  #mob-nav .mn-item span{
+    max-width:none !important;
+    opacity:1 !important;
+    margin:0 !important;
+    font-size:9.5px !important;
+    font-weight:700 !important;
+    color:inherit !important;
+  }
+  #mob-nav .mn-item svg{ width:20px !important; height:20px !important; }
+  #mob-nav .mn-item.on{
+    background:none !important;
+    color:var(--gx-blue) !important;
+  }
+  #mob-nav .mn-item.on svg{ color:var(--gx-blue) !important; transform:none !important; }
+  #mob-nav .mn-item.on span{ color:var(--gx-blue) !important; }
+
+  /* Guelane AI : cercle sombre surélevé au centre */
+  #mob-nav #mn-chat{
+    flex:0 0 auto !important;
+    width:56px !important;
+    height:56px !important;
+    margin:-24px 4px 0 !important;
+    border-radius:50% !important;
+    background:linear-gradient(145deg,#3b2a72,#1b1136) !important;
+    color:#fff !important;
+    box-shadow:0 8px 22px rgba(27,17,54,.42) !important;
+    border:4px solid #fff !important;
+    padding:0 !important;
+    justify-content:center !important;
+  }
+  #mob-nav #mn-chat svg{ width:24px !important; height:24px !important; color:#fff !important; }
+  #mob-nav #mn-chat span{ display:none !important; }
+  #mob-nav #mn-chat.on{
+    background:linear-gradient(145deg,#6247c4,#523ca6) !important;
+    box-shadow:0 8px 24px rgba(82,60,166,.50) !important;
+  }
+  #mob-nav #mn-chat:active{ transform:scale(.94) !important; }
+}
+
+/* Le bouton central reste au milieu quel que soit le nombre
+   d'entrées affichées : deux de chaque côté. */
+@media(max-width:840px){
+  #mob-nav{ display:flex; }
+  #mob-nav #mn-accueil{ order:1; }
+  #mob-nav #mn-dash{ order:2; }
+  #mob-nav #mn-chat{ order:3; }
+  #mob-nav #mn-wallet{ order:4; }
+  #mob-nav #mn-portfolio{ order:5; }
+  /* Cette entrée s'ajoute dans un mode : on la place en dernier
+     pour ne pas décaler le bouton central. */
+  #mob-nav #mn-invest-mode{ order:6; }
 }
 </style>
 <div id="ai-ask-bar">
@@ -21793,7 +21909,7 @@ if(document.readyState !== 'loading'){ _ivInitAll(); }
      - Pour une MISE À JOUR IMPORTANTE (fenêtre "Quoi de neuf") : mets IMPORTANT à true
        et remplis la liste CHANGEMENTS.
   */
-  var GUELANE_VERSION = "3.92";
+  var GUELANE_VERSION = "3.93";
   var IMPORTANT = true;
   var CHANGEMENTS = [
     { ic:"💾", txt:"Vos saisies sont conservées en arrière-plan" },
